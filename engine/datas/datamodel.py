@@ -22,10 +22,22 @@ class DataModel:
 	def fieldExist(self, fieldName):
 		return fieldName in self.fieldTypes
 
+	def copyFrom(self, other):
+		for key in other.fields:
+			if self.fieldExist(key):
+				self[key] = other.fields[key]
+
 	def getConvertedFieldValue(self, fieldName, newValue):
 		if not fieldName in self.fieldTypes:
 			raise KeyError()
 		return self.fieldTypes[fieldName].castFunction(newValue)
+
+	def setFieldType(self, fieldName, classname):
+		if isinstance(self[fieldName], classname):
+			return
+		model = classname()
+		model.copyFrom(self[fieldName])
+		self[fieldName] = model
 
 	### Access operators
 

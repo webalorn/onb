@@ -40,10 +40,26 @@ class FloatField(FieldValue):
 ### Complex types
 
 class ClassField(FieldValue):
-	""" Field that only store an instance of a class """
+	""" Field that only store instances of the same class """
 	def type(self):
 		return self.className
 
-	def __init__(self, className):
+	def createValue(self):
+		return self.type()(*self.classParams)
+
+	def __init__(self, className, *classParams):
+		if isinstance(className, str):
+			from ..modelslist import getModelByName
+			className = getModelByName(className)
+
 		self.className = className
+		self.classParams = classParams
 		FieldValue.__init__(self)
+
+### Dictionary
+
+from .dictmodelfield import *
+
+class DictField(ClassField):
+	def __init__(self, fieldsSharedType):
+		ClassField.__init__(self, DictModel, fieldsSharedType)
