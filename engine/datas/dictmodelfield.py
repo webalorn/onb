@@ -17,3 +17,7 @@ class DictModel(DataModel):
 
 		if not isinstance(self.fieldsSharedType, FieldValue):
 			raise TypeError("DictModel type must be a subclass of FieldValue")
+
+	def ensureFieldExists(self, fieldName):
+		if not fieldName in self.fields:
+			self.fields[fieldName] = self.getConvertedFieldValue(fieldName, None)

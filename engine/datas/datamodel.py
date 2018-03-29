@@ -1,8 +1,12 @@
+import re
+
 class DataModel:
 	"""
 	Base class for data storgae
 
 	raise: KeyError
+
+	type field name is reserved for the type of the model
 	"""
 
 	def getFields(self):
@@ -39,11 +43,16 @@ class DataModel:
 		model.copyFrom(self[fieldName])
 		self[fieldName] = model
 
+	def ensureFieldExists(self, fieldName):
+		if not fieldName in self.fields:
+			raise KeyError("Field {0} doesn't exist".format(fieldName))
+
 	### Access operators
 
 	def __getitem__(self, fieldName):
 		""" Get an field value. Overload [] operator """
 		if not '.' in fieldName:
+			self.ensureFieldExists(fieldName)
 			return self.fields[fieldName]
 
 		names = fieldName.split('.')
@@ -76,3 +85,15 @@ class DataModel:
 
 	def __repr__(self):
 		return str(self.fields)
+
+	### Static functions
+
+	@classmethod
+	def getModelName(className):
+		name = className.__name__
+		if name.endswith('Model'):
+			name = name[:-5]
+		words = re.findall('[A-Z][^A-Z]*', name)
+		name = '_'.join([w.lower() for w in words])
+
+		return name

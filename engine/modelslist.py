@@ -1,10 +1,11 @@
 from .models import *
+from .datas.datamodel import DataModel
 
-modelsList = {
-	'creature' : creature.CreatureModel,
-	'armor' : creature.ArmorModel,
-}
+modelsList = {}
 
+for modelClass in DataModel.__subclasses__():
+	name = modelClass.getModelName()
+	modelsList[name] = modelClass
 
 
 def getModelByName(name):
