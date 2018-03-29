@@ -18,6 +18,7 @@ try:
 	creature2 = CreatureModel()
 	PopuplateManager().populate(creature2, datas1)
 	pprint.pprint(ModelEncoder().encode(creature2))
+	print(creature2.getModelName())
 except KeyError as error2:
 	raise error2
 	print('Erreur d\'indice', error2.args)
