@@ -5,11 +5,13 @@ from engine.models.creature import CreatureModel
 from engine.modelslist import modelsList
 from engine.datas.populate import PopuplateManager
 
+import pprint
+
 try:
 	creature = CreatureModel()
-	PopuplateManager().populate(creature, {'health': 31, 'name': 'foo', 'floatValue': '4.10', 'armor.protection': '10','actions.db': 10})
+	PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}})
 
-	print(creature)
+	pprint.pprint(creature)
 	# creature['armor.protection'] = 12
 	# creature['actions.test'] = 32
 	# print(creature['actions.test'])

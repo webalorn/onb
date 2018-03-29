@@ -27,6 +27,11 @@ class IntField(FieldValue):
 	def type(self):
 		return int
 
+class BoolField(FieldValue):
+	""" Field that only store bool values """
+	def type(self):
+		return bool
+
 class StringField(FieldValue):
 	""" Field that only store string values """
 	def type(self):
