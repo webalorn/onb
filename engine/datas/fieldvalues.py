@@ -9,10 +9,15 @@ class FieldValue:
 		return self.type()()
 
 	def castFunction(self, value):
-		try:
-			return self.type()(value)
-		except:
-			return self.createValue()
+		if value == None:
+			value = self.createValue()
+		else:
+			try:
+				return self.type()(value)
+			except:
+				return self.createValue()
+		return value
+
 
 	def __init__(self, defaultValue=None):
 		self.defaultValue = self.castFunction(defaultValue)

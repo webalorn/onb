@@ -4,20 +4,20 @@
 from engine.models.creature import CreatureModel
 from engine.modelslist import modelsList
 from engine.datas.populate import PopuplateManager
+from engine.storage.encoder import *
 
 import pprint
 
 try:
 	creature = CreatureModel()
-	PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}})
+	PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
 
-	pprint.pprint(creature)
-	# creature['armor.protection'] = 12
-	# creature['actions.test'] = 32
-	# print(creature['actions.test'])
+	datas1 = ModelEncoder().encode(creature)
+	pprint.pprint(ModelEncoder().linearize(datas1))
 
-	for field in creature:
-		print(field, creature[field])
+	creature2 = CreatureModel()
+	PopuplateManager().populate(creature2, datas1)
+	pprint.pprint(ModelEncoder().encode(creature2))
 except KeyError as error2:
 	raise error2
 	print('Erreur d\'indice', error2.args)
