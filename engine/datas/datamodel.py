@@ -31,6 +31,11 @@ class DataModel:
 			if self.fieldExist(key):
 				self[key] = other.fields[key]
 
+	def getFieldType(self, fieldName):
+		if not fieldName in self.fieldTypes:
+			raise KeyError()
+		return self.fieldTypes[fieldName].type()
+
 	def getConvertedFieldValue(self, fieldName, newValue):
 		if not fieldName in self.fieldTypes:
 			raise KeyError()

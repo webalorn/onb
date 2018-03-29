@@ -1,10 +1,12 @@
 from .datamodel import DataModel
+from ..modelslist import getModelByName
 
 class PopuplateManager:
 	def __init__(self):
 		# Import here to avoir circular reference
 		from ..modelslist import modelsList
 		self.modelsList = modelsList
+		self.reservedFields = ['type']
 
 	def normalizeDatas(self, datas):
 		if isinstance(datas, dict):
@@ -24,16 +26,16 @@ class PopuplateManager:
 
 	def _populateModel(self, model, datas):
 		# Not intended for direct use by external code
-		if 'type' in datas:
-			model.setType(datas['type'])
-			datas.pop('type')
 
 		for key in datas:
-			model.ensureFieldExists(key)
-			if isinstance(datas[key], dict):
-				self._populateModel(model[key], datas[key])
-			else:
-				model[key] = datas[key]
+			if not key in self.reservedFields:
+				model.ensureFieldExists(key)
+				if isinstance(datas[key], dict):
+					if 'type' in datas[key]:
+						model.setFieldType(key, getModelByName(datas[key]['type']))
+					self._populateModel(model[key], datas[key])
+				else:
+					model[key] = datas[key]
 
 	def populate(self, model, datas):
 		self.normalizeDatas(datas)

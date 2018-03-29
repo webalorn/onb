@@ -13,12 +13,11 @@ try:
 	PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
 
 	datas1 = ModelEncoder().encode(creature)
-	pprint.pprint(ModelEncoder().linearize(datas1))
+	datas2 = ModelEncoder().linearize(datas1)
+	pprint.pprint(datas2)
 
-	creature2 = CreatureModel()
-	PopuplateManager().populate(creature2, datas1)
-	pprint.pprint(ModelEncoder().encode(creature2))
-	print(creature2.getModelName())
+	creature2 = ModelEncoder().decode(datas2)
+	print(creature2)
 except KeyError as error2:
 	raise error2
 	print('Erreur d\'indice', error2.args)

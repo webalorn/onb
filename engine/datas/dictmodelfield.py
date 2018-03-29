@@ -7,6 +7,9 @@ class DictModel(DataModel):
 	def fieldExist(self, key):
 		return True
 
+	def getFieldType(self, fieldName):
+		return self.fieldsSharedType.type()
+
 	def getConvertedFieldValue(self, fieldName, newValue):
 		return self.fieldsSharedType.castFunction(newValue)
 
