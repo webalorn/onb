@@ -1,5 +1,6 @@
 from .datamodel import DataModel
 from ..modelslist import getModelByName
+import copy
 
 class PopuplateManager:
 	def __init__(self):
@@ -38,5 +39,6 @@ class PopuplateManager:
 					model[key] = datas[key]
 
 	def populate(self, model, datas):
+		datas = copy.deepcopy(datas)
 		self.normalizeDatas(datas)
 		self._populateModel(model, datas)

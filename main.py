@@ -19,8 +19,8 @@ try:
 	datas2 = ModelEncoder().linearize(datas1)
 	pprint.pprint(datas2)
 
-	creature2 = ModelEncoder().decode(datas2)
-	print(creature2)
+	#creature2 = ModelEncoder().decode(datas2)
+	#print(creature2)
 except KeyError as error2:
 	raise error2
 	print('Erreur d\'indice', error2.args)

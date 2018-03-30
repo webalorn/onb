@@ -6,10 +6,10 @@ class ModelEncoder:
 	def encode(self, model):
 		if isinstance(model, DataModel):
 			modelName = model.getModelName()
-			datas = model.fields
+			datas = {}
 
-			for field in datas:
-				datas[field] = self.encode(datas[field])
+			for field in model.fields:
+				datas[field] = self.encode(model.fields[field])
 				# Remove key 'type' if it is the default type
 				if isinstance(datas[field], dict) and 'type' in datas[field]:
 					if getModelByName(datas[field]['type']) == model.getFieldType(field):
