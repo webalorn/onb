@@ -6,10 +6,9 @@ from engine.modelslist import modelsList
 from engine.datas.populate import PopuplateManager
 from engine.storage.encoder import *
 from engine.modelslist import modelsList
+from engine.storage.sheet import *
 
 import pprint
-
-print(modelsList)
 
 try:
 	creature = CreatureModel()
@@ -17,7 +16,17 @@ try:
 
 	datas1 = ModelEncoder().encode(creature)
 	datas2 = ModelEncoder().linearize(datas1)
-	pprint.pprint(datas2)
+	#pprint.pprint(datas2)
+
+	conv = SheetConverter()
+	"""conv.addColumn(creature)
+	conv.addColumn(datas1)
+	conv.addColumn(datas2, 'test2')
+
+	conv.saveTo('test.xlsx')"""
+
+	conv.readFrom('test.xlsx')
+	pprint.pprint(conv.getModelDatas())
 
 	#creature2 = ModelEncoder().decode(datas2)
 	#print(creature2)

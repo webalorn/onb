@@ -37,8 +37,7 @@ class DataModel:
 		return self.fieldTypes[fieldName].type()
 
 	def getConvertedFieldValue(self, fieldName, newValue):
-		if not fieldName in self.fieldTypes:
-			raise KeyError()
+		self.ensureFieldExists(fieldName)
 		return self.fieldTypes[fieldName].castFunction(newValue)
 
 	def setFieldType(self, fieldName, classname):
