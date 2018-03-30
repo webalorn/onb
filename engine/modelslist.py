@@ -3,9 +3,12 @@ from .datas.datamodel import DataModel
 
 modelsList = {}
 
-for modelClass in DataModel.__subclasses__():
-	name = modelClass.getModelName()
-	modelsList[name] = modelClass
+def _addSubClasses(classname):
+	for modelClass in classname.__subclasses__():
+		name = modelClass.getModelName()
+		modelsList[name] = modelClass
+		_addSubClasses(modelClass)
+_addSubClasses(DataModel)
 
 
 def getModelByName(name):

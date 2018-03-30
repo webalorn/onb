@@ -12,16 +12,21 @@ Allowed Fields:
 	-> DictField (required fields values type)
 """
 
-class CreatureModel(DataModel):
+class GameEntityModel(DataModel):
 	def getFields(self):
 		return {
 			'name': StringField(),
-
-			'initiative': IntField(),
 			'health': IntField(1),
 			'size': IntField(1),
-
 			'protection': ClassField('protection'),
+		}
+
+class CreatureModel(GameEntityModel):
+	def getFields(self):
+		return {
+			**super().getFields(),
+
+			'initiative': IntField(),
 			'actions': ClassField('actions'),
 			'abilities': ClassField('abilities'),
 		}
@@ -56,15 +61,6 @@ class ProtectionModel(DataModel):
 
 ### Actions
 
-def getDiceField():
-	return IntField()
-
-def diceDammagesFields():
-	return {
-		'dice': getDiceField(),
-		'bonus': IntField(),
-	}
-
 def diceRollFields():
 	return {
 		'dice': getDiceField(),
@@ -88,8 +84,6 @@ class AttackModel(DataModel):
 			'dodge_hardness': IntField(),
 			'attack_strength': IntField(),
 			'parry_required_strength': IntField(),
-
-			**diceDammagesFields(),
 		}
 
 class ActionsMovesModel(DataModel):

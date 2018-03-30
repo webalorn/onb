@@ -5,8 +5,11 @@ from engine.models.creature import CreatureModel
 from engine.modelslist import modelsList
 from engine.datas.populate import PopuplateManager
 from engine.storage.encoder import *
+from engine.modelslist import modelsList
 
 import pprint
+
+print(modelsList)
 
 try:
 	creature = CreatureModel()

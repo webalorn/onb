@@ -19,8 +19,8 @@ class FieldValue:
 		return value
 
 
-	def __init__(self, defaultValue=None):
-		self.defaultValue = self.castFunction(defaultValue)
+	def __init__(self, default=None):
+		self.defaultValue = self.castFunction(default)
 
 	def __repr__(self):
 		return str((self.__class__.__name__, self.get()))
