@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import sys
+import os
+sys.path.append(os.path.dirname(__file__))
+
 from engine.models.creature import CreatureModel
 from engine.modelslist import modelsList
 from engine.datas.populate import PopuplateManager
@@ -10,7 +14,10 @@ from engine.storage.sheet import *
 
 import pprint
 
+import engine.settings as conf
+
 try:
+	print("Dices:", *conf.DICES)
 	creature = CreatureModel()
 	PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
 
@@ -25,8 +32,8 @@ try:
 
 	conv.saveTo('test.xlsx')"""
 
-	conv.readFrom('test.xlsx')
-	pprint.pprint(conv.getModelDatas())
+	"""conv.readFrom('test.xlsx')
+	pprint.pprint(conv.getModelDatas())"""
 
 	#creature2 = ModelEncoder().decode(datas2)
 	#print(creature2)
