@@ -19,3 +19,4 @@ class User(BaseModel, TableModel):
 
 class OwnedObject(BaseModel):
 	user = ForeignKeyField(User)
+	is_public = BooleanField(default=False) # If true, other users can read, but not write

@@ -10,7 +10,7 @@ class conf:
 	sqliteDbLocation = os.path.join(root, 'db/onb.db')
 	cacheAllModels = True # Avoid duplicate instances of the same model, but keep the model in memory
 
-
+os.makedirs(os.path.dirname(conf.sqliteDbLocation), exist_ok=True)
 sqldb = SqliteDatabase(conf.sqliteDbLocation)
 
 def randomString(size=10):

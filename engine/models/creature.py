@@ -13,6 +13,15 @@ class CreatureModel(GameEntityModel):
 			'abilities': ClassField('abilities'),
 		}
 
+class ObjectModel(GameEntityModel):
+	def getFields(self):
+		return {
+			**super().getFields(),
+
+			'alignment': StringField(values=["unaligned"]),
+			'race': StringField(values=["object"]),
+		}
+
 ### Characteristics
 
 class AbilitiesModel(DataModel):

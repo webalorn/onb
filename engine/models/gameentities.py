@@ -16,6 +16,9 @@ class GameEntityModel(DataModel):
 	def getFields(self):
 		return {
 			'name': StringField(),
+			'alignment': StringField(default="neutral"),
+			'race': StringField(),
+
 			'health': IntField(1),
 			'size': IntField(1),
 			'protection': ClassField('protection'),

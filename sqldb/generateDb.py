@@ -18,8 +18,7 @@ _addSubModels(basemodels.TableModel)
 print("Create tables for:", tables)
 onb.sqldb.create_tables(tables)
 
-from engine.models.creature import *
-def tests():
+def generateExamples():
 	creature = CreatureModel()
 	creature.name = "GroGro"
 
@@ -29,8 +28,10 @@ def tests():
 	except:
 		pass
 
-	m = gameobjects.GameObject.createFrom(creature, user_id=1)
+	m = gameentities.GameEntity.createFrom(creature, user_id=1)
 	print(m.getModel())
 	m.save()
 
-tests()
+
+from engine.models.creature import *
+generateExamples()
