@@ -6,6 +6,7 @@ root = os.path.dirname(__file__)
 class conf:
 	DICES = [0, 4, 6, 8, 10, 12, 20, 100]
 	dbLocation = os.path.join(root, 'db')
+	cacheAllModels = True # Avoid duplicate instances of the same model, but keep the model in memory
 
 
 def randomString(size=10):

@@ -17,29 +17,13 @@ import onb
 
 try:
 	print("Dices:", *onb.conf.DICES)
-	creature = CreatureModel()
-	creature.save()
+	# creature = CreatureModel()
 	# PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
 
-	
-	# sm.save(creature)
-
-	#jdb.storeTo(creature, onb.getDbPath('test.json', newFile=True))
-	#creature = jdb.readModelFrom(onb.getDbPath('test.json'))
+	sm = StorageManager()
+	creature = sm.load('creature.json')
+	sm.save(creature)
 	print(creature)
-
-	"""conv = SheetConverter()
-	conv.addColumn(creature)
-	conv.addColumn(datas1)
-	conv.addColumn(datas2, 'test2')
-
-	conv.saveTo('test.xlsx')"""
-
-	"""conv.readFrom('test.xlsx')
-	pprint.pprint(conv.getModelDatas())"""
-
-	#creature2 = ModelEncoder().decode(datas2)
-	#print(creature2)
 except KeyError as error2:
 	raise error2
 	print('Erreur d\'indice', error2.args)
