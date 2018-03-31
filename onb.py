@@ -1,4 +1,5 @@
 import os, random, string
+from peewee import SqliteDatabase
 
 root = os.path.dirname(__file__)
 
@@ -9,6 +10,8 @@ class conf:
 	sqliteDbLocation = os.path.join(root, 'db/onb.db')
 	cacheAllModels = True # Avoid duplicate instances of the same model, but keep the model in memory
 
+
+sqldb = SqliteDatabase(conf.sqliteDbLocation)
 
 def randomString(size=10):
 	return ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
@@ -22,7 +25,7 @@ def getDbPath(filename, *params, newFile=False):
 		generatedPath = path
 		while os.path.isfile(generatedPath):
 			generatedPath = path.split('.')
-			generatedPath[0] += randomString()
+			generatedPath[0] += '_' + randomString()
 			generatedPath = '.'.join(generatedPath)
 		path = generatedPath
 
