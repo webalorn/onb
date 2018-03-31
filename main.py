@@ -34,6 +34,7 @@ try:
 	tables2 = copy.deepcopy(tables)
 
 	tables['values']['0'] = 100
+	tables2.values[0] = 10
 
 	pprint.pprint(ModelEncoder().encode(tables))
 	pprint.pprint(ModelEncoder().encode(tables2))

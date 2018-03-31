@@ -16,7 +16,7 @@ class DataModel:
 		return {}
 
 	def __init__(self):
-		""" Must define all values """
+		""" All properties must start with 'field' """
 		self.fields = {}
 		self.fieldTypes = self.getFields()
 		for fieldName in self.fieldTypes:
@@ -75,6 +75,15 @@ class DataModel:
 		return newMe
 
 	### Access operators
+
+	def __getattr__(self, attr):
+		return self.fields[attr]
+
+	def __setattr__(self, attr, value):
+		if attr[:5] == "field":
+			super().__setattr__(attr, value)
+		else:
+			self[attr] = value
 
 	def __getitem__(self, fieldName):
 		""" Get an field value. Overload [] operator """
