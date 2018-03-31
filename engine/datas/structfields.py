@@ -1,5 +1,6 @@
 from .datamodel import *
 from .fieldvalues import FieldValue
+
 class DictModel(DataModel):
 	""" A dictionary that can store a variable number of datas """
 

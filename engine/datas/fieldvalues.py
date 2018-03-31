@@ -40,7 +40,7 @@ class FieldValue:
 			return self.values[0]
 		return value
 
-	def __init__(self, default=None, *parameters, values=None, mini=None, maxi=None):
+	def __init__(self, default=None, *parameters, values=None, mini=None, maxi=None, helperList=None):
 		"""
 			Values defines the different possible values
 			Mini defines the minimum value/size
@@ -49,6 +49,7 @@ class FieldValue:
 		self.values = values
 		self.mini = mini
 		self.maxi = maxi
+		self.helperList = helperList # (str) key in the 'value' sql table of possible values (it's juste a user's helper, not a constraint)
 		self.defaultValue = self.castFunction(default)
 
 	def __repr__(self):
