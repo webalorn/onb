@@ -1,46 +1,31 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import sys
-import os
-sys.path.append(os.path.dirname(__file__))
-
 from engine.models.creature import *
 from engine.modelslist import modelsList
 from engine.datas.populate import PopuplateManager
 from engine.storage.encoder import *
 from engine.modelslist import modelsList
 from engine.storage.sheet import *
+import engine.storage.jsondb as jdb
 
 import pprint
 import copy
 
-import engine.settings as conf
+import onb
 
 try:
-	print("Dices:", *conf.DICES)
-	creature = CreatureModel()
+	print("Dices:", *onb.conf.DICES)
+	"""creature = CreatureModel()
 	PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
 
-	datas1 = ModelEncoder().encode(creature)
-	datas2 = ModelEncoder().linearize(datas1)
-	#pprint.pprint(datas2)
+	jdb.storeTo(creature, onb.getDbPath('test.json', newFile=True))"""
 
-	tables = DiceTableModel()
-	tables['values']['-10'] = 3
-	tables['values']['4'] = 3
-	tables['values'].setKeysRange(range(8))
+	#creature = jdb.readModelFrom(onb.getDbPath('test.json'))
+	#print(creature)
 
-	tables2 = copy.deepcopy(tables)
-
-	tables['values']['0'] = 100
-	tables2.values[0] = 10
-
-	pprint.pprint(ModelEncoder().encode(tables))
-	pprint.pprint(ModelEncoder().encode(tables2))
-
-	conv = SheetConverter()
-	"""conv.addColumn(creature)
+	"""conv = SheetConverter()
+	conv.addColumn(creature)
 	conv.addColumn(datas1)
 	conv.addColumn(datas2, 'test2')
 

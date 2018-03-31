@@ -1,8 +1,6 @@
-import copy
-from .encoder import *
+import copy, math
 import pandas as pd
-from pandas import ExcelWriter
-import math
+from .encoder import *
 
 class SheetConverter():
 
