@@ -7,6 +7,7 @@ from engine.datas.populate import PopuplateManager
 from engine.storage.encoder import *
 from engine.modelslist import modelsList
 from engine.storage.sheet import *
+from engine.storage.manager import StorageManager
 import engine.storage.jsondb as jdb
 
 import pprint
@@ -16,13 +17,16 @@ import onb
 
 try:
 	print("Dices:", *onb.conf.DICES)
-	"""creature = CreatureModel()
-	PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
+	creature = CreatureModel()
+	creature.save()
+	# PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
 
-	jdb.storeTo(creature, onb.getDbPath('test.json', newFile=True))"""
+	
+	# sm.save(creature)
 
+	#jdb.storeTo(creature, onb.getDbPath('test.json', newFile=True))
 	#creature = jdb.readModelFrom(onb.getDbPath('test.json'))
-	#print(creature)
+	print(creature)
 
 	"""conv = SheetConverter()
 	conv.addColumn(creature)

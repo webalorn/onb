@@ -82,6 +82,8 @@ class StringField(FieldValue):
 		return value
 
 	def setAboveMin(self, value):
+		if self.mini != None and len(value) < self.mini:
+			value += "#"*(self.mini-len(value))
 		return value
 
 ### Complex types

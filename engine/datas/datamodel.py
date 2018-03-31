@@ -1,5 +1,4 @@
-import re
-import copy
+import re, copy
 
 class DataModel:
 	"""
@@ -16,7 +15,7 @@ class DataModel:
 		return {}
 
 	def __init__(self):
-		""" All properties must start with 'field' """
+		""" All properties must start with 'field' or '_' """
 		self.fields = {}
 		self.fieldTypes = self.getFields()
 		for fieldName in self.fieldTypes:
@@ -80,7 +79,7 @@ class DataModel:
 		return self.fields[attr]
 
 	def __setattr__(self, attr, value):
-		if attr[:5] == "field":
+		if attr[:5] == 'field' or attr[:1] == '_':
 			super().__setattr__(attr, value)
 		else:
 			self[attr] = value
@@ -124,11 +123,19 @@ class DataModel:
 	### Static functions
 
 	@classmethod
-	def getModelName(className):
-		name = className.__name__
+	def getModelName(classObj):
+		name = classObj.__name__
 		if name.endswith('Model'):
 			name = name[:-5]
 		words = re.findall('[A-Z][^A-Z]*', name)
 		name = '_'.join([w.lower() for w in words])
 
 		return name
+
+
+	### Storage
+
+	_storageLocation = None # Only used by StorageManager
+	def save(self):
+		from ..storage.manager import StorageManager
+		StorageManager().save(self)
