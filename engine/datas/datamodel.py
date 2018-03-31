@@ -65,16 +65,20 @@ class DataModel:
 			if self.fieldExist(key):
 				self[key] = copy.deepcopy(other.fields[key])
 
-	def __deepcopy__(self):
-		newMe = type(self)()
+	def createNewInstance(self):
+		return type(self)()
+
+	def __deepcopy__(self, *p):
+		newMe = self.createNewInstance()
 		for key in self.fields:
-			newMe.fields[key] = copy.deepcopy(me.fields[key])
+			newMe.fields[key] = copy.deepcopy(self.fields[key])
 		return newMe
 
 	### Access operators
 
 	def __getitem__(self, fieldName):
 		""" Get an field value. Overload [] operator """
+		fieldName = str(fieldName)
 		if not '.' in fieldName:
 			self.ensureFieldExists(fieldName)
 			return self.fields[fieldName]
@@ -90,6 +94,7 @@ class DataModel:
 
 	def __setitem__(self, fieldName, newValue):
 		""" Set value of a field. Overload [] affectation opeator """
+		fieldName = str(fieldName)
 		if not '.' in fieldName:
 			self.fields[fieldName] = self.getConvertedFieldValue(fieldName, newValue)
 		else:
@@ -101,7 +106,7 @@ class DataModel:
 
 	def __contains__(self, fieldName):
 		""" Test if a field exit. Overload in operator """
-		return fieldName in self.fields
+		return str(fieldName) in self.fields
 
 	def __iter__(self):
 		""" Allow iteration through all fields """

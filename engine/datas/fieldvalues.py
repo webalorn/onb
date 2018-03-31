@@ -109,10 +109,14 @@ class ClassField(FieldValue):
 		self.classParams = classParams
 		FieldValue.__init__(self)
 
-### Dictionary
+### Structures
 
-from .dictmodelfield import *
+from .structfields import *
 
 class DictField(ClassField):
 	def __init__(self, fieldsSharedType):
 		ClassField.__init__(self, DictModel, fieldsSharedType)
+
+class ListField(ClassField):
+	def __init__(self, fieldsSharedType):
+		ClassField.__init__(self, ListModel, fieldsSharedType)

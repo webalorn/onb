@@ -31,6 +31,14 @@ class CreatureModel(GameEntityModel):
 			'abilities': ClassField('abilities'),
 		}
 
+### Tables
+
+class DiceTableModel(DataModel):
+	def getFields(self):
+		return {
+			'values': ListField(IntField(12))
+		}
+
 ### Characteristics
 
 class AbilitiesModel(DataModel):
