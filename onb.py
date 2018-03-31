@@ -5,7 +5,8 @@ root = os.path.dirname(__file__)
 ### Global configuration
 class conf:
 	DICES = [0, 4, 6, 8, 10, 12, 20, 100]
-	dbLocation = os.path.join(root, 'db')
+	dbLocation = os.path.join(root, 'db/files')
+	sqliteDbLocation = os.path.join(root, 'db/onb.db')
 	cacheAllModels = True # Avoid duplicate instances of the same model, but keep the model in memory
 
 

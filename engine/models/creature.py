@@ -1,25 +1,7 @@
-from ..datas.datamodel import DataModel
+from .gameentities import GameEntityModel
 from ..datas.fieldvalues import *
 
-"""
-Allowed Fields:
-	-> BoolField (optional default value)
-	-> IntField (optional default value)
-	-> StringField (optional default value)
-	-> FloatField (optional default value)
 
-	-> ClassField (required model type) # The subclasses of the model are allowed
-	-> DictField (required fields values type)
-"""
-
-class GameEntityModel(DataModel):
-	def getFields(self):
-		return {
-			'name': StringField(),
-			'health': IntField(1),
-			'size': IntField(1),
-			'protection': ClassField('protection'),
-		}
 
 class CreatureModel(GameEntityModel):
 	def getFields(self):
@@ -29,14 +11,6 @@ class CreatureModel(GameEntityModel):
 			'initiative': IntField(),
 			'actions': ClassField('actions'),
 			'abilities': ClassField('abilities'),
-		}
-
-### Tables
-
-class DiceTableModel(DataModel):
-	def getFields(self):
-		return {
-			'values': ListField(IntField(12))
 		}
 
 ### Characteristics
@@ -68,12 +42,6 @@ class ProtectionModel(DataModel):
 		}
 
 ### Actions
-
-def diceRollFields():
-	return {
-		'dice': getDiceField(),
-		'difficulty': IntField(),
-	}
 
 class ActionsModel(DataModel):
 	def getFields(seld):

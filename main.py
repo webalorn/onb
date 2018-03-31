@@ -17,12 +17,13 @@ import onb
 
 try:
 	print("Dices:", *onb.conf.DICES)
-	# creature = CreatureModel()
-	# PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
+	#print(modelsList['dammage_table'])
+	creature = CreatureModel()
+	PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
 
-	sm = StorageManager()
-	creature = sm.load('creature.json')
-	sm.save(creature)
+	#sm = StorageManager()
+	#creature = sm.load('creature.json')
+	#sm.save(creature)
 	print(creature)
 except KeyError as error2:
 	raise error2

@@ -54,3 +54,8 @@ class ListModel(DictModel):
 		self.fields = {}
 		for key in newFields:
 			self[key] = newFields[key]
+
+	def setValues(self, valuesList):
+		self.fields = {}
+		for i in range(len(valuesList)):
+			self[i] = valuesList[i]
