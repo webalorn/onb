@@ -120,6 +120,12 @@ class DataModel:
 		""" Allow iteration through all fields """
 		return self.fieldsList().__iter__()
 
+	def get(self, fieldName, default=None):
+		try:
+			return self[fieldName]
+		except:
+			return default
+
 	### Static functions
 
 	@classmethod

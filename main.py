@@ -20,6 +20,7 @@ try:
 	#print(modelsList['dammage_table'])
 	creature = CreatureModel()
 	PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
+	print(creature.get('protection.ice_bonus', 0))
 
 	#sm = StorageManager()
 	#creature = sm.load('creature.json')
