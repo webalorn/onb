@@ -25,9 +25,11 @@ try:
 	PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
 	print(creature.get('protection.ice_bonus', 0))
 
-	d = DammageTableModel()
-	d.values = [0, 1, 42]
-	print(d)
+	#d = DammageTableModel()
+	#d.values = [0, 1, 42]
+	creature.protection.fire_bonus = 222
+	print(creature.protection.fire_bonus)
+	print(creature.getFieldObj('protection.fire_bonus'))
 
 	#sm = StorageManager()
 	#creature = sm.load('creature.json')

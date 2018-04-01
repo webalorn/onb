@@ -47,20 +47,21 @@ class FieldValue:
 			return self.values[0]
 		return value
 
-	def __init__(self, default=None, *parameters, values=None, mini=None, maxi=None, helperList=None):
+	def __init__(self, default=None, *parameters, values=None, min=None, max=None, helperList=None, generated=False):
 		"""
 			Values defines the different possible values
 			Mini defines the minimum value/size
 			Maxi defines the maximum value/size
 		"""
 		self.values = values
-		self.mini = mini
-		self.maxi = maxi
+		self.mini = min
+		self.maxi = max
 		self.helperList = helperList # (str) key in the 'value' sql table of possible values (it's juste a user's helper, not a constraint)
+		self.generated = generated # Prevent users to change generated values, because their changes will be erased by the generator
 		self.defaultValue = self.castFunction(default)
 
 	def __repr__(self):
-		return str((self.__class__.__name__, self.get()))
+		return str((self.__class__.__name__,))
 
 ### Base types
 
@@ -104,22 +105,22 @@ class ClassField(FieldValue):
 	def createValue(self):
 		return self.type()(*self.classParams)
 
-	def __init__(self, className, *classParams):
+	def __init__(self, className, classParams=[], *p, **pn):
 		if isinstance(className, str):
 			from ..modelslist import getModelByName
 			className = getModelByName(className)
 
 		self.className = className
 		self.classParams = classParams
-		FieldValue.__init__(self)
+		FieldValue.__init__(self, *p, **pn)
 
 ### Structures
 
 from .structfields import *
 
 class DictField(ClassField):
-	def __init__(self, fieldsSharedType):
-		ClassField.__init__(self, DictModel, fieldsSharedType)
+	def __init__(self, fieldsSharedType, *p, **pn):
+		ClassField.__init__(self, DictModel, [fieldsSharedType], *p, **pn)
 
 	def createValueFrom(self, otherValue):
 		if isinstance(otherValue, dict):
@@ -128,8 +129,8 @@ class DictField(ClassField):
 			return cleverCast
 
 class ListField(ClassField):
-	def __init__(self, fieldsSharedType):
-		ClassField.__init__(self, ListModel, fieldsSharedType)
+	def __init__(self, fieldsSharedType, *p, **pn):
+		ClassField.__init__(self, ListModel, [fieldsSharedType], *p, **pn)
 
 	def createValueFrom(self, otherValue):
 		if isinstance(otherValue, list):

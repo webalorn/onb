@@ -24,6 +24,15 @@ class DataModel:
 	def __repr__(self):
 		return str(self.fields)
 
+	def callSubModel(self, fieldName, fctName, *p, **pn):
+		""" Call a function on a sub-model. Used when the fieldname contain '.'.
+		The function must take fielName as first parameter """
+		fieldName = fieldName.split('.')
+		model = self['.'.join(fieldName[:-1])]
+		if not isinstance(model, DataModel):
+			raise KeyError()
+		return getattr(model, fctName)(fieldName[-1], *p, **pn)
+
 	### Get Fields and FieldClass 
 
 	def fieldsList(self):
@@ -37,6 +46,8 @@ class DataModel:
 			raise KeyError("Field {0} doesn't exist".format(fieldName))
 
 	def getFieldObj(self, fieldName):
+		if '.' in fieldName:
+			return self.callSubModel(fieldName, 'getFieldObj')
 		if not fieldName in self.fieldTypes:
 			raise KeyError()
 		return self.fieldTypes[fieldName]
@@ -106,11 +117,7 @@ class DataModel:
 		if not '.' in fieldName:
 			self.fields[fieldName] = self.getConvertedFieldValue(fieldName, newValue)
 		else:
-			fieldName = fieldName.split('.')
-			model = self['.'.join(fieldName[:-1])]
-			if not isinstance(model, DataModel):
-				raise KeyError
-			model[fieldName[-1]] = newValue
+			callSubModel(fieldName, '__setitem__')
 
 	def __contains__(self, fieldName):
 		""" Test if a field exit. Overload in operator """
