@@ -51,6 +51,5 @@ class PopuplateManager:
 	def populate(self, model, datas):
 		datas = copy.deepcopy(datas)
 		datas = self.convertDatas(datas)
-		print("New datas:", datas)
 		self.normalizeDatas(datas)
 		self._populateModel(model, datas)

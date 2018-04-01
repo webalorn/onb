@@ -1,3 +1,5 @@
+import copy
+
 class FieldValue:
 	"""
 	Field with a fixed type and a default value
@@ -12,6 +14,7 @@ class FieldValue:
 		return None
 
 	def castFunction(self, value):
+		value = copy.deepcopy(value) # ensure it will create a new object
 		if value == None:
 			value = self.createValue()
 		elif not isinstance(value, self.type()):
@@ -30,6 +33,9 @@ class FieldValue:
 
 		return value
 
+	def defaultValue(self):
+		return self.castFunction(self.default)
+
 	def setUnderMax(self, value):
 		if self.max != None and value > self.max:
 			return self.type()(self.max)
@@ -42,8 +48,6 @@ class FieldValue:
 
 	def setInValidValues(self, value):
 		if isinstance(self.values, list) and self.values and not value in self.values:
-			if hasattr(self, 'defaultValue'):
-				return self.defaultValue
 			return self.values[0]
 		return value
 
@@ -58,7 +62,7 @@ class FieldValue:
 		self.max = max
 		self.helperList = helperList # (str) key in the 'value' sql table of possible values (it's juste a user's helper, not a constraint)
 		self.generated = generated # Prevent users to change generated values, because their changes will be erased by the generator
-		self.defaultValue = self.castFunction(default)
+		self.default = default
 
 	def __repr__(self):
 		return str((self.__class__.__name__,))

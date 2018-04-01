@@ -14,7 +14,6 @@ class TableModel(Model): # Every model that inherit from this model will be adde
 class User(BaseModel, TableModel):
 	username = CharField(unique=True)
 	def save(self, *p, **pn):
-		print("Sauvegarder")
 		super().save(*p, **pn)
 
 class OwnedObject(BaseModel): # Every user can read, only the owner can write

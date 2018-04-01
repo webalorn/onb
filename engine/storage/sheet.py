@@ -48,7 +48,6 @@ class SheetConverter():
 		writer = pd.ExcelWriter(filePath, engine='xlsxwriter')
 		for sheetName in self.sheets:
 			grid = self.convertToGrid(sheetName)
-			print(grid)
 			
 			df = pd.DataFrame(grid)
 			df.to_excel(writer, sheet_name=sheetName, index=False, index_label=False, header=False)

@@ -27,7 +27,7 @@ class DictModel(DataModel):
 
 	def ensureFieldExists(self, fieldName):
 		if not fieldName in self.fields:
-			self.fields[fieldName] = self.fieldsSharedType.defaultValue
+			self.fields[fieldName] = self.fieldsSharedType.defaultValue()
 
 	def setValues(self, valuesList):
 		self.fields = {}

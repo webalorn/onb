@@ -30,7 +30,7 @@ class DataModel:
 		self.fields = {}
 		self.fieldTypes = self._getAllFields()
 		for fieldName in self.fieldTypes:
-			self.fields[fieldName] = self.fieldTypes[fieldName].defaultValue
+			self.fields[fieldName] = self.fieldTypes[fieldName].defaultValue()
 
 	def __repr__(self):
 		return str(self.fields)
