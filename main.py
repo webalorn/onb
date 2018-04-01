@@ -22,12 +22,13 @@ try:
 	print("Dices:", *onb.conf.DICES)
 	#print(modelsList['dammage_table'])
 	creature = CreatureModel()
-	PopuplateManager().populate(creature, {"actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
+	PopuplateManager().populate(creature, {"name":"Conan", "actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
 	print(creature.get('protection.ice_bonus', 0))
 	print(creature)
 
-	#d = DammageTableModel()
-	#d.values = [0, 1, 42]
+	d = DammageTableModel()
+	PopuplateManager().populate(d, {"values": [0, 1, 42]})
+	print(d.values)
 
 	#sm = StorageManager()
 	#creature = sm.load('creature.json')

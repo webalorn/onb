@@ -17,9 +17,9 @@ class User(BaseModel, TableModel):
 		print("Sauvegarder")
 		super().save(*p, **pn)
 
-class OwnedObject(BaseModel):
+class OwnedObject(BaseModel): # Every user can read, only the owner can write
 	owner = ForeignKeyField(User)
-	is_public = BooleanField(default=False) # If true, other users can read, but not write
+	is_official = BooleanField(default=False) # If true, marked as official content
 
 # Values objects
 

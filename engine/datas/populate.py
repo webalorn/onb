@@ -9,6 +9,16 @@ class PopuplateManager:
 		self.modelsList = modelsList
 		self.reservedFields = ['type']
 
+	def convertDatas(self, datas):
+		if isinstance(datas, list):
+			datas = {key:datas[key] for key in range(len(datas))}
+		if isinstance(datas, dict):
+			newDatas = {}
+			for key in datas:
+				newDatas[str(key)] = self.convertDatas(datas[key])
+			datas = newDatas
+		return datas
+
 	def normalizeDatas(self, datas):
 		if isinstance(datas, dict):
 
@@ -40,5 +50,7 @@ class PopuplateManager:
 
 	def populate(self, model, datas):
 		datas = copy.deepcopy(datas)
+		datas = self.convertDatas(datas)
+		print("New datas:", datas)
 		self.normalizeDatas(datas)
 		self._populateModel(model, datas)
