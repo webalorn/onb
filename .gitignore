@@ -1,4 +1,7 @@
 git_ignore
 .idea
 db
+
 *.pyc
+*.sublime-workspace
+*.sublime-project

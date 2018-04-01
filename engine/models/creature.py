@@ -6,7 +6,7 @@ from ..datas.fieldvalues import *
 class CreatureModel(GameEntityModel):
 	def getFields(self):
 		return {
-			'initiative': IntField(),
+			'initiative': IntField(min=0),
 			'actions': ClassField('actions'),
 			'abilities': ClassField('abilities'),
 		}

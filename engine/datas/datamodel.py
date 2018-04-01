@@ -14,9 +14,11 @@ class DataModel:
 		""" Return a dictionary of all fields. Fields must inherit FieldValue """
 		return {}
 
-	def _getAllFields(self):
+	def _getAllFields(self, actualClass=None):
+		if actualClass == None:
+			actualClass = self.__class__
 		fields = {}
-		for cls in reversed(inspect.getmro(self.__class__)):
+		for cls in reversed(inspect.getmro(actualClass)):
 			if issubclass(cls, DataModel):
 				subFields = cls.getFields(self)
 				for key in subFields:

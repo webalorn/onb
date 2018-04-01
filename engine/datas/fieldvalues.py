@@ -31,13 +31,13 @@ class FieldValue:
 		return value
 
 	def setUnderMax(self, value):
-		if self.maxi != None and value > self.maxi:
-			return self.type()(self.maxi)
+		if self.max != None and value > self.max:
+			return self.type()(self.max)
 		return value
 
 	def setAboveMin(self, value):
-		if self.mini != None and value < self.mini:
-			return self.type()(self.mini)
+		if self.min != None and value < self.min:
+			return self.type()(self.min)
 		return value
 
 	def setInValidValues(self, value):
@@ -50,12 +50,12 @@ class FieldValue:
 	def __init__(self, default=None, *parameters, values=None, min=None, max=None, helperList=None, generated=False):
 		"""
 			Values defines the different possible values
-			Mini defines the minimum value/size
-			Maxi defines the maximum value/size
+			min defines the minmum value/size
+			max defines the maxmum value/size
 		"""
 		self.values = values
-		self.mini = min
-		self.maxi = max
+		self.min = min
+		self.max = max
 		self.helperList = helperList # (str) key in the 'value' sql table of possible values (it's juste a user's helper, not a constraint)
 		self.generated = generated # Prevent users to change generated values, because their changes will be erased by the generator
 		self.defaultValue = self.castFunction(default)
@@ -86,13 +86,13 @@ class StringField(FieldValue):
 		return str
 
 	def setUnderMax(self, value):
-		if self.maxi != None and len(value) > self.maxi:
-			return value[:self.maxi]
+		if self.max != None and len(value) > self.max:
+			return value[:self.max]
 		return value
 
 	def setAboveMin(self, value):
-		if self.mini != None and len(value) < self.mini:
-			value += "#"*(self.mini-len(value))
+		if self.min != None and len(value) < self.min:
+			value += "#"*(self.min-len(value))
 		return value
 
 ### Complex types
