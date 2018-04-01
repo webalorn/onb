@@ -6,8 +6,6 @@ from ..datas.fieldvalues import *
 class CreatureModel(GameEntityModel):
 	def getFields(self):
 		return {
-			**super().getFields(),
-
 			'initiative': IntField(),
 			'actions': ClassField('actions'),
 			'abilities': ClassField('abilities'),
@@ -16,8 +14,6 @@ class CreatureModel(GameEntityModel):
 class ObjectModel(GameEntityModel):
 	def getFields(self):
 		return {
-			**super().getFields(),
-
 			'alignment': StringField(values=["unaligned"]),
 			'race': StringField(values=["object"]),
 		}

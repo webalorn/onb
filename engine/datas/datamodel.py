@@ -1,4 +1,4 @@
-import re, copy
+import re, copy, inspect
 
 class DataModel:
 	"""
@@ -14,10 +14,19 @@ class DataModel:
 		""" Return a dictionary of all fields. Fields must inherit FieldValue """
 		return {}
 
+	def _getAllFields(self):
+		fields = {}
+		for cls in reversed(inspect.getmro(self.__class__)):
+			if issubclass(cls, DataModel):
+				subFields = cls.getFields(self)
+				for key in subFields:
+					fields[key] = subFields[key]
+		return fields
+
 	def __init__(self):
 		""" All properties must start with 'field' or '_' """
 		self.fields = {}
-		self.fieldTypes = self.getFields()
+		self.fieldTypes = self._getAllFields()
 		for fieldName in self.fieldTypes:
 			self.fields[fieldName] = self.fieldTypes[fieldName].defaultValue
 
