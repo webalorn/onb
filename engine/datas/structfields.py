@@ -29,16 +29,13 @@ class DictModel(DataModel):
 		if not fieldName in self.fields:
 			self.fields[fieldName] = self.fieldsSharedType.defaultValue
 
+	def setValues(self, valuesList):
+		self.fields = {}
+		for key in valuesList:
+			self[key] = valuesList[key]
+
 class ListModel(DictModel):
 	""" A dictionary that can store a variable number of datas with integer keys """
-
-	def __init__(self, fieldsSharedType):
-		""" all objects must inherit from the same class """
-		self.fieldsSharedType = fieldsSharedType
-		DataModel.__init__(self)
-
-		if not isinstance(self.fieldsSharedType, FieldValue):
-			raise TypeError("DictModel type must be a subclass of FieldValue")
 
 	def assertIsIntKey(self, key):
 		try:

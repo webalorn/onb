@@ -8,14 +8,21 @@ class FieldValue:
 	def createValue(self):
 		return self.type()()
 
+	def createValueFrom(self, otherValue):
+		return None
+
 	def castFunction(self, value):
 		if value == None:
 			value = self.createValue()
-		else:
-			try:
-				value = self.type()(value)
-			except:
-				value = self.createValue()
+		elif not isinstance(value, self.type()):
+			cleverCast = self.createValueFrom(value)
+			if cleverCast != None:
+				value = cleverCast
+			else: # Hard cast
+				try:
+					value = self.type()(value)
+				except:
+					value = self.createValue()
 
 		value = self.setUnderMax(value)
 		value = self.setAboveMin(value)
@@ -97,12 +104,6 @@ class ClassField(FieldValue):
 	def createValue(self):
 		return self.type()(*self.classParams)
 
-	def castFunction(self, value):
-		try:
-			return self.type()(value)
-		except:
-			return self.createValue()
-
 	def __init__(self, className, *classParams):
 		if isinstance(className, str):
 			from ..modelslist import getModelByName
@@ -120,6 +121,18 @@ class DictField(ClassField):
 	def __init__(self, fieldsSharedType):
 		ClassField.__init__(self, DictModel, fieldsSharedType)
 
+	def createValueFrom(self, otherValue):
+		if isinstance(otherValue, dict):
+			cleverCast = self.createValue()
+			cleverCast.setValues(otherValue)
+			return cleverCast
+
 class ListField(ClassField):
 	def __init__(self, fieldsSharedType):
 		ClassField.__init__(self, ListModel, fieldsSharedType)
+
+	def createValueFrom(self, otherValue):
+		if isinstance(otherValue, list):
+			cleverCast = self.createValue()
+			cleverCast.setValues(otherValue)
+			return cleverCast
