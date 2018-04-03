@@ -1,47 +1,52 @@
 from .basemodels import *
 from engine.modelslist import getModelByName
+from .customfields import ModelField
+from engine.models import *
+
+sqlModels = []
+
+def _addSubModelsToSqlModel(classname):
+	for modelClass in classname.__subclasses__():
+		if modelClass.storable:
+			sqlModels.append(modelClass.getModelName())
+		_addSubModelsToSqlModel(modelClass)
+_addSubModelsToSqlModel(gameentities.BaseGameModel)
 
 class GameObject(OwnedObject):
 	modelClass = 'game_entity'
 
-	filepath = TextField(unique=True)
+	model = ModelField(modelClass, unique=True)
 	created_date = DateTimeField(default=datetime.datetime.now)
-
+	updated_date = DateTimeField(default=datetime.datetime.now)
 	type = TextField(default=modelClass)
 
-	def populateFields(self, model):
+	def populateFields(self):
 		""" Fill the fields values with the values found in the object """
-		self.filepath = model._storageLocation
-		self.name = model.name
-		self.type = model.getModelName()
+		if not self.model:
+			raise TypeError("Model value can't be empty")
 
-	# Get and save linked object
-	_modelObj = None
+		for key in self.model.exposedFields:
+			setattr(self, key, self.model[key])
 
-	def getModel(self):
-		from engine.storage.manager import StorageManager
-		if not self._modelObj:
-			try:
-				self._modelObj = StorageManager().load(self.filepath)
-			except:
-				pass
-		return self._modelObj
+		self.type = self.model.getModelName()
+		self.name = self.model.name
+		self.updated_date = datetime.datetime.now()
 
 	def save(self, *p, **pn):
-		if self._modelObj: # If the object is not loaded, it hasn't changed
-			self._modelObj.save()
-			self.populateFields(self._modelObj)
+		self.populateFields()
 		super().save(*p, **pn)
 
-	# Object creation
+	@staticmethod
+	def createGameObjectModel(modelName):
+		sqlTableName = (modelName + '_table').title()
+		classModel = getModelByName(modelName)
+		properties = {}
+		properties['modelClass'] = modelName
 
-	@classmethod
-	def createFrom(cls, model, **namedParams):
-		clsClass = getModelByName(cls.modelClass)
-		if isinstance(model, clsClass):
-			obj = cls(**namedParams)
-			obj._modelObj = model
-			obj.save(force_insert=True)
-			return obj
-		else:
-			raise TypeError("{0} is not an instance of {1}".format(model.getModelName(), clsClass.getModelName()))
+		for key in classModel.exposedFields:
+			properties[key] = TextField(null=True)
+
+		return type(sqlTableName, (GameObject, TableModel,), properties)
+
+
+sqlModels = { key : GameObject.createGameObjectModel(key) for key in sqlModels }

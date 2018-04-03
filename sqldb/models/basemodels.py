@@ -19,6 +19,7 @@ class User(BaseModel, TableModel):
 class OwnedObject(BaseModel): # Every user can read, only the owner can write
 	owner = ForeignKeyField(User)
 	is_official = BooleanField(default=False) # If true, marked as official content
+	is_public = BooleanField(default=True) # If true, marked as official content
 
 # Values objects
 

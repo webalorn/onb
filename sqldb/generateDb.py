@@ -4,10 +4,12 @@
 import sys, os, peewee
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
-from models import *
+from sqldb.models import *
 import onb
 
 tables = []
+
+### Create a table for all subclasses of TableModel
 
 def _addSubModels(classname):
 	for modelClass in classname.__subclasses__():
@@ -33,6 +35,15 @@ def generateBaseDatas():
 	except peewee.IntegrityError:
 		print("Base datas have already been generated")
 
-
 from engine.models.creature import *
 generateBaseDatas()
+
+sqlCreature = gameobject.sqlModels['creature']
+c = sqlCreature.get(id=2)
+c.model.name = "Kro"
+print(c.model)
+c.save()
+
+"""creature = CreatureModel()
+creature.name = "Coooonaaaan !"
+sqlCreature.create(owner_id=1, model=creature)"""
