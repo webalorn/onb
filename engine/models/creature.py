@@ -2,7 +2,7 @@ from .gameentities import BaseGameModel, GameEntityModel
 from ..datas.fieldvalues import *
 
 class CreatureModel(GameEntityModel):
-	def getFields(self):
+	def getFields():
 		return {
 			'initiative': IntField(min=0),
 			'actions': ClassField('actions'),
@@ -11,7 +11,7 @@ class CreatureModel(GameEntityModel):
 	storable = True
 
 class ObjectModel(GameEntityModel):
-	def getFields(self):
+	def getFields():
 		return {
 			'alignment': StringField(values=["unaligned"]),
 			'race': StringField(values=["object"]),
@@ -20,7 +20,7 @@ class ObjectModel(GameEntityModel):
 ### Characteristics
 
 class AbilitiesModel(BaseGameModel):
-	def getFields(self):
+	def getFields():
 		return {
 			'parry': IntField(),
 			'dodge': IntField(),
@@ -33,7 +33,7 @@ class AbilitiesModel(BaseGameModel):
 		}
 
 class ProtectionModel(BaseGameModel):
-	def getFields(self):
+	def getFields():
 		return {
 			'armor_cutting': IntField(),
 			'armor_blunt': IntField(),
@@ -48,7 +48,7 @@ class ProtectionModel(BaseGameModel):
 ### Actions
 
 class ActionsModel(BaseGameModel):
-	def getFields(seld):
+	def getFields():
 		return {
 			'attacks': DictField(ClassField('attack')),
 			'moves': DictField(ClassField('actions_moves')),
@@ -56,7 +56,7 @@ class ActionsModel(BaseGameModel):
 
 
 class AttackModel(BaseGameModel):
-	def getFields(self):
+	def getFields():
 		return {
 			'weapon_name': StringField(),
 			'dammages_type': StringField(),
@@ -67,7 +67,7 @@ class AttackModel(BaseGameModel):
 		}
 
 class ActionsMovesModel(BaseGameModel):
-	def getFields(self):
+	def getFields():
 		return {
 			'run_speed' : IntField(1),
 			'sprint_speed' : IntField(),

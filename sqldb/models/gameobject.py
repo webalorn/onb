@@ -25,7 +25,7 @@ class GameObject(OwnedObject):
 		if not self.model:
 			raise TypeError("Model value can't be empty")
 
-		for key in self.model.exposedFields:
+		for key in self.model.getExposedFields():
 			setattr(self, key, self.model[key])
 
 		self.type = self.model.getModelName()
@@ -43,8 +43,16 @@ class GameObject(OwnedObject):
 		properties = {}
 		properties['modelClass'] = modelName
 
-		for key in classModel.exposedFields:
-			properties[key] = TextField(null=True)
+		fieldTypes = {
+			'string': TextField,
+			'int': IntegerField,
+			'float': FloatField,
+			'bool': BooleanField,
+		}
+
+		for key in classModel.getExposedFields():
+			fieldType = fieldTypes[classModel.getFieldTypes()[key].getTypeRep()]
+			properties[key] = fieldType(null=True)
 
 		return type(sqlTableName, (GameObject, TableModel,), properties)
 

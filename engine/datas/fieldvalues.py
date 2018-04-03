@@ -4,8 +4,17 @@ class FieldValue:
 	"""
 	Field with a fixed type and a default value
 	"""
+
+	values = []
+	generated = False
+	min, max, helperList, default = None, None, None, None
+
 	def type(self):
 		return None
+
+	@classmethod
+	def getTypeRep(cls):
+		return cls.__name__[:-5].lower()
 
 	def createValue(self):
 		return self.type()()
@@ -51,18 +60,16 @@ class FieldValue:
 			return self.values[0]
 		return value
 
-	def __init__(self, default=None, *parameters, values=None, min=None, max=None, helperList=None, generated=False):
+	def __init__(self, default=None, *parameters, **namedParams):
 		"""
 			Values defines the different possible values
 			min defines the minmum value/size
 			max defines the maxmum value/size
 		"""
-		self.values = values
-		self.min = min
-		self.max = max
-		self.helperList = helperList # (str) key in the 'value' sql table of possible values (it's juste a user's helper, not a constraint)
-		self.generated = generated # Prevent users to change generated values, because their changes will be erased by the generator
-		self.default = default
+		for attr in namedParams:
+			if hasattr(self, attr):
+				setattr(self, attr, namedParams[attr])
+		
 
 	def __repr__(self):
 		return str((self.__class__.__name__,))

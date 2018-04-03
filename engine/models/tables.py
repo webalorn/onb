@@ -2,14 +2,14 @@ from .gameentities import BaseGameModel
 from ..datas.fieldvalues import *
 
 class DammageTableModel(BaseGameModel):
-	def getFields(self):
+	def getFields():
 		return {
 			'base_value': IntField(12),
 			'values': ListField(IntField(12))
 		}
 
 class TableFamilyModel(BaseGameModel):
-	def getFields(self):
+	def getFields():
 		return {
 			'generator': StringField(),
 			'first_base_value': IntField(),

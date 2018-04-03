@@ -9,26 +9,40 @@ class DataModel:
 	type field name is reserved for the type of the model
 	"""
 
-
-	def getFields(self):
-		""" Return a dictionary of all fields. Fields must inherit FieldValue """
+	fieldTypes = None
+	def getFields():
+		"""A dictionary of all fields. Fields must inherit FieldValue"""
 		return {}
 
-	def _getAllFields(self, actualClass=None):
-		if actualClass == None:
-			actualClass = self.__class__
-		fields = {}
-		for cls in reversed(inspect.getmro(actualClass)):
-			if issubclass(cls, DataModel):
-				subFields = cls.getFields(self)
-				for key in subFields:
-					fields[key] = subFields[key]
-		return fields
+	@classmethod
+	def agregateAttr(cls, attrname):
+		saveName = '_aggregate_saved_' + attrname
+		if hasattr(cls, saveName):
+			return getattr(cls, saveName)
+
+		attr = getattr(cls, attrname)
+		if callable(attr):
+			attr = attr()
+		for base in cls.__bases__:
+			if hasattr(base, 'agregateAttr') and hasattr(base, attrname):
+				subattr = base.agregateAttr(attrname)
+				if isinstance(attr, list):
+					attr += subattr
+				else:
+					attr = {**subattr, **attr}
+		setattr(cls, saveName, attr)
+		return attr
+
+	@classmethod
+	def getFieldTypes(cls, actualClass=None):
+		if cls.fieldTypes == None:
+			cls.fieldTypes = cls.agregateAttr('getFields')
+		return cls.fieldTypes
 
 	def __init__(self):
 		""" All properties must start with 'field' or '_' """
 		self.fields = {}
-		self.fieldTypes = self._getAllFields()
+		self.getFieldTypes()
 		for fieldName in self.fieldTypes:
 			self.fields[fieldName] = self.fieldTypes[fieldName].defaultValue()
 

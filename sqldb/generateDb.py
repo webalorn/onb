@@ -39,11 +39,13 @@ from engine.models.creature import *
 generateBaseDatas()
 
 sqlCreature = gameobject.sqlModels['creature']
-c = sqlCreature.get(id=2)
+
+creature = CreatureModel()
+creature.name = "Coooonaaaan !"
+creature.health = 42
+sqlCreature.create(owner_id=1, model=creature)
+
+"""c = sqlCreature.get(id=1)
 c.model.name = "Kro"
 print(c.model)
-c.save()
-
-"""creature = CreatureModel()
-creature.name = "Coooonaaaan !"
-sqlCreature.create(owner_id=1, model=creature)"""
+c.save()"""

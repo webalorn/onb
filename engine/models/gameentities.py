@@ -16,8 +16,12 @@ class BaseGameModel(DataModel):
 	storable = False # Will this model  be directly stored in the database ?
 	exposedFields = [] # Field added in the databse entry
 
+	@classmethod
+	def getExposedFields(cls):
+		return cls.agregateAttr('exposedFields')
+
 class GameEntityModel(BaseGameModel):
-	def getFields(self):
+	def getFields():
 		return {
 			'name': StringField(),
 			'alignment': StringField(default="neutral", helperList="alignment"),
