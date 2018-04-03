@@ -15,7 +15,7 @@ class StorageManager(metaclass=Singleton):
 
 	def _createModelFile(self, model):
 		path = onb.getDbPath('{0}.json'.format(model.getModelName()), newFile=True)
-		relPath = os.path.relpath(path, onb.conf.dbLocation)
+		relPath = os.path.relpath(path, onb.conf.dbFilesLocation)
 		model._storageLocation = relPath
 		self._storeModel(model)
 
