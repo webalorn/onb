@@ -1,7 +1,5 @@
-from .gameentities import GameEntityModel
+from .gameentities import BaseGameModel, GameEntityModel
 from ..datas.fieldvalues import *
-
-
 
 class CreatureModel(GameEntityModel):
 	def getFields(self):
@@ -10,6 +8,7 @@ class CreatureModel(GameEntityModel):
 			'actions': ClassField('actions'),
 			'abilities': ClassField('abilities'),
 		}
+	storable = True
 
 class ObjectModel(GameEntityModel):
 	def getFields(self):
@@ -20,7 +19,7 @@ class ObjectModel(GameEntityModel):
 
 ### Characteristics
 
-class AbilitiesModel(DataModel):
+class AbilitiesModel(BaseGameModel):
 	def getFields(self):
 		return {
 			'parry': IntField(),
@@ -33,7 +32,7 @@ class AbilitiesModel(DataModel):
 			'agility': IntField(),
 		}
 
-class ProtectionModel(DataModel):
+class ProtectionModel(BaseGameModel):
 	def getFields(self):
 		return {
 			'armor_cutting': IntField(),
@@ -48,7 +47,7 @@ class ProtectionModel(DataModel):
 
 ### Actions
 
-class ActionsModel(DataModel):
+class ActionsModel(BaseGameModel):
 	def getFields(seld):
 		return {
 			'attacks': DictField(ClassField('attack')),
@@ -56,7 +55,7 @@ class ActionsModel(DataModel):
 		}
 
 
-class AttackModel(DataModel):
+class AttackModel(BaseGameModel):
 	def getFields(self):
 		return {
 			'weapon_name': StringField(),
@@ -67,7 +66,7 @@ class AttackModel(DataModel):
 			'parry_required_strength': IntField(),
 		}
 
-class ActionsMovesModel(DataModel):
+class ActionsMovesModel(BaseGameModel):
 	def getFields(self):
 		return {
 			'run_speed' : IntField(1),

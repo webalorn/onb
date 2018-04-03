@@ -101,7 +101,7 @@ class DataModel:
 		return self.fields[attr]
 
 	def __setattr__(self, attr, value):
-		if attr[:5] == 'field' or attr[:1] == '_':
+		if attr[:5] == 'field' or attr[:1] == '_' or hasattr(self.__class__, attr):
 			super().__setattr__(attr, value)
 		else:
 			self[attr] = value

@@ -12,7 +12,11 @@ Allowed Fields:
 	-> DictField (required fields values type)
 """
 
-class GameEntityModel(DataModel):
+class BaseGameModel(DataModel):
+	storable = False # Will this model  be directly stored in the database ?
+	exposedFields = [] # Field added in the databse entry
+
+class GameEntityModel(BaseGameModel):
 	def getFields(self):
 		return {
 			'name': StringField(),
@@ -23,3 +27,4 @@ class GameEntityModel(DataModel):
 			'size': IntField(1),
 			'protection': ClassField('protection'),
 		}
+	exposedFields = ['name', 'race', 'alignment']
