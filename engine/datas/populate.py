@@ -2,7 +2,7 @@ from .datamodel import DataModel
 from ..modelslist import getModelByName
 import copy
 
-class PopuplateManager:
+class PopulateManager:
 	def __init__(self):
 		# Import here to avoir circular reference
 		from ..modelslist import modelsList

@@ -61,3 +61,14 @@ class ListModel(DictModel):
 		self.fields = {}
 		for i in range(len(valuesList)):
 			self[i] = valuesList[i]
+
+	def getList(self):
+		return [self.fields[fieldName] for fieldName in self.fields]
+
+	def getMaxKey(self):
+		if not self.fields:
+			return 0
+		return max([int(key) for key in self.fields])
+
+	def append(self, value):
+		self[self.getMaxKey()+1] = value

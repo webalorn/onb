@@ -2,7 +2,7 @@ from ..datas.datamodel import DataModel
 from ..datas.structfields import *
 from ..datas.fieldvalues import *
 from ..modelslist import getModelByName
-from ..datas.populate import PopuplateManager
+from ..datas.populate import PopulateManager
 import inspect
 
 class ModelEncoder:
@@ -47,7 +47,7 @@ class ModelEncoder:
 			modelName = datas['type']
 		modelClass = getModelByName(modelName)
 		model = modelClass()
-		PopuplateManager().populate(model, datas)
+		PopulateManager().populate(model, datas)
 		return model
 
 	@classmethod

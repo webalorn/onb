@@ -5,7 +5,7 @@ from engine.models.gameentities import GameEntityModel
 from engine.models.tables import *
 
 from engine.modelslist import modelsList
-from engine.datas.populate import PopuplateManager
+from engine.datas.populate import PopulateManager
 from engine.storage.encoder import ModelEncoder
 from engine.modelslist import modelsList
 from engine.storage.sheet import *
@@ -19,12 +19,16 @@ try:
 	print("Dices:", *onb.conf.DICES)
 	#print(modelsList['dammage_table'])
 	creature = CreatureModel()
-	PopuplateManager().populate(creature, {"name":"Conan", "actions.0":{'type':'action_move'}, 'protection.ice_bonus': 12})
+	PopulateManager().populate(creature, {"name":"Conan", "actions.10":{'type':'action_move'}, 'protection.ice_bonus': 12})
 	print(creature.get('protection.ice_bonus', 0))
 	print(ModelEncoder.encode(creature))
 
+	print(creature.actions.getMaxKey())
+	creature.actions.append(AttackModel({'weapon_name':'Very big sword'}))
+	print(creature.actions.getList())
+
 	#d = DammageTableModel()
-	#PopuplateManager().populate(d, {"values": [0, 1, 42]})
+	#PopulateManager().populate(d, {"values": [0, 1, 42]})
 	#print(d.values)
 
 	#sm = StorageManager()

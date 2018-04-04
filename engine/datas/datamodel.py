@@ -38,12 +38,16 @@ class DataModel:
 		cls.fieldTypes = cls.agregateAttr('getFields')
 		return cls.fieldTypes
 
-	def __init__(self):
+	def __init__(self, populateWith = None):
 		""" All properties must start with 'field' or '_' """
 		self.fields = {}
 		self.getFieldTypes()
 		for fieldName in self.fieldTypes:
 			self.fields[fieldName] = self.fieldTypes[fieldName].defaultValue()
+
+		if populateWith:
+			from .populate import PopulateManager
+			PopulateManager().populate(self, populateWith)
 
 	def __repr__(self):
 		return str(self.fields)
@@ -152,10 +156,12 @@ class DataModel:
 		return self.fieldsList().__iter__()
 
 	def get(self, fieldName, default=None):
-		try:
-			return self[fieldName]
-		except:
-			return default
+		if str(fieldName) in self.fields:
+			try:
+				return self[fieldName]
+			except:
+				pass
+		return default
 
 	### Static functions
 
