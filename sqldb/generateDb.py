@@ -1,11 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-import sys, os, peewee
-sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-
+import env.dev.settings, onb, peewee
 from sqldb.models import *
-import onb
 
 tables = []
 

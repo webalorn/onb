@@ -3,7 +3,5 @@ for loading and exporting excel files:
 -> xlrd (pip3 install --upgrade xlrd)
 
 For databases:
--> peewee
-	git clone https://github.com/coleifer/peewee.git
-	cd peewee
-	python3 setup.py install
+-> peewee (pip3 install --upgrade pip3)
+-> peewee_migrate (pip3 install --upgrade peewee_migrate)

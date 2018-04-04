@@ -1,4 +1,4 @@
-import random
+import random, string
 
 class Rand:
 	def randomString(size=10):
