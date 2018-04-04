@@ -4,4 +4,3 @@ for loading and exporting excel files:
 
 For databases:
 -> peewee (pip3 install --upgrade pip3)
--> peewee_migrate (pip3 install --upgrade peewee_migrate)

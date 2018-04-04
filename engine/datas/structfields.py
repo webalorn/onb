@@ -16,6 +16,10 @@ class DictModel(DataModel):
 
 	def __init__(self, fieldsSharedType):
 		""" all objects must inherit from the same class """
+		if isinstance(fieldsSharedType, str):
+			from .fieldvalues import ClassField
+			fieldsSharedType = ClassField(fieldsSharedType)
+
 		self.fieldsSharedType = fieldsSharedType
 		DataModel.__init__(self)
 

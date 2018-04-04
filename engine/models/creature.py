@@ -5,8 +5,8 @@ class CreatureModel(GameEntityModel):
 	def getFields():
 		return {
 			'initiative': IntField(min=0),
-			'actions': ClassField('action'),
-			'abilities': ClassField('abilitiy'),
+			'actions': ListField('action'),
+			'abilities': ClassField('ability'),
 		}
 	storable = True
 
@@ -19,7 +19,7 @@ class ObjectModel(GameEntityModel):
 
 ### Characteristics
 
-class AbilitiyModel(BaseGameModel):
+class AbilityModel(BaseGameModel):
 	def getFields():
 		return {
 			'parry': IntField(),
@@ -49,13 +49,10 @@ class ProtectionModel(BaseGameModel):
 
 class ActionModel(BaseGameModel):
 	def getFields():
-		return {
-			'attacks': DictField(ClassField('attack')),
-			'moves': DictField(ClassField('action_move')),
-		}
+		return {}
 
 
-class AttackModel(BaseGameModel):
+class AttackModel(ActionModel):
 	def getFields():
 		return {
 			'weapon_name': StringField(),
@@ -66,7 +63,7 @@ class AttackModel(BaseGameModel):
 			'parry_required_strength': IntField(),
 		}
 
-class ActionMoveModel(BaseGameModel):
+class ActionMoveModel(ActionModel):
 	def getFields():
 		return {
 			'run_speed' : IntField(1),

@@ -35,8 +35,7 @@ class DataModel:
 
 	@classmethod
 	def getFieldTypes(cls, actualClass=None):
-		if cls.fieldTypes == None:
-			cls.fieldTypes = cls.agregateAttr('getFields')
+		cls.fieldTypes = cls.agregateAttr('getFields')
 		return cls.fieldTypes
 
 	def __init__(self):

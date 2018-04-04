@@ -7,7 +7,6 @@ import importlib.util
 
 if __name__ == "__main__":
 	import sys
-	print("ARGS", sys.argv)
 	if len(sys.argv) < 2:
 		print("First arg must be the script name")
 	else:

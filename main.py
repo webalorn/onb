@@ -6,7 +6,7 @@ from engine.models.tables import *
 
 from engine.modelslist import modelsList
 from engine.datas.populate import PopuplateManager
-from engine.storage.encoder import *
+from engine.storage.encoder import ModelEncoder
 from engine.modelslist import modelsList
 from engine.storage.sheet import *
 from engine.storage.manager import StorageManager
@@ -19,9 +19,9 @@ try:
 	print("Dices:", *onb.conf.DICES)
 	#print(modelsList['dammage_table'])
 	creature = CreatureModel()
-	PopuplateManager().populate(creature, {"name":"Conan", "actions.attacks.main_weapon":{}, 'protection.ice_bonus': 12})
+	PopuplateManager().populate(creature, {"name":"Conan", "actions.0":{'type':'action_move'}, 'protection.ice_bonus': 12})
 	print(creature.get('protection.ice_bonus', 0))
-	print(creature)
+	print(ModelEncoder.encode(creature))
 
 	#d = DammageTableModel()
 	#PopuplateManager().populate(d, {"values": [0, 1, 42]})
