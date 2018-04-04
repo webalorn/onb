@@ -1,30 +1,30 @@
-import os, random, string
+import os, string
 from peewee import SqliteDatabase
+from engine.rand import Rand
 
 root = os.path.dirname(__file__)
 
 ### Global configuration
-class conf:
+conf, sqldb, api = None, None, None
+
+class OnbSettings:
 	DICES = [0, 4, 6, 8, 10, 12, 20, 100]
-	debug = True
-	dbFilesLocation = os.path.join(root, 'db/files')
-	sqliteDbLocation = os.path.join(root, 'db/onb.db')
+	debug = False
 	cacheAllModels = False # Avoid duplicate instances of the same model, but keep the model in memory
 
-### Environment creation
+	dbRootLocation = os.path.join(root, 'db')
+	dbFilesLocation = os.path.join(dbRootLocation, 'files')
+	sqliteDbLocation = os.path.join(dbRootLocation, 'onb.db')
 
-os.makedirs(os.path.dirname(conf.sqliteDbLocation), exist_ok=True)
 
-### Global variables
+	def createDbObject(self):
+		os.makedirs(os.path.dirname(self.sqliteDbLocation), exist_ok=True)
+		return SqliteDatabase(self.sqliteDbLocation)
 
-sqldb = SqliteDatabase(conf.sqliteDbLocation)
-api = None
-
-### Global utility functions
-
-class Utility:
-	def randomString(size=10):
-		return ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+	def __init__(self):
+		global conf, sqldb, api
+		sqldb = self.createDbObject()
+		conf = self
 
 ### Global functions for simple parameters use
 
@@ -37,7 +37,7 @@ def getDbPath(filename, *params, newFile=False):
 		generatedPath = path
 		while os.path.isfile(generatedPath):
 			generatedPath = path.split('.')
-			generatedPath[0] += '_' + Utility.randomString()
+			generatedPath[0] += '_' + Rand.randomString()
 			generatedPath = '.'.join(generatedPath)
 		path = generatedPath
 

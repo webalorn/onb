@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import onb, env.dev.settings
+
 from engine.models.creature import *
 from engine.models.gameentities import GameEntityModel
 from engine.models.tables import *
@@ -15,8 +17,6 @@ import engine.storage.jsondb as jdb
 
 import pprint
 import copy
-
-import onb
 
 try:
 	print("Dices:", *onb.conf.DICES)

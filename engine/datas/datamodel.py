@@ -16,7 +16,7 @@ class DataModel:
 
 	@classmethod
 	def agregateAttr(cls, attrname):
-		saveName = '_aggregate_saved_' + attrname
+		saveName = '_aggregate_saved_' + cls.__name__ + '_' + attrname 
 		if hasattr(cls, saveName):
 			return getattr(cls, saveName)
 
