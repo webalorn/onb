@@ -82,7 +82,7 @@ class ModelEncoder:
 				datas = {'type': type_name}
 
 				# Property name -> default value
-				properties = {'values': None, 'min': None, 'max': None, 'helperList': None, 'generated': False, 'modelName': None}
+				properties = {'values': [], 'min': None, 'max': None, 'helperList': None, 'generated': False, 'modelName': None}
 				for prop in properties:
 					if hasattr(obj, prop) and getattr(obj, prop) != properties[prop]:
 						datas[prop] = getattr(obj, prop)

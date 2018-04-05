@@ -1,6 +1,6 @@
 import os, string
 from peewee import SqliteDatabase
-from engine.rand import Rand
+from engine.engine import Rand
 
 root = os.path.dirname(__file__)
 

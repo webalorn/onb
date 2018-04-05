@@ -22,18 +22,10 @@ try:
 	print(creature.get('protection.ice_bonus', 0))
 	# creature.abilities = 1
 	# creature.abilities = 'ability'
-	print(creature)
-	print(ModelEncoder.encode(creature))
-	#print(ModelEncoder.encodeTypes(creature))
+	#print(creature)
+	#print(ModelEncoder.encode(creature))
+	pprint.pprint(ModelEncoder.encodeTypes(creature))
 
-	#d = DammageTableModel()
-	#PopulateManager().populate(d, {"values": [0, 1, 42]})
-	#print(d.values)
-
-	#sm = StorageManager()
-	#creature = sm.load('creature.json')
-	#sm.save(creature)
-	#print(creature.protection)
 except KeyError as error2:
 	raise error2
 	print('Erreur d\'indice', error2.args)
