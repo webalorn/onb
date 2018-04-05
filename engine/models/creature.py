@@ -6,8 +6,7 @@ class CreatureModel(GameEntityModel):
 		return {
 			'initiative': IntField(min=0),
 			'actions': ListField('action'),
-			#'abilities': ClassField('ability'),
-			'abilities': ForeignKeyField('ability', default='ability'),
+			'abilities': ClassField('ability'),
 		}
 	storable = True
 

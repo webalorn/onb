@@ -5,3 +5,4 @@ db
 *.pyc
 *.sublime-workspace
 *.sublime-project
+*.lock

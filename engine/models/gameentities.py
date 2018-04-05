@@ -10,6 +10,8 @@ Allowed Fields:
 
 	-> ClassField (required model type) # The subclasses of the model are allowed
 	-> DictField (required fields values type)
+	-> ListField (required fields values type)
+	-> ForeignKeyField (required model identifier)
 """
 
 class BaseGameModel(DataModel):
