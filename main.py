@@ -18,14 +18,11 @@ import copy
 try:
 	print("Dices:", *onb.conf.DICES)
 	#print(modelsList['dammage_table'])
-	creature = CreatureModel()
-	PopulateManager().populate(creature, {"name":"Conan", "actions.10":{'type':'action_move'}, 'protection.ice_bonus': 12})
+	creature = CreatureModel({"name":"Conan", "actions.10":{'type':'action_move'}, 'protection.ice_bonus': 12})
 	print(creature.get('protection.ice_bonus', 0))
+	creature.abilities = 1
+	print(creature)
 	print(ModelEncoder.encode(creature))
-
-	print(creature.actions.getMaxKey())
-	creature.actions.append(AttackModel({'weapon_name':'Very big sword'}))
-	print(creature.actions.getList())
 
 	#d = DammageTableModel()
 	#PopulateManager().populate(d, {"values": [0, 1, 42]})

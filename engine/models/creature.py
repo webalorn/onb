@@ -6,7 +6,8 @@ class CreatureModel(GameEntityModel):
 		return {
 			'initiative': IntField(min=0),
 			'actions': ListField('action'),
-			'abilities': ClassField('ability'),
+			#'abilities': ClassField('ability'),
+			'abilities': ForeignKeyField('ability'),
 		}
 	storable = True
 
@@ -31,6 +32,7 @@ class AbilityModel(BaseGameModel):
 			'dexterity': IntField(),
 			'agility': IntField(),
 		}
+	storable = True
 
 class ProtectionModel(BaseGameModel):
 	def getFields():

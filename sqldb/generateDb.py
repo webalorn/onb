@@ -39,6 +39,10 @@ creature.name = "Coooonaaaan !"
 creature.health = 42
 sqlCreature.create(owner_id=1, model=creature)
 
+ability = AbilityModel()
+ability.parry = 666
+gameobject.sqlModels['ability'].create(owner_id=1, model=ability)
+
 """c = sqlCreature.get(id=1)
 c.model.name = "Kro"
 print(c.model)

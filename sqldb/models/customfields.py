@@ -14,7 +14,7 @@ class ModelField(TextField):
 			model.save()
 			return model._storageLocation
 		else:
-			raise TypeError("Model is not an instance of {1}".format(self._modelType.getModelName()))
+			raise TypeError("Model is not an instance of {0}".format(self._modelType.getModelName()))
 
 	def python_value(self, value):
 		return StorageManager().load(value)

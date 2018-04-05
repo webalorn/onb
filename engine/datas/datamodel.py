@@ -46,8 +46,7 @@ class DataModel:
 			self.fields[fieldName] = self.fieldTypes[fieldName].defaultValue()
 
 		if populateWith:
-			from .populate import PopulateManager
-			PopulateManager().populate(self, populateWith)
+			self.populate(populateWith)
 
 	def __repr__(self):
 		return str(self.fields)
@@ -60,6 +59,10 @@ class DataModel:
 		if not isinstance(model, DataModel):
 			raise KeyError()
 		return getattr(model, fctName)(fieldName[-1], *p, **pn)
+
+	def populate(self, datas):
+		from .populate import PopulateManager
+		return PopulateManager().populate(self, datas)
 
 	### Get Fields and FieldClass 
 
@@ -156,11 +159,10 @@ class DataModel:
 		return self.fieldsList().__iter__()
 
 	def get(self, fieldName, default=None):
+		if '.' in fieldName:
+			return self.callSubModel(fieldName, 'get', default=None)
 		if str(fieldName) in self.fields:
-			try:
-				return self[fieldName]
-			except:
-				pass
+			return self[fieldName]
 		return default
 
 	### Static functions

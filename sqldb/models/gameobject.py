@@ -13,11 +13,12 @@ def _addSubModelsToSqlModel(classname):
 _addSubModelsToSqlModel(gameentities.BaseGameModel)
 
 class GameObject(OwnedObject):
-	modelClass = 'game_entity'
 
-	model = ModelField(modelClass, unique=True)
 	created_date = DateTimeField(default=datetime.datetime.now)
 	updated_date = DateTimeField(default=datetime.datetime.now)
+
+	modelClass = 'game_entity'
+	model = ModelField(modelClass, unique=True)
 	type = TextField(default=modelClass)
 
 	def populateFields(self):
@@ -29,7 +30,6 @@ class GameObject(OwnedObject):
 			setattr(self, key, self.model[key])
 
 		self.type = self.model.getModelName()
-		self.name = self.model.name
 		self.updated_date = datetime.datetime.now()
 
 	def save(self, *p, **pn):
@@ -40,8 +40,11 @@ class GameObject(OwnedObject):
 	def createGameObjectModel(modelName):
 		sqlTableName = (modelName + '_table').title()
 		classModel = getModelByName(modelName)
-		properties = {}
-		properties['modelClass'] = modelName
+		properties = {
+			'modelClass': modelName,
+			'model': ModelField(modelName, unique=True),
+			'type': TextField(default=modelName),
+		}
 
 		fieldTypes = {
 			'string': TextField,
@@ -55,6 +58,5 @@ class GameObject(OwnedObject):
 			properties[key] = fieldType(null=True)
 
 		return type(sqlTableName, (GameObject, TableModel,), properties)
-
 
 sqlModels = { key : GameObject.createGameObjectModel(key) for key in sqlModels }

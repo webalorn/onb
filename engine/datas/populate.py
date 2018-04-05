@@ -53,3 +53,4 @@ class PopulateManager:
 		datas = self.convertDatas(datas)
 		self.normalizeDatas(datas)
 		self._populateModel(model, datas)
+		return model

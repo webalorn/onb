@@ -42,6 +42,9 @@ class FieldValue:
 
 		return value
 
+	def getDbValue(self, value):
+		return value
+
 	def defaultValue(self):
 		return self.castFunction(self.default)
 
@@ -123,6 +126,36 @@ class ClassField(FieldValue):
 
 		self.className = className
 		self.classParams = classParams
+		FieldValue.__init__(self, *p, **pn)
+
+class ForeignKeyField(FieldValue):
+	""" Field that only store instances of the same class """
+
+	def type(self):
+		from ..modelslist import getModelByName
+		return getModelByName(self.modelName)
+	
+	def createValue(self):
+		return None
+
+	def getDbValue(self, value):
+		if hasattr(value, '_foreignKeyId'):
+			return value._foreignKeyId
+
+	def createValueFrom(self, key):
+		from ..modelslist import getModelByName
+		from sqldb.models.gameobject import sqlModels
+		try:
+			if isinstance(key, getModelByName(self.modelName)):
+				return key
+			model = sqlModels[self.modelName].get(id=int(key)).model
+			model._foreignKeyId = int(key)
+			return model
+		except:
+			return None
+
+	def __init__(self, modelName, *p, **pn):
+		self.modelName = modelName
 		FieldValue.__init__(self, *p, **pn)
 
 ### Structures

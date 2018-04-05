@@ -15,7 +15,9 @@ class ModelEncoder:
 			datas = {}
 
 			for field in model.fields:
-				datas[field] = cls.encode(model.fields[field])
+				fieldValue = model.fields[field]
+				fieldValue = model.getFieldObj(field).getDbValue(fieldValue)
+				datas[field] = cls.encode(fieldValue)
 				# Remove key 'type' if it is the default type
 				if isinstance(datas[field], dict) and 'type' in datas[field]:
 					if getModelByName(datas[field]['type']) == model.getFieldType(field):
