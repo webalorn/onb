@@ -17,11 +17,13 @@ class ModelEncoder:
 			for field in model.fields:
 				fieldValue = model.fields[field]
 				fieldValue = model.getFieldObj(field).getDbValue(fieldValue)
-				datas[field] = cls.encode(fieldValue)
-				# Remove key 'type' if it is the default type
-				if isinstance(datas[field], dict) and 'type' in datas[field]:
-					if getModelByName(datas[field]['type']) == model.getFieldType(field):
-						del datas[field]['type']
+
+				if fieldValue != None:
+					datas[field] = cls.encode(fieldValue)
+					# Remove key 'type' if it is the default type
+					if isinstance(datas[field], dict) and 'type' in datas[field]:
+						if getModelByName(datas[field]['type']) == model.getFieldType(field):
+							del datas[field]['type']
 
 			if isinstance(model, ListModel):
 				datas = [datas[key] for key in datas]
@@ -61,7 +63,7 @@ class ModelEncoder:
 			return cls.encodeTypes(type(obj))
 		elif inspect.isclass(obj) and issubclass(obj, DataModel):
 			datas = {'type':'model', 'model_name': obj.getModelName()}
-			fields = obj._getAllFields(object(), obj)
+			fields = obj.getFieldTypes()
 			datas['fieldsType'] = {key:cls.encodeTypes(fields[key]) for key in fields}
 			return datas
 		elif isinstance(obj, FieldValue):
@@ -80,9 +82,9 @@ class ModelEncoder:
 				datas = {'type': type_name}
 
 				# Property name -> default value
-				properties = {'values': None, 'min': None, 'max': None, 'helperList': None, 'generated': False}
+				properties = {'values': None, 'min': None, 'max': None, 'helperList': None, 'generated': False, 'modelName': None}
 				for prop in properties:
-					if getattr(obj, prop) != properties[prop]:
+					if hasattr(obj, prop) and getattr(obj, prop) != properties[prop]:
 						datas[prop] = getattr(obj, prop)
 				return datas
 

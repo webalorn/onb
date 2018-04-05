@@ -20,9 +20,11 @@ try:
 	#print(modelsList['dammage_table'])
 	creature = CreatureModel({"name":"Conan", "actions.10":{'type':'action_move'}, 'protection.ice_bonus': 12})
 	print(creature.get('protection.ice_bonus', 0))
-	creature.abilities = 1
+	# creature.abilities = 1
+	# creature.abilities = 'ability'
 	print(creature)
 	print(ModelEncoder.encode(creature))
+	#print(ModelEncoder.encodeTypes(creature))
 
 	#d = DammageTableModel()
 	#PopulateManager().populate(d, {"values": [0, 1, 42]})

@@ -69,6 +69,7 @@ class FieldValue:
 			min defines the minmum value/size
 			max defines the maxmum value/size
 		"""
+		self.default = default
 		for attr in namedParams:
 			if hasattr(self, attr):
 				setattr(self, attr, namedParams[attr])
@@ -134,6 +135,9 @@ class ForeignKeyField(FieldValue):
 	def type(self):
 		from ..modelslist import getModelByName
 		return getModelByName(self.modelName)
+
+	def defaultValue(self):
+		return self.castFunction(self.default)
 	
 	def createValue(self):
 		return None
@@ -145,18 +149,24 @@ class ForeignKeyField(FieldValue):
 	def createValueFrom(self, key):
 		from ..modelslist import getModelByName
 		from sqldb.models.gameobject import sqlModels
+		
 		try:
-			if isinstance(key, getModelByName(self.modelName)):
-				return key
-			model = sqlModels[self.modelName].get(id=int(key)).model
-			model._foreignKeyId = int(key)
+			key = int(key)
+			model = sqlModels[self.modelName].get(id=key).model
+			model._foreignKeyId = key
 			return model
-		except:
-			return None
+		except: # cast error -> invalid data or None value
+			pass
+
+		if isinstance(key, str): # if the model is created with a string, it will create an empty model that won't be saved
+			key = getModelByName(key)()
+		if isinstance(key, getModelByName(self.modelName)):
+			return key
+		return None
 
 	def __init__(self, modelName, *p, **pn):
 		self.modelName = modelName
-		FieldValue.__init__(self, *p, **pn)
+		super().__init__(*p, **pn)
 
 ### Structures
 

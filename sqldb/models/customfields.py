@@ -10,6 +10,8 @@ class ModelField(TextField):
 		self._modelType = modelType
 
 	def db_value(self, model):
+		if isinstance(model, dict):
+			model = self._modelType(model)
 		if isinstance(model, self._modelType):
 			model.save()
 			return model._storageLocation

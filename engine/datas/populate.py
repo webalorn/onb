@@ -21,7 +21,6 @@ class PopulateManager:
 
 	def normalizeDatas(self, datas):
 		if isinstance(datas, dict):
-
 			recursiveKeys = {key : datas[key] for key in datas if '.' in key}
 			for key in recursiveKeys:
 				datas.pop(key)
@@ -37,7 +36,6 @@ class PopulateManager:
 
 	def _populateModel(self, model, datas):
 		# Not intended for direct use by external code
-
 		for key in datas:
 			if not key in self.reservedFields:
 				model.ensureFieldExists(key)

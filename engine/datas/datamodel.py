@@ -34,7 +34,7 @@ class DataModel:
 		return attr
 
 	@classmethod
-	def getFieldTypes(cls, actualClass=None):
+	def getFieldTypes(cls):
 		cls.fieldTypes = cls.agregateAttr('getFields')
 		return cls.fieldTypes
 
@@ -117,11 +117,17 @@ class DataModel:
 
 	### Access operators
 
+	@classmethod
+	def isReservedField(cls, attr):
+		return attr[:5] == 'field' or attr[:1] == '_' or hasattr(cls, attr)
+
 	def __getattr__(self, attr):
-		return self.fields[attr]
+		if not self.isReservedField(attr):
+			return self.fields[attr]
+		raise AttributeError
 
 	def __setattr__(self, attr, value):
-		if attr[:5] == 'field' or attr[:1] == '_' or hasattr(self.__class__, attr):
+		if self.isReservedField(attr):
 			super().__setattr__(attr, value)
 		else:
 			self[attr] = value
