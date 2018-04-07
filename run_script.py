@@ -1,7 +1,8 @@
-import importlib.util
+import importlib.util, sys, time
 
 if __name__ == "__main__":
-	import sys
+	startTime = time.time()
+
 	if len(sys.argv) < 2:
 		print("First arg must be the script name")
 	else:
@@ -10,3 +11,6 @@ if __name__ == "__main__":
 		spec = importlib.util.spec_from_file_location("__main__", scriptPath)
 		module = importlib.util.module_from_spec(spec)
 		spec.loader.exec_module(module)
+
+	endTime = time.time()
+	print("\nScript duration:", endTime - startTime, "seconds")
