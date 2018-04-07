@@ -1,5 +1,5 @@
 from .datamodel import *
-from .fieldvalues import FieldValue
+from .fieldvalues import FieldValue, ClassField
 
 class DictModel(DataModel):
 	""" A dictionary that can store a variable number of datas """
@@ -17,7 +17,6 @@ class DictModel(DataModel):
 	def __init__(self, fieldsSharedType):
 		""" all objects must inherit from the same class """
 		if isinstance(fieldsSharedType, str):
-			from .fieldvalues import ClassField
 			fieldsSharedType = ClassField(fieldsSharedType)
 
 		self.fieldsSharedType = fieldsSharedType
@@ -63,7 +62,16 @@ class ListModel(DictModel):
 			self[i] = valuesList[i]
 
 	def getList(self):
-		return [self.fields[fieldName] for fieldName in self.fields]
+		keys = sorted(self.fields.keys())
+		return [self.fields[fieldName] for fieldName in keys]
+
+	def filter(self, fctOrClassname): # Filer by class name
+		if isinstance(fctOrClassname, str):
+			from ..modelslist import getModelByName
+			classModel = getModelByName(fctOrClassname)
+			fctOrClassname = lambda obj: isinstance(obj, classModel)
+
+		return list(filter(fctOrClassname, self.getList()))
 
 	def getMaxKey(self):
 		if not self.fields:

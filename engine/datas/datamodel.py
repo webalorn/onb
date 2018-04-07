@@ -16,13 +16,14 @@ class DataModel:
 
 	@classmethod
 	def agregateAttr(cls, attrname):
-		saveName = '_aggregate_saved_' + cls.__name__ + '_' + attrname 
+		saveName = '_aggregate_saved_' + cls.__name__ + '_' + attrname
 		if hasattr(cls, saveName):
 			return getattr(cls, saveName)
 
-		attr = getattr(cls, attrname)
+		attr = copy.deepcopy(getattr(cls, attrname))
 		if callable(attr):
 			attr = attr()
+
 		for base in cls.__bases__:
 			if hasattr(base, 'agregateAttr') and hasattr(base, attrname):
 				subattr = base.agregateAttr(attrname)

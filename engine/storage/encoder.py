@@ -26,7 +26,7 @@ class ModelEncoder:
 							del datas[field]['type']
 
 			if isinstance(model, ListModel):
-				datas = [datas[key] for key in datas]
+				datas = [datas[key] for key in sorted(datas.keys())]
 			else:
 				datas["type"] = modelName
 			return datas
@@ -59,6 +59,9 @@ class ModelEncoder:
 		"""
 			return {'type':'model', 'fieldsType': ...}
 		"""
+		if isinstance(obj, str): # In case of a model identifier
+			obj = getModelByName(obj)
+
 		if isinstance(obj, DataModel):
 			return cls.encodeTypes(type(obj))
 		elif inspect.isclass(obj) and issubclass(obj, DataModel):

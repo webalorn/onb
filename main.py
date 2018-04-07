@@ -20,11 +20,16 @@ try:
 	#print(modelsList['dammage_table'])
 	creature = CreatureModel({"name":"Conan", "actions.10":{'type':'action_move'}, 'protection.ice_bonus': 12})
 	print(creature.get('protection.ice_bonus', 0))
-	# creature.abilities = 1
-	# creature.abilities = 'ability'
+		
+	creature.actions.append(ActionMoveModel({'run_speed':12}))
+	creature.actions.append(AttackModel({'weapon_name': 'BIG SWORD'}))
+	creature.actions.append(AttackModel({'weapon_name': 'VERY BIG SWORD'}))
+
+	pprint.pprint(creature.actions.filter('attack'))
+
 	#print(creature)
-	#print(ModelEncoder.encode(creature))
-	pprint.pprint(ModelEncoder.encodeTypes(creature))
+	#pprint.pprint(ModelEncoder.encode(creature))
+	#pprint.pprint(ModelEncoder.encodeTypes(creature))
 
 except KeyError as error2:
 	raise error2

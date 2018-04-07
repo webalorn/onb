@@ -22,6 +22,24 @@ class BaseGameModel(DataModel):
 	def getExposedFields(cls):
 		return cls.agregateAttr('exposedFields')
 
+class DbStorableModel(DataModel): # won't be directly stored, despite of 'storable=True' because doesn't inherit 'BaseGameModel'
+	"""
+	Define common fields for extra-informations
+	It's not required to use this model to create storable models
+	Must be before 'BaseGameModel' in inheritance list
+	"""
+	def getFields():
+		return {
+			'name': StringField(),
+			'summary': StringField(),
+			'description': StringField(),
+			'image_id': IntField(),
+		}
+
+	exposedFields = ['name', 'summary', 'description', 'image_id']
+	storable = True
+
+
 class GameEntityModel(BaseGameModel):
 	def getFields():
 		return {
