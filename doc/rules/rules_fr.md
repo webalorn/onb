@@ -15,6 +15,7 @@ Règles du jeu pour les joueurs: les mécanismes de création des créature et d
 - [Créatures](#creatures)
 	- [Statistiques de base](#statistiques-de-base)
 - [Matériel](#materiel)
+- [Préparer le jeu](#preparer-le-jeu)
 - [Termes, mesures](#termes-mesures)
 - [A ajouter](#a-ajouter)
 
@@ -25,7 +26,7 @@ Plusieurs armées s'affrontent. A chaque tour, les joueurs activent leur unités
 
 Le jeu dois ainsi avoir des règles simple a utiliser, mais potentiellement large en arrière-plan, tant que cela n'affecte pas l'expérience des joueurs
 
-*Ici, les termes unité, et créature, sont équivalent et désigne n'importe quelle entitée représentée par une figurine, y compris un humain ou une machine*
+*Ici, les termes unité, et créature, sont équivalent et désigne n'importe quelle entité représentée par une figurine, y compris un humain ou une machine*
 
 
 ________________________________
@@ -50,7 +51,7 @@ Lorsqu'une unité est activée, elle peut, au choix:
 - Effectuer une action longue
 - Effectuer une OU deux demi-actions (actions courtes)
 
-Une action longue prend tout le round de la créature: par exemple, un déplacement sur une distance longue (sprint). Une demi-action correspond a une action brêve. De plus, sauf pouvoir indiquant le contraire, une créature ne peux effectuer qu'une seule action de mouvement par tour, ainsi qu'une seule attaque. Pour avoir des détails sur les actions, voir plus bas.
+Une action longue prend tout le round de la créature: par exemple, un déplacement sur une distance longue (sprint). Une demi-action correspond a une action brève. De plus, sauf pouvoir indiquant le contraire, une créature ne peux effectuer qu'une seule action de mouvement par tour, ainsi qu'une seule attaque. Pour avoir des détails sur les actions, voir plus bas.
 
 #### Fin de l'activation de la créature
 
@@ -216,6 +217,24 @@ ________________________________
 - Des fiches indiquant les dés a jeter pour toutes les attaques/pouvoirs contres les autres créatures (on prendra uniquement celles correspondant a des créatures utilisée).
 
 
+
+________________________________
+
+## Préparer le jeu
+
+Il faut préparer un terrain constitué de cases: ce peut être un terrain intérieur, ou extérieur. On choisir ensuite un scénario, par exemple:
+
+- Bataille a mort
+- Capturer un point contrôlé par l'ennemi
+- Tuer une unité ennemie particulière
+
+Pour créer les armées, les joueurs décident d'un montant en points a attribuer a chaque armée, et de la faction que jouera chacun. Chaque joueur choisit ensuite un ensemble de créature dont le coût total ne dépasse pas ce montant. Le choix est fait secrètement, bien que des joueurs alliés puissent choisir ensemble et l'un en fonction de l'autre: il est interdit de réalise son armée en fonction de ses adversaires, mais pas de ses alliés.
+
+Les alliances doivent être décidées a l'avance, de manière a équilibré le jeu. Dans l'idéal, il devrait y avoir autant d'armée dans chaque alliance, quitte a attribuer plus de points a une armée pour ré-équilibrer si une alliance est en sous-nombre. Le jeu peut aussi être totalement individuel. même a plus de 2. On peut aussi joueur la même armée a plusieurs joueurs.
+
+
+
+________________________________
 
 
 
