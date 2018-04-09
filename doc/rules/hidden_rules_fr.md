@@ -39,7 +39,8 @@ L'**accuracy** c'est la précision, elle représente en pourcentage la précisio
 
 ### Armes
 
-- Type d'attaque
+- Type d'attaque ['contact', 'distance']
+- Type de dégats ['contondant', 'tranchant', 'perçant']
 - Bonus d'attaque *Ajouté a la valeur de l'attaque, dépend uniquement de l'arme*
 - Coeff de maitrise *Maitrise de l'arme par son porteur -> multiplie l'attaque, 100 est une valeur standard*
 - bonus force parade *Bonus/malus ajouté a la force du porteur pour parer au CAC: au plus il est haut, au plus on peut parer des adversaires forts*
@@ -47,11 +48,17 @@ L'**accuracy** c'est la précision, elle représente en pourcentage la précisio
 - maitrise_accrucy de l'arme *(100 pour une arme standard, représente l'entrainement)*
 - parade_CAC_bonus *Quand l'arme permet de parer un peu plus facilement/difficilement*
 - parade_CAC_coeff *Quand l'arme affecte de part sa surface drastiquement la manière de parer (ex: lance pierre => 0%)"
+- bonus_force_attaque *Armes lourdes, dont le poid va augmenter leur force de frappe*
+- bonus_force_parade *Armes permettant de bloquer plus efficacement un coup trop puissant*
 
 ### Armures et résistances naturelles (peau, écaille)
 
 - Bonus d'esquive
 - Valeur de protection
+- Bonus de résistance contre
+	- Tranchant
+	- Perçant
+	- Contondant
 
 ## Gérer une attaque
 
@@ -65,11 +72,20 @@ Soient les créatures **attaquant** et **défenseur**
 => attaque_min = attaque_max * accuracy
 
 **défenseur**
-Parer avec une arme:
+
+**Parer avec une arme:**
 => parade_max = ( parade + arme->parade_CAC_bonus) * (arme->maitrise / 100) * (arme->parade_CAC_coeff / 100)
 => parade_accuracy = min(1, parade_accuracy * arme->maitrise_accuracy / 100^2)
 => parade_min = parade_max * parade_accuracy
-Esquiver:
+
+*Prise en compte du choc*
+=> force_attaque = attaquant->force + arme->bonus_force_attaque
+=> force_defense = attaquant->force + (arme->bonus_force_parade)
+=> delta_force = force_attaque - force_defense
+SI attaquant->arme->type_de_degats = contondant / Choc ET delta_force > 0:
+= = = => parade_max  = parade_max - delta_force
+
+**Esquiver:**
 => esquive_max = max(0, esquive + SUM(armures->bonus_esquive))
 => esquive_min = min(1, esquive_accuracy/100) * esquive_max
 
@@ -78,13 +94,15 @@ Esquiver:
 => reussite_min = attaque_min - max(parade_max, esquive_max)
 => delta_reussite = reussite_max - reussite_min
 
-
+=> degats_purs = attaquant->arme->defense
+=> resistance = SUM( defenseur->armure->resistance + defenseur->armur->bonus_resistance_contr(attaquant->arme->type_de_dégat) )
+=> degats_base = degats_purs - resistance *Dégats avec l'armure*
 
 **résulat**
 => **dé** = plus_proche_de(delta_reussite / DiceVal)
 => bonus pour pv en plus  = degats_purs * DamageCoeffPerPoints *| Nombre de points ajoutés au dé nécessaires pour faire un dégât de plus*
 => **table** = plus_proche_de(bonus pour pv en plus)
-=> **bonus_degats** = round( 9SUM [pour i de 10 a 20] ( abs( table[i] - (degats_pur + degats pur/ bonus pour pv en plus) / 10) *| Difference moyenne entre dégats théoriques et donnés par la table*
+=> **bonus_degats** = round( 9SUM [pour i de 10 a 20] ( abs( table[i] - (degats_base + degats pur/ bonus pour pv en plus) / 10) *| Difference moyenne entre dégats théoriques et donnés par la table*
 => **Bonus dé** = 10 + round( reussite_max / DiceVal ) - dé
 
 
