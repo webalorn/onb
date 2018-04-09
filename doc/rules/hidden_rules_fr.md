@@ -19,6 +19,7 @@ L'**accuracy** c'est la précision, elle représente en pourcentage la précisio
 - DamageCoeffPerPoints = 5/100 *Coeff appliqué aux dégats bonus pour chaque point de reussite en plus*
 - HumanSize = 3 *Taille standard, sert de référance*
 - ProjectilFacilityOnDiffSize = 4 *Bonus/malus attributé aux projectiles quand ils visent des cibles de tailles différentes d'un humain*
+- CoeffLongRangeAttack = 0.8
 
 ## Créatures
 
@@ -35,6 +36,12 @@ L'**accuracy** c'est la précision, elle représente en pourcentage la précisio
 - parade_accuracy
 - Attaque CAC
 - Attaque CAC accuracy
+- Pouvoirs passifs
+	- Texte simple (utilisé par le joueur)
+	- Bonus d'attaque
+		- Contre: liste de type de créatures, de races, sous-races ou catégories
+		- Bonus de dégats *Pour faire plus de dégats*
+		- Bonus d'attaque *Pour toucher plus facilement*
 
 #### Statistiques générées
 
@@ -43,24 +50,25 @@ L'**accuracy** c'est la précision, elle représente en pourcentage la précisio
 ### Armes
 
 - Type d'attaque ['contact', 'distance']
-- Type de dégats ['contondant', 'tranchant', 'perçant']
+- Type de dégâts ['contondant', 'tranchant', 'perçant', 'souffle'] *Souffle représente une explosion, un souffle de créature, etc... On ne peut pas l'esquiver*
+- Type de pouvoir [Rien, ou alors: acide, feu, etc...] *Les dégats sont-ils dus au poison ? A de la magie ? etc...*
 - Bonus d'attaque *Ajouté a la valeur de l'attaque, dépend uniquement de l'arme*
-- Coeff de maitrise *Maitrise de l'arme par son porteur -> multiplie l'attaque, 100 est une valeur standard*
+- Coeff de maîtrise *Maîtrise de l'arme par son porteur -> multiplie l'attaque, 100 est une valeur standard*
 - bonus force parade *Bonus/malus ajouté a la force du porteur pour parer au CAC: au plus il est haut, au plus on peut parer des adversaires forts*
 - base_accuracy de l'arme *(100 pour une arme standard, sa précision naturelle)*
-- maitrise_accrucy de l'arme *(100 pour une arme standard, représente l'entrainement)*
+- maitrise_accrucy de l'arme *(100 pour une arme standard, représente l'entraînement de la créature)*
 - parade_bonus *Quand l'arme permet de parer un peu plus facilement/difficilement*
 - parade_CAC_coeff *Quand l'arme affecte de part sa surface drastiquement la manière de parer (ex: lance pierre => 0%)"
 - parade_DIST_coeff *Pour parer un projectile. Default: 0%, une arme ne peut pas. Peut valoir > 100% pour un bouclier*
 - bonus_force_attaque *Armes lourdes, dont le poid va augmenter leur force de frappe*
 - bonus_force_parade *Armes permettant de bloquer plus efficacement un coup trop puissant*
-- esquive_difficulté *100 de base. Les armes particulièrement rapides sont plus difficile a esquive. Mutliplier par 2 divise l'esquive adverse par 2*
+- esquive_difficulté *100 de base. Les armes particulièrement rapides sont plus difficile a esquive. Multiplier par 2 divise l'esquive adverse par 2*
+- portée *1 au contact*
 
 Pour une arme de tir:
 
 - force projectile
 - coeff_bonus_force_creature *0% par defaut. Ce coeff fois la force de la créature est ajouté a la force du projectile*
-- 
 
 ### Armures et résistances naturelles (peau, écaille)
 
@@ -70,6 +78,13 @@ Pour une arme de tir:
 	- Tranchant
 	- Perçant
 	- Contondant
+	- Souffle
+- Bonus de résistance contre
+	- Acide
+	- Feu
+	- Glace
+	- électricité
+	- magie pure
 
 ## Gérer une attaque
 
@@ -77,6 +92,7 @@ Pour une arme de tir:
 
 Soient les créatures **attaquant** et **défenseur**
 TYPE = CAC ou DIST
+Les attaques a distance ont une attaque a portée normale, et une attaque a longue portée
 
 **attaquant**
 => attaque_max = ( attaque TYPE + arme->bonus_attaque) * (arme->maitrise / 100)
@@ -84,6 +100,8 @@ TYPE = CAC ou DIST
 *Attaque DIST contre une grosse créature*
 SI attaque a distance:
 = = = => attaque_max += (cible->taille - HumanSize) * ProjectilFacilityOnDiffSize
+Si attaque a distance et long portée:
+= = = => attaque_max *= CoeffLongRangeAttack
 
 => accuracy = min(1, attaque_TYPE_accuracy * arme->base_accuracy * arme->maitrise_accuracy / 100^3)
 => attaque_min = attaque_max * accuracy
@@ -107,15 +125,19 @@ SI attaquant->arme->type_de_degats = contondant / Choc ET delta_force > 0:
 
 **Esquiver:**
 => esquive_max = max(0, (esquive + SUM(armures->bonus_esquive) )  / (attaque->esquive_difficulté / 100) )
+Si attaque de souffle: esquive_max = 0
 => esquive_min = min(1, esquive_accuracy/100) * esquive_max
 
 **combat** *Attaque réussie si la réussite est >= 0*
 => reussite_max = attaque_max - max(parade_min, esquive_min)
+On ajoute a reussite_max tout les dégâts ajoutés par les passifs
 => reussite_min = attaque_min - max(parade_max, esquive_max)
 => delta_reussite = reussite_max - reussite_min
 
+**dégats**
 => degats_purs = attaquant->arme->defense
-=> resistance = SUM( defenseur->armure->resistance + defenseur->armure->bonus_resistance_contr(attaquant->arme->type_de_dégat) )
+On ajoute a degats_purs tout les dégâts ajoutés par les passifs
+=> resistance = SUM( defenseur->armure->resistance + defenseur->armure->bonus_resistance_contr(attaquant->arme->type_de_dégat) + defenseur->armure->bonus_resistance_contre(attaquant->arme->Type de pouvoir))
 => degats_base = degats_purs - resistance *Dégats avec l'armure*
 
 **résulat**
