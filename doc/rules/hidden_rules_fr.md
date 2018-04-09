@@ -18,8 +18,8 @@ L'**accuracy** c'est la précision, elle représente en pourcentage la précisio
 - DiceVal = 2 *Valeur d'attaque correspondant a '1' de plus ou de moins au dé'*
 - DamageCoeffPerPoints = 5/100 *Coeff appliqué aux dégats bonus pour chaque point de reussite en plus*
 - HumanSize = 3 *Taille standard, sert de référance*
-- ProjectilFacilityOnDiffSize = 4 *Bonus/malus attributé aux projectiles quand ils visent des cibles de tailles différentes d'un humain*
-- CoeffLongRangeAttack = 0.8
+- ProjectileFacilityOnDiffSize = 4 *Bonus/malus attributé aux projectiles quand ils visent des cibles de tailles différentes d'un humain*
+- MalusLongRangeAttack = 4
 
 ## Créatures
 
@@ -88,64 +88,65 @@ Pour une arme de tir:
 
 ## Gérer une attaque
 
-### Attaques de CAC - DIST
+### Attaques
 
-Soient les créatures **attaquant** et **défenseur**
+Soient les créatures **attaquant** et **défenseur**.
+
 TYPE = CAC ou DIST
-Les attaques a distance ont une attaque a portée normale, et une attaque a longue portée
 
-**attaquant**
-=> attaque_max = ( attaque TYPE + arme->bonus_attaque) * (arme->maitrise / 100)
+Les attaques a distance ont une attaque a portée normale, et une attaque a longue portée, calculées séparément
 
-*Attaque DIST contre une grosse créature*
-SI attaque a distance:
-= = = => attaque_max += (cible->taille - HumanSize) * ProjectilFacilityOnDiffSize
-Si attaque a distance et long portée:
-= = = => attaque_max *= CoeffLongRangeAttack
+#### attaquant
 
-=> accuracy = min(1, attaque_TYPE_accuracy * arme->base_accuracy * arme->maitrise_accuracy / 100^3)
-=> attaque_min = attaque_max * accuracy
+-attaque_max = ( attaque TYPE + arme->bonus_attaque) * (arme->maitrise / 100)
+- *Attaque DIST contre une créature de taille différente*
+	- attaque_max += (cible->taille - HumanSize) * ProjectilFacilityOnDiffSize
+- Si attaque a distance et long portée:
+	- attaque_max -= MalusLongRangeAttack
+- accuracy = min(1, attaque_TYPE_accuracy * arme->base_accuracy * arme->maitrise_accuracy / 100^3) 
+- attaque_min = attaque_max * accuracy
 
-**défenseur**
+#### défenseur
 
-**Parer avec une arme:**
-=> parade_max = ( parade + arme->parade_bonus) * (arme->maitrise / 100) * (arme->parade_TYPE_coeff / 100)
+##### Parer avec une arme:
 
-*Prise en compte du choc*
-=> force_attaque = attaquant->force + arme->bonus_force_attaque
-OU si DIST: force_attaque = force projectile + attaquant->force * projectile->coeff_bonus_force_creature
-=> force_defense = attaquant->force + (arme->bonus_force_parade)
-=> delta_force = force_attaque - force_defense
-SI attaquant->arme->type_de_degats = contondant / Choc ET delta_force > 0:
-= = = => parade_max  = parade_max - delta_force
-
-=> parade_accuracy = min(1, parade_accuracy * arme->maitrise_accuracy / 100^2)
-=> parade_min = parade_max * parade_accuracy
+- parade_max = ( parade + arme->parade_bonus) * (arme->maitrise / 100) * (arme->parade_TYPE_coeff / 100)
+- *Prise en compte du choc*
+	- force_attaque = attaquant->force + arme->bonus_force_attaque
+	- OU si DIST: force_attaque = force projectile + attaquant->force * projectile->coeff_bonus_force_creature
+	-  force_defense = attaquant->force + (arme->bonus_force_parade)
+	- delta_force = force_attaque - force_defense
+	- SI attaquant->arme->type_de_degats = contondant / Choc ET delta_force > 0:
+		- parade_max  = parade_max - delta_force
+- parade_accuracy = min(1, parade_accuracy * arme->maitrise_accuracy / 100^2)
+- parade_min = parade_max * parade_accuracy
 
 
-**Esquiver:**
-=> esquive_max = max(0, (esquive + SUM(armures->bonus_esquive) )  / (attaque->esquive_difficulté / 100) )
-Si attaque de souffle: esquive_max = 0
-=> esquive_min = min(1, esquive_accuracy/100) * esquive_max
+##### Esquiver:
+- esquive_max = max(0, (esquive + SUM(armures->bonus_esquive) )  / (attaque->esquive_difficulté / 100) )
+- Si attaque de souffle: esquive_max = 0
+- esquive_min = min(1, esquive_accuracy/100) * esquive_max
 
-**combat** *Attaque réussie si la réussite est >= 0*
-=> reussite_max = attaque_max - max(parade_min, esquive_min)
-On ajoute a reussite_max tout les dégâts ajoutés par les passifs
-=> reussite_min = attaque_min - max(parade_max, esquive_max)
-=> delta_reussite = reussite_max - reussite_min
+#### combat
+*Attaque réussie si la réussite est >= 0*
 
-**dégats**
-=> degats_purs = attaquant->arme->defense
-On ajoute a degats_purs tout les dégâts ajoutés par les passifs
-=> resistance = SUM( defenseur->armure->resistance + defenseur->armure->bonus_resistance_contr(attaquant->arme->type_de_dégat) + defenseur->armure->bonus_resistance_contre(attaquant->arme->Type de pouvoir))
-=> degats_base = degats_purs - resistance *Dégats avec l'armure*
+- reussite_max = attaque_max - max(parade_min, esquive_min)
+- On ajoute a reussite_max tout les dégâts ajoutés par les passifs
+- reussite_min = attaque_min - max(parade_max, esquive_max)
+- delta_reussite = reussite_max - reussite_min
 
-**résulat**
-=> **dé** = plus_proche_de(delta_reussite / DiceVal)
-=> bonus pour pv en plus  = degats_purs * DamageCoeffPerPoints *| Nombre de points ajoutés au dé nécessaires pour faire un dégât de plus*
-=> **table** = plus_proche_de(bonus pour pv en plus / cible->Santé par PV)
-=> **bonus_degats** = round( 9SUM [pour i de 10 a 20] ( abs( table[i] - ( (degats_base + degats pur/ bonus pour pv en plus) / cible->Santé par PV ) / 10) *| Difference moyenne entre dégats théoriques et donnés par la table*
-=> **Bonus dé** = 10 + round( reussite_max / DiceVal ) - dé
+#### dégats
+- degats_purs = attaquant->arme->defense
+- On ajoute a degats_purs tout les dégâts ajoutés par les passifs
+- resistance = SUM( defenseur->armure->resistance + defenseur->armure->bonus_resistance_contr(attaquant->arme->type_de_dégat) + defenseur->armure->bonus_resistance_contre(attaquant->arme->Type de pouvoir))
+- degats_base = degats_purs - resistance *Dégats avec l'armure*
+
+####  résulat
+- **dé** = plus_proche_de(delta_reussite / DiceVal)
+- bonus pour pv en plus  = degats_purs * DamageCoeffPerPoints *| Nombre de points ajoutés au dé nécessaires pour faire un dégât de plus*
+- **table** = plus_proche_de(bonus pour pv en plus / cible->Santé par PV)
+- **bonus_degats** = round( 9SUM [pour i de 10 a 20] ( abs( table[i] - ( (degats_base + degats pur/ bonus pour pv en plus) / cible->Santé par PV ) / 10) *| Difference moyenne entre dégats théoriques et donnés par la table*
+- **Bonus dé** = 10 + round( reussite_max / DiceVal ) - dé
 
 
 
