@@ -5,8 +5,12 @@ class FieldValue:
 	Field with a fixed type and a default value
 	"""
 
+	# All values that describe the field properties and can be exported
+	fieldProperties = ["values", "generated", "optional", "min", "max", "helperList", "default"]
+
 	values = []
 	generated = False
+	optional = False
 	min, max, helperList, default = None, None, None, None
 
 	def type(self):
@@ -25,6 +29,8 @@ class FieldValue:
 	def castFunction(self, value):
 		value = copy.deepcopy(value) # ensure it will create a new object
 		if value == None:
+			if self.optional:
+				return None
 			value = self.createValue()
 		elif not isinstance(value, self.type()):
 			cleverCast = self.createValueFrom(value)

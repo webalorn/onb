@@ -42,6 +42,7 @@ class DbStorableModel(DataModel): # won't be directly stored, despite of 'storab
 
 class GameEntityModel(BaseGameModel):
 	def getFields():
+		print("GET fields")
 		return {
 			'name': StringField(),
 			'alignment': StringField(default="neutral", helperList="alignment"),
@@ -49,6 +50,6 @@ class GameEntityModel(BaseGameModel):
 
 			'health': IntField(1),
 			'size': IntField(1),
-			'protection': ClassField('protection'),
+			'protection': ClassField('protection', optional=True),
 		}
 	exposedFields = ['name', 'race', 'alignment']

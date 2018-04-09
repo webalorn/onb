@@ -1,5 +1,7 @@
 import re, copy, inspect
 
+_agregatedFields = {}
+
 class DataModel:
 	"""
 	Base class for data storgae
@@ -17,8 +19,8 @@ class DataModel:
 	@classmethod
 	def agregateAttr(cls, attrname):
 		saveName = '_aggregate_saved_' + cls.__name__ + '_' + attrname
-		if hasattr(cls, saveName):
-			return getattr(cls, saveName)
+		if saveName in _agregatedFields:
+			return _agregatedFields[saveName]
 
 		attr = copy.deepcopy(getattr(cls, attrname))
 		if callable(attr):
@@ -31,7 +33,8 @@ class DataModel:
 					attr += subattr
 				else:
 					attr = {**subattr, **attr}
-		setattr(cls, saveName, attr)
+
+		_agregatedFields[saveName] = attr
 		return attr
 
 	@classmethod
@@ -73,9 +76,11 @@ class DataModel:
 	def fieldExist(self, fieldName):
 		return fieldName in self.fieldTypes
 
-	def ensureFieldExists(self, fieldName):
+	def ensureFieldExists(self, fieldName): # Rais error if field doesn't exist and ensure field value isn't None if field is optional
 		if not fieldName in self.fields:
 			raise KeyError("Field {0} doesn't exist".format(fieldName))
+		if self.fields[fieldName] == None:
+			self.fields[fieldName] = self.getFieldObj(fieldName).createValue()
 
 	def getFieldObj(self, fieldName):
 		if '.' in fieldName:
@@ -94,6 +99,7 @@ class DataModel:
 		return self.fieldTypes[fieldName].castFunction(newValue)
 
 	def setFieldType(self, fieldName, modelClass):
+		self.ensureFieldExists(fieldName)
 		if isinstance(self[fieldName], modelClass):
 			return
 		model = modelClass()
@@ -144,6 +150,7 @@ class DataModel:
 		model = self
 		for prop in names:
 			if isinstance(model, DataModel):
+				model.ensureFieldExists
 				model = model[prop]
 			else:
 				raise KeyError()

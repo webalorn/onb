@@ -38,7 +38,6 @@ class PopulateManager:
 		# Not intended for direct use by external code
 		for key in datas:
 			if not key in self.reservedFields:
-				model.ensureFieldExists(key)
 				if isinstance(datas[key], dict):
 					if '_type' in datas[key]:
 						model.setFieldType(key, getModelByName(datas[key]['_type']))
