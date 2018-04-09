@@ -7,7 +7,7 @@ class PopulateManager:
 		# Import here to avoir circular reference
 		from ..modelslist import modelsList
 		self.modelsList = modelsList
-		self.reservedFields = ['type']
+		self.reservedFields = ['_type']
 
 	def convertDatas(self, datas):
 		if isinstance(datas, list):
@@ -40,8 +40,8 @@ class PopulateManager:
 			if not key in self.reservedFields:
 				model.ensureFieldExists(key)
 				if isinstance(datas[key], dict):
-					if 'type' in datas[key]:
-						model.setFieldType(key, getModelByName(datas[key]['type']))
+					if '_type' in datas[key]:
+						model.setFieldType(key, getModelByName(datas[key]['_type']))
 					self._populateModel(model[key], datas[key])
 				else:
 					model[key] = datas[key]

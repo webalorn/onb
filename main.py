@@ -18,7 +18,7 @@ import copy
 try:
 	print("Dices:", *onb.conf.DICES)
 	#print(modelsList['dammage_table'])
-	creature = CreatureModel({"name":"Conan", "actions.10":{'type':'action_move'}, 'protection.ice_bonus': 12})
+	creature = CreatureModel({"name":"Conan", "actions.10":{'_type':'action_move'}, 'protection.ice_bonus': 12})
 	print(creature.get('protection.ice_bonus', 0))
 		
 	creature.actions.append(ActionMoveModel({'run_speed':12}))
@@ -26,6 +26,10 @@ try:
 	creature.actions.append(AttackModel({'weapon_name': 'VERY BIG SWORD'}))
 
 	pprint.pprint(creature.actions.filter('attack'))
+
+	encoding = ModelEncoder.encode(creature)
+	creature2 = ModelEncoder.decode(encoding)
+	print(creature2)
 
 	#print(creature)
 	#pprint.pprint(ModelEncoder.encode(creature))

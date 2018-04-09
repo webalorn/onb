@@ -21,14 +21,14 @@ class ModelEncoder:
 				if fieldValue != None:
 					datas[field] = cls.encode(fieldValue)
 					# Remove key 'type' if it is the default type
-					if isinstance(datas[field], dict) and 'type' in datas[field]:
-						if getModelByName(datas[field]['type']) == model.getFieldType(field):
-							del datas[field]['type']
+					if isinstance(datas[field], dict) and '_type' in datas[field]:
+						if getModelByName(datas[field]['_type']) == model.getFieldType(field):
+							del datas[field]['_type']
 
 			if isinstance(model, ListModel):
 				datas = [datas[key] for key in sorted(datas.keys())]
 			else:
-				datas["type"] = modelName
+				datas["_type"] = modelName
 			return datas
 		return model
 
@@ -47,8 +47,8 @@ class ModelEncoder:
 	@classmethod
 	def decode(cls, datas):
 		modelName = 'creature'
-		if 'type' in datas:
-			modelName = datas['type']
+		if '_type' in datas:
+			modelName = datas['_type']
 		modelClass = getModelByName(modelName)
 		model = modelClass()
 		PopulateManager().populate(model, datas)
@@ -57,7 +57,7 @@ class ModelEncoder:
 	@classmethod
 	def encodeTypes(cls, obj):
 		"""
-			return {'type':'model', 'fieldsType': ...}
+			return {'_type':'model', 'fieldsType': ...}
 		"""
 		if isinstance(obj, str): # In case of a model identifier
 			obj = getModelByName(obj)
@@ -65,7 +65,7 @@ class ModelEncoder:
 		if isinstance(obj, DataModel):
 			return cls.encodeTypes(type(obj))
 		elif inspect.isclass(obj) and issubclass(obj, DataModel):
-			datas = {'type':'model', 'model_name': obj.getModelName()}
+			datas = {'_type':'model', 'model_name': obj.getModelName()}
 			fields = obj.getFieldTypes()
 			datas['fieldsType'] = {key:cls.encodeTypes(fields[key]) for key in fields}
 			return datas
@@ -74,15 +74,15 @@ class ModelEncoder:
 			# Object -> recall with the object class
 			# otherwise, return string type
 			if isinstance(obj, DictField):
-				return {'type':'dict', 'fieldsType': cls.encodeTypes(obj.classParams[0])} # [0] -> fieldsSharedType
+				return {'_type':'dict', 'fieldsType': cls.encodeTypes(obj.classParams[0])} # [0] -> fieldsSharedType
 			elif isinstance(obj, ListField):
-				return {'type':'list', 'fieldsType': cls.encodeTypes(obj.classParams[0])} # [0] -> fieldsSharedType
+				return {'_type':'list', 'fieldsType': cls.encodeTypes(obj.classParams[0])} # [0] -> fieldsSharedType
 			elif isinstance(obj, ClassField):
 				return cls.encodeTypes(obj.type())
 			else:
 				# return field class name in lower case, without "Field" at the end
 				type_name = obj.__class__.__name__[:-5].lower()
-				datas = {'type': type_name}
+				datas = {'_type': type_name}
 
 				# Property name -> default value
 				properties = {'values': [], 'min': None, 'max': None, 'helperList': None, 'generated': False, 'modelName': None}

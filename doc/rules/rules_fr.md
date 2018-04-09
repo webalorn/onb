@@ -177,6 +177,7 @@ ________________________________
 Ces statistiques sont celles visibles par le joueur, qui devra directement les utiliser
 
 - Nom
+- Univers *Univers dans laquelle se situe la créature/l'entité
 - Affiliation | *Le 'camp', ou neutre. Une armée est nécessairement constitué de créatures de même affiliation, et neutres*
 - Race - Sous race | *Utile pour certains pouvoirs*
 - Catégories | *Liste de symboles affectant le type de la créature: distance, lourde, volante, démoniaque, robot...*

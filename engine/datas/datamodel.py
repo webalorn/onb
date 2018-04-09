@@ -6,7 +6,7 @@ class DataModel:
 
 	raise: KeyError
 
-	type field name is reserved for the type of the model
+	_type field name is reserved for the type of the model
 	"""
 
 	fieldTypes = None
