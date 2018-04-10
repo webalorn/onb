@@ -1,6 +1,3 @@
-import onb
+import onb, os
 
-class DevSettings(onb.OnbSettings):
-	debug = True
-
-DevSettings()
+onb.OnbSettings.loadFrom('env/dev/settings.yml')

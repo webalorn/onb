@@ -1,37 +1,68 @@
-import os, string
+import os, string, yaml
 from peewee import SqliteDatabase
-from engine.engine import Rand
-
-root = os.path.dirname(__file__)
+from engine.engine import Rand, Map
 
 ### Global configuration
+conf = Map()
 conf, sqldb, api = None, None, None
 
 class OnbSettings:
-	DICES = [0, 4, 6, 8, 10, 12, 20, 100]
+	"""
+		Settings files special fields:
+		- require: a dictionary of key: files that will be included as sub-fields
+		- inherit
+		- locations : a dictionary of locations. Locations will be tranformed to absolute paths
+	"""
 
-	class game:
-		humanSize = 3
-		attackTypes = ['contact', 'ranged']
-		dammageTypes = ['cutting', 'blunt', 'piercing']
-		powerTypes = ['material', 'fire', 'ice', 'electricity', 'acid', 'magic']
+	root = os.path.dirname(__file__)
 
-	debug = False
-	cacheAllModels = False # Avoid duplicate instances of the same model, but keep the model in memory
+	@classmethod
+	def mergeCfg(cls, source, destination):
+		for key, value in source.items():
+			if isinstance(value, dict) or isinstance(value, Map):
+				node = destination.setdefault(key, {})
+				cls.mergeCfg(value, node)
+			else:
+				destination[key] = value
+		return destination
 
-	dbRootLocation = os.path.join(root, 'db')
-	dbFilesLocation = os.path.join(dbRootLocation, 'files')
-	sqliteDbLocation = os.path.join(dbRootLocation, 'onb.db')
-
-
+	@classmethod
 	def createDbObject(self):
-		os.makedirs(os.path.dirname(self.sqliteDbLocation), exist_ok=True)
-		return SqliteDatabase(self.sqliteDbLocation)
+		os.makedirs(os.path.dirname(conf.locations.sqliteDb), exist_ok=True)
+		return SqliteDatabase(conf.locations.sqliteDb)
 
-	def __init__(self):
-		global conf, sqldb, api
-		sqldb = self.createDbObject()
-		conf = self
+	@classmethod
+	def loadYamlCfg(cls, filename):
+		if not os.path.isabs(filename):
+			filename = os.path.join(cls.root, filename)
+
+		with open(filename, 'r') as f:
+			cfg = yaml.load(f)
+
+		if 'require' in cfg:
+			for section in cfg['require']:
+				cfg[section] = cls.loadYamlCfg(cfg['require'][section])
+
+		if 'locations' in cfg:
+			for section in cfg['locations']:
+				if not os.path.isabs(cfg['locations'][section]):
+					cfg['locations'][section] = os.path.join(cls.root, cfg['locations'][section])
+
+		if 'inherit' in cfg:
+			cfg = cls.mergeCfg(cfg, cls.loadYamlCfg(cfg['inherit']))
+
+		return Map(cfg)
+
+	@classmethod
+	def loadFrom(cls, filename):
+		global conf, sqldb
+		conf = cls.loadYamlCfg(filename)
+		sqldb = cls.createDbObject()
+		
+
+
+
+
 
 ### Global functions for simple parameters use
 

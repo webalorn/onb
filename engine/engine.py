@@ -13,3 +13,11 @@ class Rand:
 
 	def roll(diceValue):
 		return random.randint(1, diceValue)
+
+class Map(dict):
+	__setattr__ = dict.__setitem__
+	__delattr__ = dict.__delitem__
+
+	def __getattr__(*args):
+		val = dict.get(*args)
+		return Map(val) if type(val) is dict else val

@@ -1,0 +1,16 @@
+dices: [0, 4, 6, 8, 10, 12, 20, 100]
+humanSize: 3
+attackTypes:
+  - contact
+  - ranged
+dammageTypes:
+  - cutting
+  - blunt
+  - piercing
+powerTypes:
+  - material
+  - fire
+  - ice
+  - electricity
+  - acid
+  - magic

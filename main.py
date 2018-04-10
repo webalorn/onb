@@ -15,7 +15,8 @@ import pprint
 import copy
 
 try:
-	print("Dices:", *onb.conf.DICES)
+	print("Dices:", *onb.conf.game.dices)
+	print(onb.conf.game.humanSize)
 	unit = UnitModel()
 	unit.armor.bonuses.ice = 12
 	print(unit.armor.bonuses.get('ice', -1))

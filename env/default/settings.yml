@@ -1,0 +1,10 @@
+debug: no
+cacheAllModels: no # Avoid duplicate instances of the same model, but keep the model in memory
+
+locations:
+  dbRoot: db
+  dbFiles: db/files
+  sqliteDb: onb.db
+
+require:
+  game: engine/settings.yml
