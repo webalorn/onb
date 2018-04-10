@@ -28,7 +28,7 @@ class GameEntityModel(BaseGameModel):
 			# Generated values
 			'categories': ListField(StringField(), generated=True),
 		}
-	exposedFields = ['name', 'race', 'sub_race', 'alignment', 'universe', 'battleground']
+	exposedFields = ['name', 'race', 'subrace', 'alignment', 'universe', 'battleground']
 
 class ObjectModel(DbStorableModel, GameEntityModel):
 	def getFields():

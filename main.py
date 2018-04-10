@@ -9,6 +9,7 @@ from engine.storage.encoder import ModelEncoder
 from engine.modelslist import modelsList
 from engine.storage.sheet import *
 from engine.storage.manager import StorageManager
+from engine.generator.tables import TableGenerator
 import engine.storage.jsondb as jdb
 
 import pprint

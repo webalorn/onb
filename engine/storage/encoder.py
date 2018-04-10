@@ -26,7 +26,7 @@ class ModelEncoder:
 							del datas[field]['_type']
 
 			if isinstance(model, ListModel):
-				datas = [datas[key] for key in sorted(datas.keys())]
+				datas = [datas[str(key)] for key in model.getSortedKeys()]
 			else:
 				datas["_type"] = modelName
 			return datas

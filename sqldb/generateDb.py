@@ -1,6 +1,9 @@
 import env.dev.settings, onb, peewee
 from sqldb.models import *
 
+import engine.storage.jsondb as jsondb
+from engine.generator.tables import TableGenerator
+
 tables = []
 
 ### Create a table for all subclasses of TableModel
@@ -29,21 +32,6 @@ def generateBaseDatas():
 	except peewee.IntegrityError:
 		print("Base datas have already been generated")
 
-from engine.models.creature import *
+	jsondb.storeTo(TableGenerator.new(), onb.conf.game.locations.table)
+
 generateBaseDatas()
-
-sqlCreature = gameobject.sqlModels['creature']
-
-creature = CreatureModel()
-creature.name = "Coooonaaaan !"
-creature.health = 42
-sqlCreature.create(owner_id=1, model=creature)
-
-ability = AbilityModel()
-ability.parry = 666
-gameobject.sqlModels['ability'].create(owner_id=1, model=ability)
-
-"""c = sqlCreature.get(id=1)
-c.model.name = "Kro"
-print(c.model)
-c.save()"""

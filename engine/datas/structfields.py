@@ -66,8 +66,11 @@ class ListModel(DictModel):
 		for i in range(len(valuesList)):
 			self[i] = valuesList[i]
 
+	def getSortedKeys(self):
+		return [str(i) for i in sorted([int(i) for i in self.fields.keys()])]
+
 	def getList(self):
-		keys = sorted(self.fields.keys())
+		keys = self.getSortedKeys()
 		return [self.fields[fieldName] for fieldName in keys]
 
 	def filter(self, fctOrClassname): # Filer by class name
@@ -80,7 +83,7 @@ class ListModel(DictModel):
 
 	def getMaxKey(self):
 		if not self.fields:
-			return 0
+			return -1
 		return max([int(key) for key in self.fields])
 
 	def append(self, value):

@@ -1,5 +1,6 @@
 dices: [0, 4, 6, 8, 10, 12, 20, 100]
 humanSize: 3
+diceSuccess: 10
 attackTypes:
   - contact
   - ranged
@@ -14,3 +15,5 @@ powerTypes:
   - electricity
   - acid
   - magic
+locations:
+  table: db/table.json

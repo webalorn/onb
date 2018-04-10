@@ -4,7 +4,7 @@ cacheAllModels: no # Avoid duplicate instances of the same model, but keep the m
 locations:
   dbRoot: db
   dbFiles: db/files
-  sqliteDb: onb.db
+  sqliteDb: db/onb.db
 
 require:
   game: engine/settings.yml
