@@ -1,7 +1,6 @@
 import onb, env.dev.settings
 
-from engine.models.creature import *
-from engine.models.gameentities import GameEntityModel
+from engine.models.gameentities import *
 from engine.models.tables import *
 
 from engine.modelslist import modelsList
@@ -17,25 +16,9 @@ import copy
 
 try:
 	print("Dices:", *onb.conf.DICES)
-	#print(modelsList['dammage_table'])
-	creature = CreatureModel({"name":"Conan", "actions.10":{'_type':'action_move'}, 'protection.ice_bonus': 12})
-	print(creature.get('protection.ice_bonus', 0))
-	
-	print(creature)
-
-	"""creature.actions.append(ActionMoveModel({'run_speed':12}))
-	creature.actions.append(AttackModel({'weapon_name': 'BIG SWORD'}))
-	creature.actions.append(AttackModel({'weapon_name': 'VERY BIG SWORD'}))
-
-	pprint.pprint(creature.actions.filter('attack'))"""
-
-	"""encoding = ModelEncoder.encode(creature)
-	creature2 = ModelEncoder.decode(encoding)
-	print(creature2)"""
-
-	#print(creature)
-	#pprint.pprint(ModelEncoder.encode(creature))
-	#pprint.pprint(ModelEncoder.encodeTypes(creature))
+	unit = UnitModel()
+	unit.armor.bonuses.ice = 12
+	print(unit.armor.bonuses.get('ice', -1))
 
 except KeyError as error2:
 	raise error2

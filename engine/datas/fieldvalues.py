@@ -101,6 +101,11 @@ class FloatField(FieldValue):
 	def type(self):
 		return float
 
+class PercentField(IntField):
+	def __init__(self, *p, **pn):
+		self.default = 100
+		super().__init__(*p, **pn)
+
 class StringField(FieldValue):
 	""" Field that only store string values """
 	def type(self):
@@ -179,8 +184,9 @@ class ForeignKeyField(FieldValue):
 from .structfields import *
 
 class DictField(ClassField):
-	def __init__(self, fieldsSharedType, *p, **pn):
-		ClassField.__init__(self, DictModel, [fieldsSharedType], *p, **pn)
+	def __init__(self, fieldsSharedType, *p, keysIn=None, **pn):
+		self.keysIn = keysIn
+		ClassField.__init__(self, DictModel, [fieldsSharedType, keysIn], *p, **pn)
 
 	def createValueFrom(self, otherValue):
 		if isinstance(otherValue, dict):

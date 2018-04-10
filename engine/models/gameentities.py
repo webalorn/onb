@@ -1,44 +1,10 @@
-from ..datas.datamodel import DataModel
-from ..datas.fieldvalues import *
-
 """
-Allowed Fields:
-	-> BoolField (optional default value)
-	-> IntField (optional default value)
-	-> StringField (optional default value)
-	-> FloatField (optional default value)
-
-	-> ClassField (required model type) # The subclasses of the model are allowed
-	-> DictField (required fields values type)
-	-> ListField (required fields values type)
-	-> ForeignKeyField (required model identifier)
+Base class for all entities (creatures, objects)
 """
 
-class BaseGameModel(DataModel):
-	storable = False # Will this model  be directly stored in the database ?
-	exposedFields = [] # Field added in the databse entry
-
-	@classmethod
-	def getExposedFields(cls):
-		return cls.agregateAttr('exposedFields')
-
-class DbStorableModel(DataModel): # won't be directly stored, despite of 'storable=True' because doesn't inherit 'BaseGameModel'
-	"""
-	Define common fields for extra-informations
-	It's not required to use this model to create storable models
-	Must be before 'BaseGameModel' in inheritance list
-	"""
-	def getFields():
-		return {
-			'name': StringField(),
-			'summary': StringField(),
-			'description': StringField(),
-			'image_id': IntField(),
-		}
-
-	exposedFields = ['name', 'summary', 'description', 'image_id']
-	storable = True
-
+from .gamemodels import *
+from .unitstats import *
+from .equipments import *
 
 class GameEntityModel(BaseGameModel):
 	def getFields():
@@ -47,9 +13,54 @@ class GameEntityModel(BaseGameModel):
 			'name': StringField(),
 			'alignment': StringField(default="neutral", helperList="alignment"),
 			'race': StringField(helperList="race"),
+			'subrace': StringField(helperList="subraces"),
+			'universe': StringField(helperList="universes"),
+			'battleground': StringField(helperList="battlegrounds"),
 
+			'life_points': IntField(1),
 			'health': IntField(1),
-			'size': IntField(1),
-			'protection': ClassField('protection', optional=True),
+			'size': IntField(3),
+			'base_size': IntField(3),
+			'mana': IntField(),
+
+			'armor': ClassField('armor'),
+
+			# Generated values
+			'categories': ListField(StringField(), generated=True),
 		}
-	exposedFields = ['name', 'race', 'alignment']
+	exposedFields = ['name', 'race', 'sub_race', 'alignment', 'universe', 'battleground']
+
+class ObjectModel(DbStorableModel, GameEntityModel):
+	def getFields():
+		return {
+			# rewrite fields
+			'alignment': StringField(values=["unaligned"]),
+			'race': StringField(values=["object"]),
+		}
+
+class UnitModel(DbStorableModel, GameEntityModel):
+	"""
+	Any entity that can move and, eventualy, be added in an army
+	"""
+
+	def getFields():
+		return {
+			'cost': IntField(),
+			'initiative': IntField(min=0),
+			'unit_type': StringField("troop", "hero", "npc"),
+
+			'movement': ClassField('action_move'),
+			'attributes': ClassField('attributes'),
+			'skills': ClassField('skills'),
+
+			'weapons': ListField('weapon'),
+			'actions': ListField('action'),
+			'passives': ListField('passive'),
+		}
+
+	def getActions():
+		return [
+			*self.actions.getList(),
+			*[weapon.getActions() for weapon in self.weapons.getList()],
+			self.movement
+		]

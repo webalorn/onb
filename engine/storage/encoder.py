@@ -57,7 +57,7 @@ class ModelEncoder:
 	@classmethod
 	def encodeTypes(cls, obj):
 		"""
-			return {'type':'model', 'fieldsType': ...}
+			return {'type':'model', 'fields': ...}
 		"""
 		if isinstance(obj, str): # In case of a model identifier
 			obj = getModelByName(obj)
@@ -67,14 +67,17 @@ class ModelEncoder:
 		elif inspect.isclass(obj) and issubclass(obj, DataModel):
 			datas = {'type':'model', 'model_name': obj.getModelName()}
 			fields = obj.getFieldTypes()
-			datas['fieldsType'] = {key:cls.encodeTypes(fields[key]) for key in fields}
+			datas['fields'] = {key:cls.encodeTypes(fields[key]) for key in fields}
 			return datas
 		elif isinstance(obj, FieldValue):
 			# List and dict -> direct recall with fieldssharedtype
 			# Object -> recall with the object class
 			# otherwise, return string type
 			if isinstance(obj, DictField):
-				return {'type':'dict', 'fieldsType': cls.encodeTypes(obj.classParams[0])} # [0] -> fieldsSharedType
+				datas = {'type':'dict', 'fieldsType': cls.encodeTypes(obj.classParams[0])} # [0] -> fieldsSharedType
+				if obj.keysIn:
+					datas['keysIn'] = obj.keysIn
+				return datas
 			elif isinstance(obj, ListField):
 				return {'type':'list', 'fieldsType': cls.encodeTypes(obj.classParams[0])} # [0] -> fieldsSharedType
 			elif isinstance(obj, ClassField):

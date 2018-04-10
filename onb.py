@@ -9,6 +9,13 @@ conf, sqldb, api = None, None, None
 
 class OnbSettings:
 	DICES = [0, 4, 6, 8, 10, 12, 20, 100]
+
+	class game:
+		humanSize = 3
+		attackTypes = ['contact', 'ranged']
+		dammageTypes = ['cutting', 'blunt', 'piercing']
+		powerTypes = ['material', 'fire', 'ice', 'electricity', 'acid', 'magic']
+
 	debug = False
 	cacheAllModels = False # Avoid duplicate instances of the same model, but keep the model in memory
 

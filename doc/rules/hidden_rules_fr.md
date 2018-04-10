@@ -56,7 +56,7 @@ L'**accuracy** c'est la précision, elle représente en pourcentage la précisio
 - Coeff de maîtrise *Maîtrise de l'arme par son porteur -> multiplie l'attaque, 100 est une valeur standard*
 - bonus force parade *Bonus/malus ajouté a la force du porteur pour parer au CAC: au plus il est haut, au plus on peut parer des adversaires forts*
 - base_accuracy de l'arme *(100 pour une arme standard, sa précision naturelle)*
-- maitrise_accrucy de l'arme *(100 pour une arme standard, représente l'entraînement de la créature)*
+- maitrise_accuracy de l'arme *(100 pour une arme standard, représente l'entraînement de la créature)*
 - parade_bonus *Quand l'arme permet de parer un peu plus facilement/difficilement*
 - parade_CAC_coeff *Quand l'arme affecte de part sa surface drastiquement la manière de parer (ex: lance pierre => 0%)"
 - parade_DIST_coeff *Pour parer un projectile. Default: 0%, une arme ne peut pas. Peut valoir > 100% pour un bouclier*

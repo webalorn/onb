@@ -14,8 +14,10 @@ class DictModel(DataModel):
 		self.ensureFieldExists(fieldName)
 		return self.fieldsSharedType.castFunction(newValue)
 
-	def __init__(self, fieldsSharedType):
+	def __init__(self, fieldsSharedType, keysIn=None):
 		""" all objects must inherit from the same class """
+		self._keysIn = keysIn
+
 		if isinstance(fieldsSharedType, str):
 			fieldsSharedType = ClassField(fieldsSharedType)
 
@@ -30,11 +32,14 @@ class DictModel(DataModel):
 
 	def ensureFieldExists(self, fieldName):
 		if not fieldName in self.fields:
+			if self._keysIn and not fieldName in self._keysIn:
+				raise KeyError("{0} is not in not an allowed key for this Dict".format(fieldName))
 			self.fields[fieldName] = self.fieldsSharedType.defaultValue()
 
 	def setValues(self, valuesList):
 		self.fields = {}
 		for key in valuesList:
+			ensureFieldExists(key)
 			self[key] = valuesList[key]
 
 class ListModel(DictModel):
