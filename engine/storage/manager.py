@@ -45,3 +45,9 @@ class StorageManager(metaclass=Singleton):
 		path = model._storageLocation
 		jsondb.storeTo(model, self._getRealPath(path))
 		return path
+
+	def delete(self, model):
+		if model and model._storageLocation:
+			path = self._getRealPath(model._storageLocation)
+			model._storageLocation = None
+			os.remove(path)

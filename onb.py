@@ -67,9 +67,9 @@ class OnbSettings:
 ### Global functions for simple parameters use
 
 def getDbPath(filename, *params, newFile=False):
-	directory = os.path.join(conf.dbFilesLocation)
+	directory = os.path.join(conf.locations.dbFiles)
 	os.makedirs(directory, exist_ok=True)
-	path = os.path.join(conf.dbFilesLocation, filename)
+	path = os.path.join(conf.locations.dbFiles, filename)
 
 	if newFile:
 		generatedPath = path

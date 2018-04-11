@@ -56,7 +56,7 @@ class DataModel:
 		return str(self.fields)
 
 	def callSubModel(self, fieldName, fctName, *p, **pn):
-		""" Call a function on a sub-model. Used when the fieldname contain '.'.
+		""" Call a function on a sub-model. Used when the field name contain '.'.
 		The function must take fielName as first parameter """
 		fieldName = fieldName.split('.')
 		model = self['.'.join(fieldName[:-1])]

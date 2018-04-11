@@ -26,12 +26,19 @@ class PassiveModel(BaseGameModel):
 			
 		}
 
+class TextPassiveModel(DescribedModel, PassiveModel):
+	pass
+
 ### Actions
 
 class ActionModel(BaseGameModel):
 	def getFields():
-		return {}
+		return {
+			'duration': StringField(values=["short", "long"]),
+		}
 
+
+### Attack actions
 
 class AttackModel(ActionModel):
 	def getFields():

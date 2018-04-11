@@ -1,9 +1,17 @@
 from .basemodels import *
 from engine.modelslist import getModelByName
+from engine.storage.manager import StorageManager
 from .customfields import ModelField
 from engine.models import *
 
 sqlModels = []
+
+_fieldTypes = {
+	'string': TextField,
+	'int': IntegerField,
+	'float': FloatField,
+	'bool': BooleanField,
+}
 
 def _addSubModelsToSqlModel(classname):
 	for modelClass in classname.__subclasses__():
@@ -31,8 +39,14 @@ class GameObject(OwnedObject):
 		self.populateFields()
 		super().save(*p, **pn)
 
+	def delete_instance(self, *p, **pn):
+		StorageManager().delete(self.model)
+		self.model = None
+		super().delete_instance()
+
 	@staticmethod
-	def createGameObjectModel(modelName):
+	def _createGameObjectModel(modelName):
+		""" Create a new class to save a specific model"""
 		sqlTableName = (modelName + '_table').title()
 		classModel = getModelByName(modelName)
 		properties = {
@@ -41,17 +55,10 @@ class GameObject(OwnedObject):
 			'type': TextField(default=modelName),
 		}
 
-		fieldTypes = {
-			'string': TextField,
-			'int': IntegerField,
-			'float': FloatField,
-			'bool': BooleanField,
-		}
-
 		for key in classModel.getExposedFields():
-			fieldType = fieldTypes[classModel.getFieldTypes()[key].getTypeRep()]
+			fieldType = _fieldTypes[classModel.getFieldTypes()[key].getTypeRep()]
 			properties[key] = fieldType(null=True)
 
 		return type(sqlTableName, (GameObject, TableModel,), properties)
 
-sqlModels = { key : GameObject.createGameObjectModel(key) for key in sqlModels }
+sqlModels = { key : GameObject._createGameObjectModel(key) for key in sqlModels }
