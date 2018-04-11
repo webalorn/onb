@@ -1,9 +1,9 @@
 language: python
   - "3.6"
-sudo: enabled
+sudo: false
 install:
-  - sudo pip install --upgrade pip
-  - sudo pip install pipenv
+  - pip install --upgrade pip
+  - pip install pipenv
   - pipenv install --dev
 script:
   - runTests.sh
