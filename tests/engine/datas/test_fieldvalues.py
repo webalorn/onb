@@ -5,6 +5,7 @@ import random
 
 class IntFieldTest(EngineTestModel):
 	def setUp(self):
+		super().setUp()
 		self.field = IntField()
 
 	def test_allowedValues(self):
@@ -72,6 +73,7 @@ class IntFieldTest(EngineTestModel):
 
 class BoolFieldTest(EngineTestModel):
 	def setUp(self):
+		super().setUp()
 		self.field = BoolField()
 
 	def test_allowedValues(self):
@@ -90,6 +92,7 @@ class BoolFieldTest(EngineTestModel):
 
 class FloatFieldTest(EngineTestModel):
 	def setUp(self):
+		super().setUp()
 		self.field = FloatField()
 
 	def test_allowedValues(self):
@@ -110,6 +113,7 @@ class FloatFieldTest(EngineTestModel):
 
 class PercentFieldTest(EngineTestModel):
 	def setUp(self):
+		super().setUp()
 		self.field = PercentField()
 
 	def test_allowedValues(self):
@@ -128,6 +132,7 @@ class PercentFieldTest(EngineTestModel):
 
 class StringFieldTest(EngineTestModel):
 	def setUp(self):
+		super().setUp()
 		self.field = StringField()
 
 	def test_allowedValues(self):
@@ -157,6 +162,7 @@ class StringFieldTest(EngineTestModel):
 
 class ClassFieldTest(EngineTestModel):
 	def setUp(self):
+		super().setUp()
 		self.field = ClassField('unit')
 
 	def test_createValue(self):

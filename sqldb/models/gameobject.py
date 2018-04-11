@@ -27,6 +27,8 @@ class GameObject(OwnedObject):
 
 	def populateFields(self):
 		""" Fill the fields values with the values found in the object """
+		if isinstance(self.model, dict):
+			self.model = getModelByName(self.modelClass)(self.model)
 		if not self.model:
 			raise TypeError("Model value can't be empty")
 

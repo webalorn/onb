@@ -1,6 +1,7 @@
 git_ignore
 .idea
 db
+db_testing
 
 *.pyc
 *.sublime-workspace
