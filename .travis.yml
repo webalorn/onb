@@ -6,10 +6,13 @@ env:
   global:
     - PIPENV_VENV_IN_PROJECT=1
     - PIPENV_IGNORE_VIRTUALENVS=1
+
 install:
   - pip install --upgrade pip
   - pip install pipenv
   - pipenv install --dev --skip-lock
 script:
-  - ls
   - ./runTests.sh
+
+notifications:
+  email: false

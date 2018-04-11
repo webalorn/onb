@@ -8,7 +8,6 @@ from .equipments import *
 
 class GameEntityModel(BaseGameModel):
 	def getFields():
-		print("GET fields")
 		return {
 			'name': StringField(),
 			'alignment': StringField(default="neutral", helperList="alignment"),

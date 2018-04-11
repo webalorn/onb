@@ -30,6 +30,11 @@ Scripts:
 - main.py (default entry point)
 - sqldb/generateDb.py
 
+You can also run tests:
+```bash
+./runTests.sh
+```
+
 ## Code specifications
 
 ```

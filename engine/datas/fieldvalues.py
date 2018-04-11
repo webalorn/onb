@@ -103,8 +103,8 @@ class FloatField(FieldValue):
 
 class PercentField(IntField):
 	def __init__(self, *p, **pn):
-		self.default = 100
 		super().__init__(*p, **pn)
+		self.default = 100
 
 class StringField(FieldValue):
 	""" Field that only store string values """
@@ -118,7 +118,7 @@ class StringField(FieldValue):
 
 	def setAboveMin(self, value):
 		if self.min != None and len(value) < self.min:
-			value += "#"*(self.min-len(value))
+			value += " "*(self.min-len(value))
 		return value
 
 ### Complex types
@@ -141,7 +141,7 @@ class ClassField(FieldValue):
 		FieldValue.__init__(self, *p, **pn)
 
 class ForeignKeyField(FieldValue):
-	""" Field that only store instances of the same class """
+	""" Field that only store foreign key to the same class """
 
 	def type(self):
 		from ..modelslist import getModelByName
