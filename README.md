@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/webalorn/onb.svg?branch=master)](https://travis-ci.org/webalorn/onb)
+
 # ONB - One dice Battles
 
 **One dice Battles** is a **miniature wargame system** that aims to suport elaborate rules, but to be very **simple to play**, through the usage of pre-computed actions tests. Don't worry: you still have to roll a dice yourself, but **only one**. Creatures and entities are created inside the program, and the user can generate a simple 'action' card for each action and each pair of attacking creature / attacked creature. On this card is writed the dice player should roll and the bonus to apply. Then, when a player want to perform an attack, he only have to roll the dice, apply bonuses/maluses, and look in the game table of dammages how many damage he dealt to his opponent.
