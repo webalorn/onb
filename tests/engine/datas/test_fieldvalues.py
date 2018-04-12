@@ -25,6 +25,10 @@ class IntFieldTest(EngineTestModel):
 		self.assertEqual(self.field.castFunction(None), None)
 		self.assertEqual(self.field.castFunction(12), 12)
 
+		self.field = IntField(optional=True, min=10)
+		self.assertEqual(self.field.castFunction(None), None)
+		self.assertEqual(self.field.castFunction(8), 10)
+
 	def test_defaultValue(self):
 		self.field = IntField(12)
 		self.assertEqual(self.field.defaultValue(), 12)

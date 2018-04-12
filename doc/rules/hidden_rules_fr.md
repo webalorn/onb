@@ -20,6 +20,7 @@ L'**accuracy** c'est la précision, elle représente en pourcentage la précisio
 - HumanSize = 3 *Taille standard, sert de référance*
 - ProjectileFacilityOnDiffSize = 4 *Bonus/malus attributé aux projectiles quand ils visent des cibles de tailles différentes d'un humain*
 - MalusLongRangeAttack = 4
+- AttackSpeedDodgeMalus = 2
 
 ## Créatures
 
@@ -62,7 +63,7 @@ L'**accuracy** c'est la précision, elle représente en pourcentage la précisio
 - parade_DIST_coeff *Pour parer un projectile. Default: 0%, une arme ne peut pas. Peut valoir > 100% pour un bouclier*
 - bonus_force_attaque *Armes lourdes, dont le poid va augmenter leur force de frappe*
 - bonus_force_parade *Armes permettant de bloquer plus efficacement un coup trop puissant*
-- esquive_difficulté *100 de base. Les armes particulièrement rapides sont plus difficile a esquive. Multiplier par 2 divise l'esquive adverse par 2*
+- Vitesse de l'attaque *100% de base. Les armes particulièrement rapides sont plus difficile a esquiver. Ajouter 100 enleve 'AttackSpeedDodgeMalus' à l'esquive adverse*
 - portée *1 au contact*
 
 Pour une arme de tir:
@@ -123,7 +124,7 @@ Les attaques a distance ont une attaque a portée normale, et une attaque a long
 
 
 ##### Esquiver:
-- esquive_max = max(0, (esquive + SUM(armures->bonus_esquive) )  / (attaque->esquive_difficulté / 100) )
+- esquive_max = max(0, (esquive + SUM(armures->bonus_esquive) )  /- (attaque->vitesse_de_l_attaque / 100 - 1) * AttackSpeedDodgeMalus
 - Si attaque de souffle: esquive_max = 0
 - esquive_min = min(1, esquive_accuracy/100) * esquive_max
 

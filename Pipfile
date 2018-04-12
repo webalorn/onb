@@ -8,6 +8,8 @@ pandas = "*"
 peewee = "*"
 xlrd = "*"
 pyyaml = "*"
+flask = "*"
+flask-restful = "*"
 
 [dev-packages]
 
