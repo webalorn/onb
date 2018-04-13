@@ -12,6 +12,8 @@ def _addSubModels(classname):
 _addSubModels(basemodels.TableModel)
 
 def generateStructure(verbose=False):
+	onb.sqldb.connect()
+
 	if verbose:
 		print("Create tables for:", [t.__name__ for t in tables])
 	onb.sqldb.create_tables(tables)
@@ -22,3 +24,4 @@ def generateStructure(verbose=False):
 		print("Base datas have already been generated")
 
 	jsondb.storeTo(TableGenerator.new(), onb.conf.game.locations.table)
+	onb.sqldb.close()

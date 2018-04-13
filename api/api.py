@@ -19,6 +19,15 @@ from api.common.converters import *
 from api.common.auth import *
 from api.ressources import *
 
+@onb.app.before_request
+def _db_connect():
+	onb.sqldb.connect()
+
+@onb.app.teardown_request
+def _db_close(exc):
+	if not onb.sqldb.is_closed():
+		onb.sqldb.close()
+
 @onb.api.resource('/')
 class HelloWorld(Resource):
 	def get(self):

@@ -51,7 +51,7 @@ class UserAuth(Resource):
 			user = sqlUser.get(username=args['username'])
 			if not user.verifyPassword(args['password']):
 				raise UserAuthError()
-		except sqlUser.DoesNotExist:
+		except NotFoundError:
 			raise UserAuthError()
 
 		return user

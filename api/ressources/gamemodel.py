@@ -20,10 +20,14 @@ class ModelPages(Resource):
 	@fjwt.jwt_optional
 	def get(self, modelclass, pageId=1):
 		args = modelListFilterParser().parse_args()
+		
+		whereClause = (modelclass.is_public == True) | (modelclass.owner_id == fjwt.get_jwt_identity())
+		if args['only_official']:
+			whereClause = whereClause & (modelclass.is_official == True)
+
 		req = (modelclass.select()
 				.paginate(pageId, args['pagination'])
-				.where((modelclass.is_official == True) | (modelclass.is_official == args['only_official']))
-				.where((modelclass.is_public == True) | (modelclass.owner_id == fjwt.get_jwt_identity()))
+				.where(whereClause)
 		)
 
 		return list(req)

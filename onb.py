@@ -1,5 +1,5 @@
 import os, string, yaml
-from peewee import SqliteDatabase
+from playhouse.pool import PooledSqliteExtDatabase
 from engine.engine import Rand, Map
 
 ### Global configuration
@@ -29,7 +29,7 @@ class OnbSettings:
 	@classmethod
 	def createDbObject(self):
 		os.makedirs(os.path.dirname(conf.locations.sqliteDb), exist_ok=True)
-		return SqliteDatabase(conf.locations.sqliteDb)
+		return PooledSqliteExtDatabase(conf.locations.sqliteDb)
 
 	@classmethod
 	def loadYamlCfg(cls, filename):
