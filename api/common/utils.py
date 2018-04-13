@@ -6,5 +6,4 @@ def api_route(self, *args, **kwargs):
 		return cls
 	return wrapper
 
-def utilsMain():
-	onb.api.route = types.MethodType(api_route, onb.api)
+onb.api.route = types.MethodType(api_route, onb.api)

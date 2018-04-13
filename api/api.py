@@ -1,20 +1,22 @@
 from flask import Flask
 from flask_restful import Resource, Api
-import onb, env.dev.settings
-from api.common.utils import utilsMain
+from flask_jwt_extended import JWTManager
 from api.common.errors import errors
+import onb, env.dev.settings, os
 
 app = Flask(__name__)
-api = Api(app, errors=errors)
+
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY') or 'dev_secret_key'
 
 onb.app = app
-onb.api = api
+onb.api = Api(app, errors=errors)
+onb.jwt = JWTManager(app)
 
-utilsMain()
-
+from api.common.utils import *
+from api.common.auth import *
 from api.ressources import *
 
-@api.route('/')
+@onb.api.route('/')
 class HelloWorld(Resource):
 	def get(self):
 		return {'hello': 'the world'}

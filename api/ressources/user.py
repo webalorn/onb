@@ -1,6 +1,8 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, marshal, marshal_with
 from sqldb.models.user import User as sqlUser
 from api.common.errors import *
+from api.fields.user import *
+import flask_jwt_extended as fjwt
 import onb
 
 print("user")
@@ -28,11 +30,21 @@ class User(Resource):
 		if sqlUser.select().where(sqlUser.username == args['username']).exists():
 			raise UserAlreadyExistsError()
 
-		sqlUser.create(username=args['username'], autoSave=False, password_hash=password)
-		return {"test": "created"}
+		user = sqlUser.create(username=args['username'], autoSave=False, password_hash=password)
+		return {"test": "created", 'id': user.id, 'username': user.username}
+
+@onb.api.route('/user/<int:id>')
+class UserWithId(Resource):
+	@fjwt.jwt_optional
+	def get(self, id):
+		user = fjwt.get_current_user()
+		if user and user.id == id:
+			return marshal(user, auth_user_fields)
+		return marshal(user, user_fields)
 
 @onb.api.route('/user/auth')
 class UserAuth(Resource):
+	@marshal_with(auth_user_fields)
 	def get(self):
 		args = authParser().parse_args()
 		password = sqlUser.hashPassword(args['password'])
@@ -44,4 +56,4 @@ class UserAuth(Resource):
 		except sqlUser.DoesNotExist:
 			raise UserAuthError()
 
-		return user.id
+		return user
