@@ -12,14 +12,15 @@ onb.app = app
 onb.api = Api(app, errors=errors)
 onb.jwt = JWTManager(app)
 
-from api.common.utils import *
+from api.common.converters import *
 from api.common.auth import *
 from api.ressources import *
 
-@onb.api.route('/')
+@onb.api.resource('/')
 class HelloWorld(Resource):
 	def get(self):
 		return {'hello': 'the world'}
 
 if __name__ == '__main__':
-	app.run(debug=onb.conf.debug)
+	#app.run(debug=onb.conf.debug)
+	app.run(debug=True)
