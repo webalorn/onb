@@ -1,4 +1,5 @@
 from .basemodels import *
+from .user import OwnedObject
 from engine.modelslist import getModelByName
 from engine.storage.manager import StorageManager
 from .customfields import ModelField

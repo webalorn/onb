@@ -10,6 +10,8 @@ xlrd = "*"
 pyyaml = "*"
 flask = "*"
 flask-restful = "*"
+bcrypt = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 

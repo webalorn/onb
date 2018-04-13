@@ -4,7 +4,7 @@ from engine.engine import Rand, Map
 
 ### Global configuration
 conf = Map()
-conf, sqldb, api = None, None, None
+conf, sqldb = None, None
 
 class OnbSettings:
 	"""
