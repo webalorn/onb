@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse, marshal, marshal_with
+from flask_restful import Resource, reqparse, marshal, marshal_with, inputs
 from sqldb.models.user import User as sqlUser
 from api.common.errors import *
 from api.fields.user import *
@@ -14,7 +14,7 @@ def authParser():
 	return parser
 
 def createParser():
-	return authParser()
+	return authParser().copy()
 
 ### Endpoints
 
@@ -23,22 +23,39 @@ class User(Resource):
 	@marshal_with(auth_user_fields)
 	def post(self):
 		args = createParser().parse_args()
+		username = args['username'].strip()
 		password = sqlUser.hashPassword(args['password'])
 
-		if sqlUser.select().where(sqlUser.username == args['username']).exists():
-			raise UserAlreadyExistsError()
+		if not username:
+			raise BadRequestError
+		if sqlUser.select().where(sqlUser.username == args['username']):
+			raise UserAlreadyExistsError
 
-		user = sqlUser.create(username=args['username'], autoSave=False, password_hash=password)
+		user = sqlUser.create(username=args['username'], password_hash=password)
+		return user
+
+	@fjwt.jwt_required
+	@marshal_with(auth_user_fields)
+	def get(self):
+		user = fjwt.get_current_user()
+		if user:
+			return user
+		raise NotFoundError
+
+@onb.api.resource('/user/anonymous')
+class AnonymousUser(Resource):
+	@marshal_with(auth_user_fields)
+	def post(self):
+		""" Create a new anonymous user """
+		user = sqlUser.create(username=None, password_hash=None)
 		return user
 
 @onb.api.resource('/user/<int:id>')
 class UserWithId(Resource):
 	@fjwt.jwt_optional
+	@marshal_with(user_fields)
 	def get(self, id):
-		user = fjwt.get_current_user()
-		if user and user.id == id:
-			return marshal(user, auth_user_fields)
-		return marshal(sqlUser.get(id=id), user_fields)
+		return sqlUser.get(id=id)
 
 @onb.api.resource('/user/auth')
 class UserAuth(Resource):
@@ -50,8 +67,8 @@ class UserAuth(Resource):
 		try:
 			user = sqlUser.get(username=args['username'])
 			if not user.verifyPassword(args['password']):
-				raise UserAuthError()
+				raise UserAuthError
 		except NotFoundError:
-			raise UserAuthError()
+			raise UserAuthError
 
 		return user

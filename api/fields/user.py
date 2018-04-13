@@ -4,6 +4,7 @@ import flask_jwt_extended as fjwt
 user_fields = {
 	'id': fields.Integer,
 	'username': fields.String,
+	'is_anonymous': fields.Boolean(attribute=lambda user: user.isAnonymous())
 }
 
 auth_user_fields = {

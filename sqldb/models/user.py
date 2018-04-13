@@ -3,8 +3,11 @@ from .basemodels import BaseModel, TableModel
 import bcrypt
 
 class User(BaseModel, TableModel):
-	username = CharField(unique=True)
-	password_hash = TextField()
+	username = CharField(unique=True, null=True)
+	password_hash = TextField(null=True)
+
+	def isAnonymous(self):
+		return self.username == None
 
 	def save(self, *p, **pn):
 		super().save(*p, **pn)
