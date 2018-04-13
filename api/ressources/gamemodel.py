@@ -10,7 +10,10 @@ import onb, peewee
 
 @onb.api.resource('/model/<model:modelclass>')
 class Model(Resource):
-	pass
+	@fjwt.jwt_optional
+	@marshal_with(model_summary)
+	def get(self, modelclass):
+		return list(modelclass.select())
 
 @onb.api.resource('/model/<model:modelclass>/<int:id>')
 class ModelWithId(Resource):
