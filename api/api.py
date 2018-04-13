@@ -28,11 +28,6 @@ def _db_close(exc):
 	if not onb.sqldb.is_closed():
 		onb.sqldb.close()
 
-@onb.api.resource('/')
-class HelloWorld(Resource):
-	def get(self):
-		return {'hello': 'the world'}
-
 if __name__ == '__main__':
 	#app.run(debug=onb.conf.debug)
 	app.run(debug=True)
