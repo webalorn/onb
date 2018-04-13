@@ -7,6 +7,9 @@ import onb, env.dev.settings, os
 app = Flask(__name__)
 
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY') or 'dev_secret_key'
+app.config['JWT_IDENTITY_CLAIM'] = 'sub'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
+app.config['JWT_ALGORITHM'] = 'HS512'
 
 onb.app = app
 onb.api = Api(app, errors=errors)
