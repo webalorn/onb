@@ -3,7 +3,7 @@ from playhouse.pool import PooledSqliteExtDatabase
 from engine.engine import Rand, Map, SettingsLoader
 
 ### Global configuration
-conf = Map()
+conf = None
 conf, sqldb = None, None
 
 class OnbSettings:
@@ -27,6 +27,8 @@ class OnbSettings:
 	@classmethod
 	def loadFrom(cls, filename):
 		global conf, sqldb
+		if conf != None:
+			raise RuntimeError("Configuration already loaded")
 		cfgLoader = SettingsLoader(cls.root)
 		conf = cfgLoader.loadYamlCfg(filename)
 		sqldb = cls.createDbObject()

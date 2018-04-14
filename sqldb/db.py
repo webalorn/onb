@@ -18,8 +18,7 @@ def generateStructure(verbose=False):
 		print("Create tables for:", [t.__name__ for t in tables])
 	onb.sqldb.create_tables(tables)
 	try:
-		if verbose:
-			user.User.create(username="root")
+		user.User.create(username="root")
 	except peewee.IntegrityError:
 		print("Base datas have already been generated")
 

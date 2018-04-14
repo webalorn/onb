@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Resource, Api
 from flask_jwt_extended import JWTManager
 from api.common.errors import errors
-import onb, env.dev.settings, os
+import onb
 
 app = Flask(__name__)
 
@@ -19,7 +19,8 @@ from api.ressources import *
 
 @onb.app.before_request
 def _db_connect():
-	onb.sqldb.connect()
+	if onb.sqldb.is_closed():
+		onb.sqldb.connect()
 
 @onb.app.teardown_request
 def _db_close(exc):

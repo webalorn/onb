@@ -4,8 +4,7 @@ testingMode: yes
 flask:
   DEBUG: false
   TESTING: true
-
-sqldb: memory
+  JWT_SECRET_KEY: testing_secret_key
 
 locations:
   dbRoot: __temp_dir__
