@@ -1,10 +1,12 @@
 from ..sqldbmodel import SqldbTestModel
 from sqldb.models.basemodels import *
+from sqldb.models.user import *
 from engine.engine import Rand
 import peewee, datetime
 
 class UserModelTest(SqldbTestModel):
 	def setUp(self):
+		super().setUp()
 		self.user = User.create(username=Rand.randomString())
 
 	def test_create(self):

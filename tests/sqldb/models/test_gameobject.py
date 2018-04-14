@@ -5,6 +5,7 @@ import peewee, os
 
 class GameObjectTest(SqldbTestModel):
 	def setUp(self):
+		super().setUp()
 		self.modelClass = sqlModels['unit']
 		self.sqlModel = self.modelClass.create(model={})
 
