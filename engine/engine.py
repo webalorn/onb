@@ -28,6 +28,7 @@ tempFiles = []
 class SettingsLoader():
 	def __init__(self, basePath):
 		self.root = basePath
+		self.locations = {}
 
 	def cfgStringRealValue(self, strValue):
 		getEnv = lambda v : os.getenv(v.group(1)) or ''
@@ -47,15 +48,30 @@ class SettingsLoader():
 				else:
 					self.loadCfgVariables(cfg[i])
 
-	def getRealPath(self, path):
+	regPath = r'^//\(([a-zA-Z0-9_]+)\)'
+	def regPathReplace(self, v):
+		if v.group(1) in self.locations:
+			return self.locations[v.group(1)]
+		return v.group(0)
+
+	def getRealPath(self, pathName, path):
 		if path == '__temp_dir__':
 			tmpDir = tempfile.TemporaryDirectory()
 			tempFiles.append(tmpDir)
-			return tmpDir.name
-		else:
-			if not os.path.isabs(path):
-				return os.path.join(self.root, path)
+			path = tmpDir.name
+		elif re.match(self.regPath, path):
+			path = re.sub(self.regPath, self.regPathReplace, path)
+		elif not os.path.isabs(path):
+			path = os.path.join(self.root, path)
+		
+		if not pathName in self.locations:
+			self.locations[pathName] = path
 		return path
+
+	def convertLocations(self, cfg):
+		if 'locations' in cfg:
+			for section in cfg['locations']:
+				cfg['locations'][section] = self.getRealPath(section, cfg['locations'][section])
 
 	def loadYamlCfg(self, filename):
 		if not os.path.isabs(filename):
@@ -64,16 +80,15 @@ class SettingsLoader():
 		with open(filename, 'r') as f:
 			cfg = yaml.load(f)
 
+		self.convertLocations(cfg)
+
 		if 'require' in cfg:
 			for section in cfg['require']:
 				cfg[section] = self.loadYamlCfg(cfg['require'][section])
 			del cfg['require']
 
-		if 'locations' in cfg:
-			for section in cfg['locations']:
-				cfg['locations'][section] = self.getRealPath(cfg['locations'][section])
-
 		self.loadCfgVariables(cfg)
+		self.convertLocations(cfg)
 
 		if 'inherit' in cfg:
 			cfg = self.mergeCfg(cfg, self.loadYamlCfg(cfg['inherit']))

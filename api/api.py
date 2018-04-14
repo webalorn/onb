@@ -7,8 +7,7 @@ import onb, env.dev.settings, os
 app = Flask(__name__)
 
 if 'flask' in onb.conf:
-	for key in onb.conf.flask:
-		app.config[key] = onb.conf.flask[key]
+	app.config.update(**onb.conf.flask)
 
 onb.app = app
 onb.api = Api(app, errors=errors)

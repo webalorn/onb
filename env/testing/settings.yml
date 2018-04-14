@@ -1,9 +1,13 @@
 debug: yes
 testingMode: yes
 
+flask:
+  DEBUG: false
+  TESTING: true
+
 sqldb: memory
 
 locations:
-  dbFiles: __temp_dir__
+  dbRoot: __temp_dir__
 
 inherit: env/default/settings.yml

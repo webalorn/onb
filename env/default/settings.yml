@@ -12,8 +12,9 @@ flask:
 sqldb: sqlite
 
 locations:
-  dbFiles: db/files
-  sqliteDb: db/onb.db
+  dbRoot: db
+  dbFiles: //(dbRoot)/files
+  sqliteDb: //(dbRoot)/onb.db
 
 require:
   game: engine/settings.yml

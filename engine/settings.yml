@@ -16,4 +16,4 @@ powerTypes:
   - acid
   - magic
 locations:
-  table: db/table.json
+  table: //(dbRoot)/table.json
