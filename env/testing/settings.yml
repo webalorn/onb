@@ -1,8 +1,9 @@
-debug: true
+debug: yes
+testingMode: yes
+
+sqldb: memory
 
 locations:
-  dbRoot: db_testing
-  dbFiles: db_testing/files
-  sqliteDb: db_testing/onb.db
+  dbFiles: __temp_dir__
 
 inherit: env/default/settings.yml

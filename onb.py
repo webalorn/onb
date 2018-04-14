@@ -1,6 +1,6 @@
-import os, string, yaml
+import os
 from playhouse.pool import PooledSqliteExtDatabase
-from engine.engine import Rand, Map
+from engine.engine import Rand, Map, SettingsLoader
 
 ### Global configuration
 conf = Map()
@@ -17,57 +17,25 @@ class OnbSettings:
 	root = os.path.dirname(__file__)
 
 	@classmethod
-	def mergeCfg(cls, source, destination):
-		for key, value in source.items():
-			if isinstance(value, dict) or isinstance(value, Map):
-				node = destination.setdefault(key, {})
-				cls.mergeCfg(value, node)
-			else:
-				destination[key] = value
-		return destination
-
-	@classmethod
 	def createDbObject(self):
-		os.makedirs(os.path.dirname(conf.locations.sqliteDb), exist_ok=True)
-		return PooledSqliteExtDatabase(conf.locations.sqliteDb)
-
-	@classmethod
-	def loadYamlCfg(cls, filename):
-		if not os.path.isabs(filename):
-			filename = os.path.join(cls.root, filename)
-
-		with open(filename, 'r') as f:
-			cfg = yaml.load(f)
-
-		if 'require' in cfg:
-			for section in cfg['require']:
-				cfg[section] = cls.loadYamlCfg(cfg['require'][section])
-
-		if 'locations' in cfg:
-			for section in cfg['locations']:
-				if not os.path.isabs(cfg['locations'][section]):
-					cfg['locations'][section] = os.path.join(cls.root, cfg['locations'][section])
-
-		if 'inherit' in cfg:
-			cfg = cls.mergeCfg(cfg, cls.loadYamlCfg(cfg['inherit']))
-
-		return Map(cfg)
+		if conf.sqldb == 'sqlit':
+			os.makedirs(os.path.dirname(conf.locations.sqliteDb), exist_ok=True)
+			return PooledSqliteExtDatabase(conf.locations.sqliteDb)
+		elif conf.sqldb == 'memory':
+			return PooledSqliteExtDatabase(':memory:')
 
 	@classmethod
 	def loadFrom(cls, filename):
 		global conf, sqldb
-		conf = cls.loadYamlCfg(filename)
+		cfgLoader = SettingsLoader(cls.root)
+		conf = cfgLoader.loadYamlCfg(filename)
 		sqldb = cls.createDbObject()
-		
-
-
-
 
 
 ### Global functions for simple parameters use
 
 def getDbPath(filename, *params, newFile=False):
-	directory = os.path.join(conf.locations.dbFiles)
+	directory = conf.locations.dbFiles
 	os.makedirs(directory, exist_ok=True)
 	path = os.path.join(conf.locations.dbFiles, filename)
 

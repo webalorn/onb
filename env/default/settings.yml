@@ -1,8 +1,17 @@
 debug: no
 cacheAllModels: no # Avoid duplicate instances of the same model, but keep the model in memory
+searchEnabled: yes
+testingMode: no
+
+flask:
+  JWT_SECRET_KEY: $(JWT_SECRET_KEY)
+  JWT_IDENTITY_CLAIM: sub
+  JWT_ACCESS_TOKEN_EXPIRES: false
+  JWT_ALGORITHM: HS512
+
+sqldb: sqlite
 
 locations:
-  dbRoot: db
   dbFiles: db/files
   sqliteDb: db/onb.db
 

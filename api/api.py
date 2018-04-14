@@ -6,10 +6,9 @@ import onb, env.dev.settings, os
 
 app = Flask(__name__)
 
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY') or 'dev_secret_key'
-app.config['JWT_IDENTITY_CLAIM'] = 'sub'
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
-app.config['JWT_ALGORITHM'] = 'HS512'
+if 'flask' in onb.conf:
+	for key in onb.conf.flask:
+		app.config[key] = onb.conf.flask[key]
 
 onb.app = app
 onb.api = Api(app, errors=errors)
@@ -27,7 +26,3 @@ def _db_connect():
 def _db_close(exc):
 	if not onb.sqldb.is_closed():
 		onb.sqldb.close()
-
-if __name__ == '__main__':
-	#app.run(debug=onb.conf.debug)
-	app.run(debug=True)
