@@ -1,7 +1,7 @@
 from .gameentities import BaseGameModel
 from ..datas.fieldvalues import *
 
-class TableModel(BaseGameModel):
+class GameTableModel(BaseGameModel):
 	def getFields():
 		return {
 			'first_line': IntField(),

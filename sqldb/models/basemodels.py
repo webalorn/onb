@@ -21,5 +21,5 @@ class BaseModel(Model):
 	class Meta:
 		database = onb.sqldb
 
-class TableModel(Model): # Every model that inherit from this model will be added as a database table
+class SqlTableModel(): # Every model that inherit from this model will be added as a database table
 	pass

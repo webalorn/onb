@@ -9,7 +9,7 @@ def _addSubModels(classname):
 	for modelClass in classname.__subclasses__():
 		tables.append(modelClass)
 		_addSubModels(modelClass)
-_addSubModels(basemodels.TableModel)
+_addSubModels(basemodels.SqlTableModel)
 
 def generateStructure(verbose=False):
 	onb.sqldb.connect()

@@ -19,8 +19,12 @@ class OnbSettings:
 	@classmethod
 	def createDbObject(self):
 		if conf.sqldb == 'sqlite':
+			pragmas = [
+				('journal_mode', 'wal'),
+				('cache_size', -1000 * 32)
+			]
 			os.makedirs(os.path.dirname(conf.locations.sqliteDb), exist_ok=True)
-			return PooledSqliteExtDatabase(conf.locations.sqliteDb)
+			return PooledSqliteExtDatabase(conf.locations.sqliteDb, pragmas=pragmas)
 		elif conf.sqldb == 'memory':
 			return PooledSqliteExtDatabase(':memory:')
 

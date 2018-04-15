@@ -23,7 +23,7 @@ class SqldbTestModel(MainTestModel):
 	@classmethod
 	def generateBaseTestDatas(cls):
 		""" Use this when you need a clean database with default values """
-		cls.clearTables(basemodels.TableModel)
+		cls.clearTables(basemodels.SqlTableModel)
 		unitModel = gameobject.sqlModels['unit']
 		user = User.create(username="test_user", password_hash=User.hashPassword('1234'))
 		for k in range(5):

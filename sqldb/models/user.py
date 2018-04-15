@@ -1,8 +1,8 @@
 from peewee import *
-from .basemodels import BaseModel, TableModel
+from .basemodels import BaseModel, SqlTableModel
 import bcrypt
 
-class User(BaseModel, TableModel):
+class User(BaseModel, SqlTableModel):
 	username = CharField(unique=True, null=True)
 	password_hash = TextField(null=True)
 

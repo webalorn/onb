@@ -1,9 +1,9 @@
 from .generator import ModelGenerator
-from ..models.tables import TableModel
+from ..models.tables import GameTableModel
 import onb
 
 class TableGenerator(ModelGenerator):
-	modelClass = TableModel
+	modelClass = GameTableModel
 
 	defaultFirstLine = onb.conf.game.diceSuccess
 	defaultLastLine = defaultFirstLine + 19

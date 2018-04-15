@@ -12,6 +12,20 @@ def modelListFilterParser():
 	parser.add_argument('only_official', type=bool, default=False)
 	return parser
 
+def getSearchArgsParser():
+	parser = reqparse.RequestParser()
+	parser.add_argument('search', type=str, required=True)
+	return parser
+
+def modelListGetFilterArgsAndClause(modelclass):
+	args = modelListFilterParser().parse_args()
+	
+	whereClause = (modelclass.is_public == True) | (modelclass.owner_id == fjwt.get_jwt_identity())
+	if args['only_official']:
+		whereClause = whereClause & (modelclass.is_official == True)
+
+	return args, whereClause
+
 ### Endpoints
 
 @onb.api.resource('/model/<model:modelclass>/page/<int:pageId>', '/model/<model:modelclass>')
@@ -19,18 +33,10 @@ class ModelPages(Resource):
 	@marshal_with(model_summary)
 	@fjwt.jwt_optional
 	def get(self, modelclass, pageId=1):
-		args = modelListFilterParser().parse_args()
-		
-		whereClause = (modelclass.is_public == True) | (modelclass.owner_id == fjwt.get_jwt_identity())
-		if args['only_official']:
-			whereClause = whereClause & (modelclass.is_official == True)
-
-		req = (modelclass.select()
+		args, whereClause = modelListGetFilterArgsAndClause(modelclass)
+		return list(modelclass.select()
 				.paginate(pageId, args['pagination'])
-				.where(whereClause)
-		)
-
-		return list(req)
+				.where(whereClause))
 
 @onb.api.resource('/model/<model:modelclass>')
 class Model(Resource):
@@ -42,6 +48,21 @@ class Model(Resource):
 			model=request.get_json()
 		)
 		return model
+
+@onb.api.resource('/model/<model:modelclass>/search', '/model/<model:modelclass>/search/page/<int:pageId>')
+class ModelSearch(Resource):
+	@fjwt.jwt_optional
+	@marshal_with(model_summary)
+	def get(self, modelclass, pageId=1):
+		searchArgs = getSearchArgsParser().parse_args()
+
+		args, whereClause = modelListGetFilterArgsAndClause(modelclass)
+		try:
+			return list(modelclass.search(searchArgs['search'])
+				.paginate(pageId, args['pagination'])
+				.where(whereClause))
+		except peewee.OperationalError:
+			raise BadRequestError
 
 @onb.api.resource('/model/<model:modelclass>/<int:id>')
 class ModelWithId(Resource):

@@ -1,5 +1,7 @@
 import random, string, os, yaml, re, tempfile
 
+notAlphaNumRegex = re.compile('[^a-zA-Z0-9 ]')
+
 class Singleton(type):
 	_instances = {}
 	def __call__(cls, *args, **kwargs):
