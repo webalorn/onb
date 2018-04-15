@@ -24,8 +24,7 @@ def _addSubModelsToSqlModel(classname):
 _addSubModelsToSqlModel(gameentities.BaseGameModel)
 
 sqlModelsIndexes = {}
-print("->", FTS5Model.fts5_installed())
-class GameObjectIndex(FTSModel):
+class GameObjectIndex(FTS5Model):
 	rowid = RowIDField()
 
 	class Meta:

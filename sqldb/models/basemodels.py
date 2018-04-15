@@ -1,5 +1,6 @@
 from peewee import *
 from api.common.errors import NotFoundError
+from playhouse.sqlite_ext import *
 import datetime
 import onb
 
@@ -23,3 +24,5 @@ class BaseModel(Model):
 
 class SqlTableModel(): # Every model that inherit from this model will be added as a database table
 	pass
+
+FTSenabledModel = FTS5Model if FTS5Model.fts5_installed() else FTSModel
