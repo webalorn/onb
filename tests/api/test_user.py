@@ -1,7 +1,5 @@
 from .apitestmodel import ApiTestModel
-from sqldb.models.user import User
 from api.common.errors import *
-import random
 
 class ApiUserTest(ApiTestModel):
 	def test_getUser(self):

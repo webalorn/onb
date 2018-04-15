@@ -19,7 +19,7 @@ class ModelSchemaField(fields.Raw):
 
 model_base_infos = {
 	'id': fields.Integer,
-	'owner_id': fields.String,
+	'owner_id': fields.Integer,
 	'type': fields.String,
 	'is_official': fields.Boolean,
 	'is_public': fields.Boolean,
@@ -31,6 +31,15 @@ model_summary = {
 	'model': {
 		'name': fields.String,
 		'summary': fields.String,
+		'description': fields.String,
+		"alignment": fields.String,
+		"race": fields.String,
+		"subrace": fields.String,
+		"universe": fields.String,
+		"battleground": fields.String,
+		"unit_type": fields.String,
+		"cost": fields.Integer,
+		"_type": fields.String,
 	},
 }
 

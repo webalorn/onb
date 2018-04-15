@@ -11,7 +11,8 @@ def storeTo(modelDatas, path):
 		json.dump(modelDatas, outfile)
 
 def readDatasFrom(path):
-	return json.load(open(path))
+	with open(path) as file:
+		return json.load(file)
 
 def readModelFrom(path):
 	return ModelEncoder().decode(readDatasFrom(path))

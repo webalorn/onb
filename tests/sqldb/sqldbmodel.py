@@ -26,8 +26,11 @@ class SqldbTestModel(MainTestModel):
 		cls.clearTables(basemodels.SqlTableModel)
 		unitModel = gameobject.sqlModels['unit']
 		user = User.create(username="test_user", password_hash=User.hashPassword('1234'))
-		for k in range(5):
-			unitModel.create(model={'name':'unit'+str(k+1), 'health':k}, owner_id=user.id)
+
+		descriptions = ["space gobelin", "space goblin", "gobelin", "fantastic goblin", "fantastic creature", "gob gob gobelin"]
+		for k in range(len(descriptions)):
+			unitModel.create(model={'name':'unit'+str(k+1), 'health':k, 'description':descriptions[k]}, owner_id=user.id,
+				is_official=(k >= 2), is_public=(k != 5))
 
 		if not onb.sqldb.is_closed():
 			onb.sqldb.close()
