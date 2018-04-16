@@ -1,5 +1,4 @@
-from flask_restful import Resource, reqparse, marshal, marshal_with
-from flask import request
+from flask_restful import Resource, reqparse, marshal, marshal_with, request
 import flask_jwt_extended as fjwt
 from sqldb.models.gameobject import sqlModels
 from api.common.errors import *

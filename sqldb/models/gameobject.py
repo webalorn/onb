@@ -24,7 +24,7 @@ def _addSubModelsToSqlModel(classname):
 _addSubModelsToSqlModel(gameentities.BaseGameModel)
 
 sqlModelsIndexes = {}
-class GameObjectIndex(FTS5Model):
+class GameObjectIndex(FTSenabledModel):
 	rowid = RowIDField()
 
 	class Meta:

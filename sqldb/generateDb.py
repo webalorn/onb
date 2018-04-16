@@ -8,13 +8,11 @@ from engine.models.gameentities import *
 def generateLines():
 	sqlCreature = gameobject.sqlModels['unit']
 
-	vals = ["space gobelin", "space goblin", "gobelin", "fantastic goblin", "fantastic creature"]
+	creature = UnitModel()
+	creature.name = "Coooonaaaan !"
+	creature.health = 42
+	creature.summary = description
+	c = sqlCreature.create(model=creature)
 
-	for description in vals:
-		creature = UnitModel()
-		creature.name = "Coooonaaaan !"
-		creature.health = 42
-		creature.summary = description
-		c = sqlCreature.create(model=creature)
-
-generateLines()
+# generateLines()
+generateBaseTestDatas()

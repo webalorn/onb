@@ -24,16 +24,7 @@ class SqldbTestModel(MainTestModel):
 	def generateBaseTestDatas(cls):
 		""" Use this when you need a clean database with default values """
 		cls.clearTables(basemodels.SqlTableModel)
-		unitModel = gameobject.sqlModels['unit']
-		user = User.create(username="test_user", password_hash=User.hashPassword('1234'))
-
-		descriptions = ["space gobelin", "space goblin", "gobelin", "fantastic goblin", "fantastic creature", "gob gob gobelin"]
-		for k in range(len(descriptions)):
-			unitModel.create(model={'name':'unit'+str(k+1), 'health':k, 'description':descriptions[k]}, owner_id=user.id,
-				is_official=(k >= 2), is_public=(k != 5))
-
-		if not onb.sqldb.is_closed():
-			onb.sqldb.close()
+		generateBaseTestDatas()
 
 	def setUp(self):
 		super().setUp()

@@ -18,9 +18,10 @@ class ApiTestModel(SqldbTestModel):
 		if 'token' in kw:
 			headers.add('Authorization', "Bearer " + kw['token'])
 			del kw['token']
+		kw['data'] = json.dumps(kw['data'] if 'data' in kw else {})
 		kw['headers'] = headers
 
-		request = getattr(self.app, method)(endpoint, **kw)
+		request = getattr(self.app, method)(endpoint, content_type='application/json', **kw)
 		self.checkContentType(request.headers)
 		self.assertEqual(request.status_code, checkCode)
 		return json.loads(request.data)
