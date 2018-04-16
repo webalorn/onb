@@ -42,7 +42,7 @@ class ApiModelTest(ApiTestModel):
 
 	def test_searchModel(self):
 		data = self.app_get("/model/unit/search", 200, data={'search': 'gob'})
-		self.assertInJson([{'id':3}, {'id': 1}, {'id':2}, {'id': 4}], data)
+		self.assertInJson([{'id':self.AnyValue}], data)
 		self.assertEqual(len(data), 4)
 
 		data = self.app_get("/model/unit/search", 200, data={'search': 'gob', 'only_official':True})
