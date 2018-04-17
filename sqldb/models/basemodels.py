@@ -1,16 +1,33 @@
 from peewee import *
 from api.common.errors import NotFoundError
 from playhouse.sqlite_ext import *
+from engine.engine import notAlphaNumRegex
 import datetime
 import onb
 
 class BaseModel(Model):
 	created_date = DateTimeField(default=datetime.datetime.now)
 	updated_date = DateTimeField(default=datetime.datetime.now)
+	searchTable = None
 
 	def save(self, *p, **pn):
 		self.updated_date = datetime.datetime.now()
 		super().save(*p, **pn)
+
+	@classmethod
+	def search(cls, phrase):
+		""" Search phrase will be converted to lowercase letters and nums prefixs"""
+		if not cls.searchTable:
+			raise Exception('search table not implemented for this table')
+
+		phrase = notAlphaNumRegex.sub('', phrase).lower().split()
+		phrase = " OR ".join([word + '*' for word in phrase]) or '*'
+
+		return (cls.select().join(
+				cls.searchTable,
+				on=(cls.id == cls.searchTable.rowid))
+			.where(cls.searchTable.match(phrase))
+			.order_by(cls.searchTable.bm25()))
 
 	@classmethod
 	def get(cls, *p, **pn):

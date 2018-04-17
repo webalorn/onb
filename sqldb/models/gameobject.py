@@ -2,7 +2,6 @@ from .basemodels import *
 from .user import OwnedObject
 from engine.modelslist import getModelByName
 from engine.storage.manager import StorageManager
-from engine.engine import notAlphaNumRegex
 from .customfields import ModelField
 from engine.models import *
 from playhouse.sqlite_ext import *
@@ -68,19 +67,6 @@ class GameObject(OwnedObject):
 		StorageManager().delete(self.model)
 		self.model = None
 		super().delete_instance()
-
-	@classmethod
-	def search(cls, phrase):
-		""" Search phrase will be converted to lowercase letters and nums prefixs"""
-		phrase = notAlphaNumRegex.sub('', phrase).lower().split()
-		phrase = [word + '*' for word in phrase]
-		phrase = " OR ".join(phrase)
-
-		return (cls.select().join(
-				cls.searchTable,
-				on=(cls.id == cls.searchTable.rowid))
-			.where(cls.searchTable.match(phrase))
-			.order_by(cls.searchTable.bm25()))
 
 	@staticmethod
 	def _createGameObjectModel(modelName):
