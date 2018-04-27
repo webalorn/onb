@@ -1,0 +1,212 @@
+swagger: '2.0'
+info:
+  description: |
+    ONB api
+  version: 0.0.0
+  title: ONB api
+
+host: 127.0.0.1:5000
+basePath: /
+schemes:
+ - http
+ - https
+produces:
+  - application/json
+consumes:
+  - application/json
+
+tags:
+- name: models
+  description: Game models
+- name: user
+  description: User models
+
+paths:
+  /model/table:
+    get:
+      tags:
+      - models
+      summary: Get game dammage table
+      operationId: getTableModel
+      responses:
+        200:
+          description: Success
+  /model/{modelName}:
+    parameters:
+    - name: modelName
+      in: path
+      description: Name of the model
+      required: true
+      type: string
+    get:
+      tags:
+      - models
+      summary: Get models list
+      operationId: getModelsList
+      parameters:
+      - in: body
+        name: filters
+        description: List filters
+        required: true
+        schema:
+          $ref: '#/definitions/ListFilters'
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Model"
+    post:
+      tags:
+      - models
+      summary: Create a new model
+      operationId: createModel
+      parameters:
+      - in: body
+        name: modelObject
+        description: Model object that will be created
+        required: true
+        schema:
+          $ref: '#/definitions/Model'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/Model"
+        400:
+          description: Bad request
+          schema:
+            $ref: "#/definitions/Error"
+      security:
+      - jwt_auth: []
+
+  /model/{modelName}/{id}:
+    parameters:
+    - name: modelName
+      in: path
+      description: Name of the model
+      required: true
+      type: string
+    - name: id
+      in: path
+      description: Id of the model object
+      required: true
+      type: integer
+    get:
+      tags:
+      - models
+      summary: Get models object
+      operationId: getModelById
+      parameters:
+      - in: body
+        schema:
+          type: object
+          properties:
+            schema:
+              type: boolean
+              default: true
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/Model"
+        404:
+          description: Not found
+    put:
+      tags:
+      - models
+      summary: Update a model
+      operationId: updateModel
+      parameters:
+      - in: body
+        name: modelObject
+        description: New model values
+        required: true
+        schema:
+          $ref: '#/definitions/Model'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/Model"
+        400:
+          description: Bad request
+          schema:
+            $ref: "#/definitions/Error"
+        404:
+          description: Not found
+    delete:
+      tags:
+      - models
+      summary: delete a model
+      operationId: deleteModel
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/Model"
+        404:
+          description: Not found
+
+
+securityDefinitions:
+  jwt_auth:
+    type: apiKey
+    name: Authorization
+    in: header
+
+definitions:
+  Model:
+    type: object
+    properties:
+      id:
+        type: integer
+      owner_id:
+          type: integer
+      type:
+        type: integer
+      is_official:
+        type: boolean
+      is_public:
+        type: boolean
+      is_generated:
+        type: boolean
+      model:
+        type:
+          object
+        properties:
+          name:
+            type: string
+          summary:
+            type: string
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+      is_anonymous:
+        type: boolean
+      auth_token:
+        description: JWT for logged users
+        type: string
+  ListFilters:
+    type: object
+    properties:
+      only_official:
+        type: boolean
+        default: true
+      pagination:
+        type: integer
+        default: 20
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
+
+externalDocs:
+  description: Find out more about Onb
+  url: https://github.com/webalorn/onb
