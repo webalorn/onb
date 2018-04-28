@@ -24,6 +24,8 @@ tags:
   description: Create battles and armies
 - name: image
   description: Image upload and download
+- name: message
+  description: Send and receive messages
 
 securityDefinitions:
   jwt_auth:
@@ -634,6 +636,74 @@ paths:
       security:
       - jwt_auth: []
 
+# Messaging system
+  /message/{user_id}:
+    parameters:
+    - name: user_id
+      in: path
+      description: Id of the receiver
+      required: true
+      type: integer
+    post:
+      tags:
+      - message
+      summary: Send a new message
+      operationId: sendMessage
+      parameters:
+      - in: body
+        name: messageContent
+        required: true
+        schema:
+            type: object
+            parameters:
+              content:
+                type: string
+      responses:
+        200:
+          description: Success
+        400:
+          description: Bad request
+        404:
+          description: Receiver does not exist
+      security:
+      - jwt_auth: []
+    get:
+      tags:
+      - message
+      summary: Get message sended to an user, sorted by decreasing date
+      operationId: getMessages
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Message"
+        404:
+          description: Receiver does not exist
+      security:
+      - jwt_auth: []
+  /message:
+    get:
+      tags:
+      - message
+      summary: Get all conversations
+      operationId: getMessages
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                user:
+                  $ref: "#/definitions"
+                last_message:
+                  $ref: "#/definitions"
+      security:
+      - jwt_auth: []
+
 
 
 definitions:
@@ -681,6 +751,11 @@ definitions:
         type: string
       profile:
         type: object
+        properties:
+          avatar_id:
+            type: integer
+          description:
+            type: string
       settings:
         type: object
         description: User settings, visible only by the user itself
@@ -762,6 +837,11 @@ definitions:
             unit:
               description: short version of unit model
               $ref: "#/definitions/Model"
+  Message:
+    sended_at:
+      type: datetime
+    content:
+      type: string
 
 externalDocs:
   description: Find out more about Onb
