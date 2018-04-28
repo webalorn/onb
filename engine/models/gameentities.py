@@ -56,6 +56,8 @@ class UnitModel(DbStorableModel, GameEntityModel):
 			'actions': ListField('action'),
 			'passives': ListField('passive'),
 		}
+	
+	exposedFields = ['cost']
 
 	def getActions():
 		return [

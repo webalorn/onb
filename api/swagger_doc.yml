@@ -20,6 +20,14 @@ tags:
   description: Game models
 - name: user
   description: User endpoints
+- name: battle
+  description: Create battles and armies
+
+securityDefinitions:
+  jwt_auth:
+    type: apiKey
+    name: Authorization
+    in: header
 
 paths:
   # Get game models
@@ -135,8 +143,6 @@ paths:
       responses:
         200:
           description: Success
-          schema:
-            $ref: "#/definitions/Model"
         404:
           description: Not found
       security:
@@ -338,11 +344,238 @@ paths:
       security:
       - jwt_auth: []
 
-securityDefinitions:
-  jwt_auth:
-    type: apiKey
-    name: Authorization
-    in: header
+  # Battles
+  /battle:
+    post:
+      tags:
+      - battle
+      summary: Create a new battle
+      operationId: createNewBattle
+      parameters:
+      - in: body
+        name: battleSettings
+        required: true
+        schema:
+            $ref: "#/definitions/Battle"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/Battle"
+        400:
+          description: Bad request
+      security:
+      - jwt_auth: []
+  /battle/{id}:
+    parameters:
+    - name: id
+      in: path
+      description: Id of the battle
+      required: true
+      type: integer
+    get:
+      tags:
+      - battle
+      summary: Get battle infos
+      operationId: getBattle
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/Battle"
+        404:
+          description: Not found
+      security:
+      - jwt_auth: []
+    delete:
+      tags:
+      - battle
+      summary: Delete a battle
+      operationId: deleteBattle
+      responses:
+        200:
+          description: Success
+        404:
+          description: Not found
+      security:
+      - jwt_auth: []
+    put:
+      tags:
+      - battle
+      summary: Update battle settings
+      operationId: updateBattle
+      parameters:
+      - in: body
+        name: battleSettings
+        required: true
+        schema:
+            $ref: "#/definitions/Battle"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/Battle"
+      security:
+      - jwt_auth: []
+  /battle/{id}/user/{id}:
+    parameters:
+    - name: id
+      in: path
+      description: Id of the battle
+      required: true
+      type: integer
+    put:
+      tags:
+      - battle
+      summary: Allow an user to access to the battle (restricted to the owner)
+      operationId: addUserToBattle
+      responses:
+        200:
+          description: Success
+      security:
+      - jwt_auth: []
+    delete:
+      tags:
+      - battle
+      summary: Remove an user's access to the battle (restricted to the owner)
+      operationId: removeUserFromBattle
+      responses:
+        200:
+          description: Success
+      security:
+      - jwt_auth: []
+  /battle/{id}/armies:
+    parameters:
+    - name: id
+      in: path
+      description: Id of the battle
+      required: true
+      type: integer
+    get:
+      tags:
+      - battle
+      summary: Get battle armies
+      operationId: getBattleArmies
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Army"
+      security:
+      - jwt_auth: []
+    post:
+      tags:
+      - battle
+      summary: Create a new army
+      operationId: createArmy
+      parameters:
+      - in: body
+        name: army
+        required: true
+        schema:
+          $ref: "#/definitions/Army"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/Army"
+        400:
+          description: Bad request
+      security:
+      - jwt_auth: []
+  /army/{id}:
+    parameters:
+    - name: id
+      in: path
+      description: Id of the army
+      required: true
+      type: integer
+    get:
+      tags:
+      - battle
+      summary: Get army
+      operationId: getArmy
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Army"
+      security:
+      - jwt_auth: []
+    put:
+      tags:
+      - battle
+      summary: Update army name and alignment
+      operationId: updateArmy
+      parameters:
+      - in: body
+        name: army
+        required: true
+        schema:
+          $ref: "#/definitions/Army"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/Army"
+        400:
+          description: Bad request
+      security:
+      - jwt_auth: []
+    delete:
+      tags:
+      - battle
+      summary: Remove an army
+      operationId: removeArmy
+      responses:
+        200:
+          description: Success
+      security:
+      - jwt_auth: []
+  /army/{id}/unit/{unit_id}:
+    parameters:
+    - name: id
+      in: path
+      description: Id of the army
+      required: true
+      type: integer
+    - name: unit_id
+      in: path
+      description: Id of the unit
+      required: true
+      type: integer
+    put:
+      tags:
+      - battle
+      summary: Set unit count in army
+      operationId: updateArmyUnit
+      parameters:
+      - in: body
+        name: unitCount
+        required: true
+        schema:
+            type: integer
+            minimum: 1
+      responses:
+        200:
+          description: Success
+      security:
+      - jwt_auth: []
+    delete:
+      tags:
+      - battle
+      summary: Remove an unit from an army
+      operationId: removeArmyUnit
+      responses:
+        200:
+          description: Success
+      security:
+      - jwt_auth: []
+
 
 definitions:
   Model:
@@ -413,6 +646,63 @@ definitions:
         additionalProperties:
           type: string
           description: Filter by object exposed properties. Type can be string, but also integer, or boolean
+  Battle:
+    type: object
+    properties:
+      id:
+        type: integer
+      universe:
+        type: string
+        description: Universe from which creature should come from, or null to allow all universes
+      battleground:
+        type: string
+        description: battleground type (ground, space, ocean...)
+      allow_cross_alignment:
+        type: boolean
+        default: false
+        description: If true, armies can have units with differents alignments
+      name:
+        type: string
+      scenario:
+        description: Description, scenario and objectives
+        type: string
+      army_maximum_cost:
+        type: integer
+        minimum: 1
+      owner_id:
+        type: integer
+      players:
+        type: array
+        description: All players can add and delete armies
+        items:
+          type: integer
+      armies:
+        type: array
+        items:
+          $ref: "#/definitions/Army"
+  Army:
+    type: object
+    properties:
+      id:
+        type: integer
+      battle_id:
+        type: integer
+      cost:
+        type: integer
+        description: Total cost of all units. Not stored, but computed at runtime
+      name:
+        type: string
+      alignment:
+        type: string
+        description: If not null, all units must have this alignment
+      units:
+        type: array
+        items:
+          type: object
+          properties:
+            unit:
+              description: short version of unit model
+              $ref: "#/definitions/Model"
 
 externalDocs:
   description: Find out more about Onb
