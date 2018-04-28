@@ -28,6 +28,8 @@ tags:
   description: Send and receive messages
 - name: i12n
   description: internationalization of game models, can be created by users
+- name: news
+  description: Website news
 
 securityDefinitions:
   jwt_auth:
@@ -676,6 +678,24 @@ paths:
       - message
       summary: Get message sended to an user, sorted by decreasing date
       operationId: getMessages
+      parameters:
+      - in: body
+        name: filter
+        description: Filter messages
+        required: true
+        schema:
+          type: object
+          properties:
+            pagination:
+              type: integer
+              minimum: 1
+              maximum: 100
+              default: 20
+            page:
+              type: integer
+              minimum: 1
+              default: 1
+
       responses:
         200:
           description: Success
@@ -702,9 +722,9 @@ paths:
               type: object
               properties:
                 user:
-                  $ref: "#/definitions"
+                  $ref: "#/definitions/User"
                 last_message:
-                  $ref: "#/definitions"
+                  $ref: "#/definitions/Message"
       security:
       - jwt_auth: []
 
@@ -803,6 +823,88 @@ paths:
       security:
       - jwt_auth: []
 
+# News
+  /news:
+    get:
+      tags:
+      - news
+      summary: Get news by descreasing date, with summary but without content
+      operationId: getNews
+      parameters:
+      - in: body
+        name: filter
+        description: Filter news
+        required: true
+        schema:
+          type: object
+          properties:
+            pagination:
+              type: integer
+              minimum: 1
+              maximum: 100
+              default: 20
+            page:
+              type: integer
+              minimum: 1
+              default: 1
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/News"
+    post:
+      tags:
+      - news
+      summary: Create a news
+      operationId: createNews
+      parameters:
+      - in: body
+        name: content
+        description: News content
+        required: true
+        schema:
+          $ref: "#/definitions/News"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/News"
+  /news/{id}:
+    parameters:
+    - name: id
+      in: path
+      description: Id of the news
+      required: true
+      type: integer
+    get:
+      tags:
+      - news
+      summary: Get news content
+      operationId: getNewsContent
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/News"
+        404:
+          description: Not found
+    put:
+      tags:
+      - news
+      summary: Update a news
+      operationId: updateNews
+      parameters:
+      - in: body
+        name: content
+        description: News content
+        required: true
+        schema:
+          $ref: "#/definitions/News"
+      responses:
+        200:
+          description: Success
 
 definitions:
   Model:
@@ -869,6 +971,10 @@ definitions:
         minimum: 1
         maximum: 100
         default: 20
+      page:
+        type: integer
+        minimum: 1
+        default: 1
       owner:
         type: integer
       public_only:
@@ -944,6 +1050,21 @@ definitions:
         format: date-time
       content:
         type: string
+  News:
+    type: object
+    properties:
+      owner_id:
+        type: integer
+        description: "Id of the news writer"
+      title:
+        type: string
+      thumbnail_id:
+        type: integer
+      summary:
+        type: string
+      content:
+        type:
+          string
 
 externalDocs:
   description: Find out more about Onb
