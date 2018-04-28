@@ -22,6 +22,7 @@ tags:
   description: User models
 
 paths:
+  # Get game models
   /model/table:
     get:
       tags:
@@ -76,8 +77,6 @@ paths:
             $ref: "#/definitions/Model"
         400:
           description: Bad request
-          schema:
-            $ref: "#/definitions/Error"
       security:
       - jwt_auth: []
 
@@ -96,16 +95,8 @@ paths:
     get:
       tags:
       - models
-      summary: Get models object
+      summary: Get model object by id
       operationId: getModelById
-      parameters:
-      - in: body
-        schema:
-          type: object
-          properties:
-            schema:
-              type: boolean
-              default: true
       responses:
         200:
           description: Success
@@ -132,10 +123,10 @@ paths:
             $ref: "#/definitions/Model"
         400:
           description: Bad request
-          schema:
-            $ref: "#/definitions/Error"
         404:
           description: Not found
+      security:
+      - jwt_auth: []
     delete:
       tags:
       - models
@@ -148,6 +139,40 @@ paths:
             $ref: "#/definitions/Model"
         404:
           description: Not found
+      security:
+      - jwt_auth: []
+  /model/{modelName}/schemas:
+    parameters:
+    - name: modelName
+      description: Name of the model
+      in: path
+      required: true
+      type: string
+    get:
+      tags:
+      - models
+      summary: Get the schema of the model, sub-models and inherited models
+      operationId: getModelSchemas
+      parameters:
+      - in: body
+        name: modelObject
+        required: true
+        schema:
+          type: object
+          properties:
+            submodels:
+              type: boolean
+              default: true
+            inheritedmodels:
+              type: boolean
+              default: true
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            additionalProperties:
+              type: object
 
 
 securityDefinitions:
@@ -200,12 +225,19 @@ definitions:
         default: true
       pagination:
         type: integer
+        minimum: 1
+        maximum: 100
         default: 20
-  Error:
-    type: object
-    properties:
-      message:
-        type: string
+      owner:
+        type: integer
+      public_only:
+        type: boolean
+        default: true
+      fields:
+        type: object
+        additionalProperties:
+          type: string
+          description: Filter by object exposed properties. Type can be string, but also integer, or boolean
 
 externalDocs:
   description: Find out more about Onb
