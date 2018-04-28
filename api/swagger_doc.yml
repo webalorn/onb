@@ -19,7 +19,7 @@ tags:
 - name: models
   description: Game models
 - name: user
-  description: User models
+  description: User endpoints
 
 paths:
   # Get game models
@@ -174,6 +174,169 @@ paths:
             additionalProperties:
               type: object
 
+  # User endpoints
+  /user/auth:
+    get:
+      tags:
+      - user
+      summary: Log-in
+      operationId: userAuth
+      parameters:
+      - in: body
+        name: userLoginInfos
+        required: true
+        schema:
+            $ref: "#/definitions/UserLoginInfos"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Log-in error: Bad request or invalid credentials"
+    delete:
+      tags:
+      - user
+      summary: Log-out and revoke all JWT tokens
+      operationId: userLogout
+      responses:
+        200:
+          description: Success
+      security:
+      - jwt_auth: []
+  /user/{id}:
+    parameters:
+    - name: id
+      in: path
+      description: Id of the user
+      required: true
+      type: integer
+    get:
+      tags:
+      - user
+      summary: Get user profile
+      operationId: userProfile
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Log-in error: Bad request or invalid credentials"
+  /user:
+    get:
+      tags:
+      - user
+      summary: Get logged user profile and settings
+      operationId: userInfos
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/User"
+      security:
+      - jwt_auth: []
+    post:
+      tags:
+      - user
+      summary: Create a new user
+      operationId: createUser
+      parameters:
+      - in: body
+        name: userLoginInfos
+        required: true
+        schema:
+            $ref: "#/definitions/UserLoginInfos"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: Bad request
+        409:
+          description: Username already taken
+    put:
+      tags:
+      - user
+      summary: Update user profile and settings
+      operationId: updateUser
+      parameters:
+      - in: body
+        name: userLoginInfos
+        required: true
+        description: Only profile and settings fields are allowed
+        schema:
+            $ref: "#/definitions/User"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: Bad request
+      security:
+      - jwt_auth: []
+  /user/password:
+    post:
+      tags:
+      - user
+      summary: Update user password
+      operationId: updateUserPassword
+      parameters:
+      - in: body
+        name: userPassword
+        required: true
+        description: Old and new password
+        schema:
+            type: object
+            properties:
+              old_password:
+                type: string
+              new_password:
+                type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: Bad request
+      security:
+      - jwt_auth: []
+  /user/anonymous:
+    get: 
+      tags:
+      - user
+      summary: Get new anonymous user
+      operationId: createAnonymous
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/User"
+    post: 
+      tags:
+      - user
+      summary: Claim anonymous account to make it a regular account
+      operationId: claimAnonymous
+      parameters:
+      - in: body
+        name: userLoginInfos
+        required: true
+        schema:
+            $ref: "#/definitions/UserLoginInfos"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: Bad request
+        409:
+          description: Username already taken
+      security:
+      - jwt_auth: []
 
 securityDefinitions:
   jwt_auth:
@@ -205,6 +368,13 @@ definitions:
             type: string
           summary:
             type: string
+  UserLoginInfos:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
   User:
     type: object
     properties:
@@ -217,6 +387,11 @@ definitions:
       auth_token:
         description: JWT for logged users
         type: string
+      profile:
+        type: object
+      settings:
+        type: object
+        description: User settings, visible only by the user itself
   ListFilters:
     type: object
     properties:
