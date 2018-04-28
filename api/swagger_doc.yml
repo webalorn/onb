@@ -95,7 +95,6 @@ paths:
           description: Bad request
       security:
       - jwt_auth: []
-
   /model/{modelName}/{id}:
     parameters:
     - name: modelName
@@ -353,6 +352,51 @@ paths:
           description: Username already taken
       security:
       - jwt_auth: []
+  /user/username_available:
+    get:
+      tags:
+      - user
+      summary: Get the availability of an username
+      operationId: usernameAvailability
+      parameters:
+      - in: body
+        name: username
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Username available
+        409:
+          description: Username already exist
+          schema:
+            type: object
+            properties:
+              suggestions:
+                type: array
+                items:
+                  type: string
+  /user/search:
+    get:
+      tags:
+      - user
+      summary: Search user by the beginning of their username
+      operationId: userSearch
+      parameters:
+      - in: body
+        name: search
+        description: Search value
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              type: string
+
 
 # Battles
   /battle:
@@ -952,14 +996,35 @@ definitions:
         type: string
       profile:
         type: object
+        description: Optional values that will be showed on the user profile page
         properties:
           avatar_id:
             type: integer
           description:
             type: string
+          created_at:
+            type: string
+            format: date-time
+          birthdate:
+            type: string
+            format: date-time
+          country:
+            type: string
+          gender:
+            type: string
+            enum: ['', 'M', 'F']
+          first_name:
+            type: string
+          last_name:
+            type: string
       settings:
         type: object
         description: User settings, visible only by the user itself
+        properties:
+          language:
+            type: string
+            default: null
+            enum: [en, fr]
   ListFilters:
     type: object
     properties:
