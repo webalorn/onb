@@ -452,7 +452,7 @@ paths:
       tags:
       - user
       summary: Get user that have added the user as friend
-      operationId: getFriends
+      operationId: getFollowers
       responses:
         200:
           description: Success
@@ -462,7 +462,7 @@ paths:
               $ref: "#/definitions/User"
   /user/friend/{friend_id}:
     parameters:
-    - name: id
+    - name: friend_id
       in: path
       description: Id of the friend
       required: true
@@ -486,7 +486,7 @@ paths:
         200:
           description: Friend removed
         404:
-          Friend doesn't exist
+          description: Friend doesn't exist
       security:
       - jwt_auth: []
 
