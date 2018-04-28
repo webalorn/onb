@@ -22,6 +22,8 @@ tags:
   description: User endpoints
 - name: battle
   description: Create battles and armies
+- name: image
+  description: Image upload and download
 
 securityDefinitions:
   jwt_auth:
@@ -30,7 +32,7 @@ securityDefinitions:
     in: header
 
 paths:
-  # Get game models
+# Get game models
   /model/table:
     get:
       tags:
@@ -180,7 +182,7 @@ paths:
             additionalProperties:
               type: object
 
-  # User endpoints
+# User endpoints
   /user/auth:
     get:
       tags:
@@ -344,7 +346,7 @@ paths:
       security:
       - jwt_auth: []
 
-  # Battles
+# Battles
   /battle:
     post:
       tags:
@@ -575,6 +577,63 @@ paths:
           description: Success
       security:
       - jwt_auth: []
+
+# Upload images
+  /image:
+    post:
+      tags:
+      - image
+      summary: Upload an image
+      operationId: uploadImage
+      consumes:
+         - multipart/form-data
+      parameters:
+         - in: formData
+           name: image
+           type: file
+           description: The image to upload.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: integer
+            description: Image id
+        400:
+          description: Bad request
+      security:
+      - jwt_auth: []
+  /image/{id}:
+    parameters:
+    - name: id
+      in: path
+      description: Id of the image
+      required: true
+      type: integer
+    get:
+      tags:
+      - image
+      summary: Get uploaded image
+      operationId: getImage
+      produces:
+         - image/*
+      responses:
+        200:
+          description: Success, return the image
+        404:
+          description: Image not found
+    delete:
+      tags:
+      - image
+      summary: Delete an image
+      operationId: deleteImage
+      responses:
+        200:
+          description: Success
+        404:
+          description: Image not found
+      security:
+      - jwt_auth: []
+
 
 
 definitions:
