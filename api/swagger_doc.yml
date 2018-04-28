@@ -186,6 +186,32 @@ paths:
             type: object
             additionalProperties:
               type: object
+  /model/{modelName}/search:
+    parameters:
+    - name: modelName
+      in: path
+      description: Name of the model
+      required: true
+      type: string
+    get:
+      tags:
+      - models
+      summary: Search model by name, description and other text fields
+      operationId: searchModel
+      parameters:
+      - in: body
+        name: searchQuery
+        description: Search query and search filters
+        required: true
+        schema:
+          $ref: '#/definitions/ModelSearch'
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Model"
 
 # User endpoints
   /user/auth:
@@ -396,7 +422,6 @@ paths:
             type: array
             items:
               type: string
-
 
 # Battles
   /battle:
@@ -1025,6 +1050,9 @@ definitions:
             type: string
             default: null
             enum: [en, fr]
+          i12n_editor:
+            type: boolean
+            default: false
   ListFilters:
     type: object
     properties:
@@ -1050,6 +1078,13 @@ definitions:
         additionalProperties:
           type: string
           description: Filter by object exposed properties. Type can be string, but also integer, or boolean
+  ModelSearch:
+    allOf:
+    - $ref: "#/definitions/ListFilters"
+    - type: object
+      properties:
+        search:
+          type: string
   Battle:
     type: object
     properties:
