@@ -421,7 +421,74 @@ paths:
           schema:
             type: array
             items:
-              type: string
+              $ref: "#/definitions/User"
+  /user/{id}/friends:
+    parameters:
+    - name: id
+      in: path
+      description: Id of the user
+      required: true
+      type: integer
+    get:
+      tags:
+      - user
+      summary: Get the user friends
+      operationId: getFriends
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
+  /user/{id}/followers:
+    parameters:
+    - name: id
+      in: path
+      description: Id of the user
+      required: true
+      type: integer
+    get:
+      tags:
+      - user
+      summary: Get user that have added the user as friend
+      operationId: getFriends
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
+  /user/friend/{friend_id}:
+    parameters:
+    - name: id
+      in: path
+      description: Id of the friend
+      required: true
+      type: integer
+    post:
+      tags:
+      - user
+      summary: Add a friend
+      operationId: addFriend
+      responses:
+        200:
+          description: Friend added
+      security:
+      - jwt_auth: []
+    delete:
+      tags:
+      - user
+      summary: Remove a friend
+      operationId: removeFriend
+      responses:
+        200:
+          description: Friend removed
+        404:
+          Friend doesn't exist
+      security:
+      - jwt_auth: []
 
 # Battles
   /battle:
@@ -1016,6 +1083,12 @@ definitions:
         type: string
       is_anonymous:
         type: boolean
+      is_friend:
+        type: boolean
+        description: True if the logged user has added him as a friend
+      is_follower:
+        type: boolean
+        description: True if he has added the logged user as a friend
       auth_token:
         description: JWT for logged users
         type: string
