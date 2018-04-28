@@ -26,6 +26,8 @@ tags:
   description: Image upload and download
 - name: message
   description: Send and receive messages
+- name: i12n
+  description: internationalization of game models, can be created by users
 
 securityDefinitions:
   jwt_auth:
@@ -303,8 +305,10 @@ paths:
             properties:
               old_password:
                 type: string
+                format: password
               new_password:
                 type: string
+                format: password
       responses:
         200:
           description: Success
@@ -654,10 +658,10 @@ paths:
         name: messageContent
         required: true
         schema:
-            type: object
-            parameters:
-              content:
-                type: string
+          type: object
+          properties:
+            content:
+              type: string
       responses:
         200:
           description: Success
@@ -688,7 +692,7 @@ paths:
       tags:
       - message
       summary: Get all conversations
-      operationId: getMessages
+      operationId: getConversations
       responses:
         200:
           description: Success
@@ -704,6 +708,100 @@ paths:
       security:
       - jwt_auth: []
 
+# Dynamic internationalization
+  /i12n:
+    post:
+      tags:
+      - i12n
+      summary: Request a new translation id
+      operationId: createTranslation
+      responses:
+        200:
+          description: Success
+          schema:
+            description: translation id
+            type: integer
+      security:
+      - jwt_auth: []
+  /i12n/{lang}:
+    parameters:
+    - name: lang
+      in: path
+      description: Language code of the translations
+      required: true
+      type: string
+    get:
+      tags:
+      - i12n
+      summary: Translate a set of text ids
+      operationId: getTranslations
+      parameters:
+      - in: body
+        name: textsIds
+        required: true
+        schema:
+          description: an array of all text ids to translate
+          type: array
+          items:
+            type: integer
+      responses:
+        200:
+          description: Success
+          schema:
+            description: A map of text_id => translation
+            type: object
+            additionalProperties:
+              type: string
+  
+
+  /i12n/{lang}/{id}:
+    parameters:
+    - name: lang
+      in: path
+      description: Language code of the translations
+      required: true
+      type: string
+    - name: id
+      in: path
+      description: Translation id
+      required: true
+      type: integer
+    get:
+      tags:
+      - i12n
+      summary: Get a translation. If not found, return the english translation
+      operationId: getTranslation
+      responses:
+        200:
+          description: Success
+        404:
+          description: Translation not found
+    put:
+      tags:
+      - i12n
+      summary: Update a translation
+      operationId: updateTranslation
+      parameters:
+      - in: body
+        name: translation
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Success
+      security:
+      - jwt_auth: []
+    delete:
+      tags:
+      - i12n
+      summary: Remove a translation
+      operationId: removeTranslation
+      responses:
+        200:
+          description: Success
+      security:
+      - jwt_auth: []
 
 
 definitions:
@@ -737,6 +835,7 @@ definitions:
         type: string
       password:
         type: string
+        format: password
   User:
     type: object
     properties:
@@ -833,15 +932,18 @@ definitions:
         type: array
         items:
           type: object
+          description: short versions of unit model
           properties:
             unit:
-              description: short version of unit model
               $ref: "#/definitions/Model"
   Message:
-    sended_at:
-      type: datetime
-    content:
-      type: string
+    type: object
+    properties:
+      sended_at:
+        type: string
+        format: date-time
+      content:
+        type: string
 
 externalDocs:
   description: Find out more about Onb
