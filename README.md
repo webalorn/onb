@@ -35,15 +35,34 @@ You can also run tests:
 ./runTests.sh
 ```
 
+Or start the development server:
+```base
+./startDevApi.sh
+```
+### API
+
+Development API can be accessed at `http://127.0.0.1:5000`
+
+The API has a [swagger specification on swaggerhub](https://app.swaggerhub.com/apis/webalorn/onb)
+
 ## Code specifications
 
 ```
 | engine
 	| models
-		|  [Put here game models files]
+		| [Game models files]
+	| generator
+		| [Game models geneators]
 | sqldb
 	| models
-		| [Put here website models]
+		| [Website models]
+| api
+	| common
+		| [Common API code]
+	| ressources
+		| [API endpoints]
+| tests
+	| [Test files, following the same organization as the global one]
 ```
 
 Sql models for game objects are automaticly created
@@ -96,5 +115,5 @@ Model identifiers are created by taking the model class without the ending 'Mode
 #### Code 
 
 - Tabulations are used instead of spaces
-- Name must be in camelCase format,
+- Names must be in camelCase format,
 - Game models properties and sql model fields use lowercase letters and underscores
