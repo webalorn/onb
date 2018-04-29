@@ -9,6 +9,9 @@ class User(BaseModel, SqlTableModel):
 	def isAnonymous(self):
 		return self.username == None
 
+	def isAdmin(self):
+		return False
+
 	def save(self, *p, **pn):
 		super().save(*p, **pn)
 

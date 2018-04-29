@@ -13,7 +13,9 @@ onb.app = app
 onb.api = Api(app, errors=errors)
 onb.jwt = JWTManager(app)
 
-from api.common.converters import *
+from api.common.converters import url_converters
+onb.app.url_map.converters = {**onb.app.url_map.converters, **url_converters}
+
 from api.common.auth import *
 from api.ressources import *
 

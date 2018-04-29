@@ -12,4 +12,6 @@ class ModelConverter(BaseConverter):
 	def to_url(self, value):
 		return value.modelClass
 
-onb.app.url_map.converters['model'] = ModelConverter
+url_converters = {
+	'model': ModelConverter,
+}

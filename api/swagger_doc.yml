@@ -1049,9 +1049,9 @@ definitions:
       id:
         type: integer
       owner_id:
-          type: integer
-      type:
         type: integer
+      type:
+        type: string
       is_official:
         type: boolean
       is_public:
