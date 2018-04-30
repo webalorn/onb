@@ -6,6 +6,10 @@ class ModelField(fields.Raw):
 	def format(self, value):
 		return ModelEncoder.encode(value)
 
+class ShortModelField(fields.Raw):
+	def format(self, model):
+		return {prop: model[prop] for prop in model.getExposedFields()}
+
 model_base_infos = {
 	'id': fields.Integer,
 	'owner_id': fields.Integer,
@@ -17,19 +21,7 @@ model_base_infos = {
 
 model_summary = {
 	**model_base_infos,
-	'model': {
-		'name': fields.String,
-		'summary': fields.String,
-		'description': fields.String,
-		"alignment": fields.String,
-		"race": fields.String,
-		"subrace": fields.String,
-		"universe": fields.String,
-		"battleground": fields.String,
-		"unit_type": fields.String,
-		"cost": fields.Integer,
-		"_type": fields.String,
-	},
+	'model': ShortModelField,
 }
 
 model_fields = {
