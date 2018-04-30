@@ -14,6 +14,15 @@ class BaseModel(Model):
 		self.updated_date = datetime.datetime.now()
 		super().save(*p, **pn)
 
+	def updateFrom(self, vals, autoSave=True):
+		for key, val in vals.items():
+			if isinstance(getattr(self, key), BaseModel):
+				getattr(self, key).updateFrom(val, autoSave=autoSave)
+			else:
+				setattr(self, key, val)
+		if autoSave:
+			self.save()
+
 	@classmethod
 	def search(cls, phrase):
 		""" Search phrase will be converted to lowercase letters and nums prefixs"""

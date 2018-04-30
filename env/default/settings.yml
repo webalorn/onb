@@ -3,6 +3,8 @@ cacheAllModels: no # Avoid duplicate instances of the same model, but keep the m
 searchEnabled: yes
 testingMode: no
 
+langs: [en, fr]
+
 flask:
   JWT_SECRET_KEY: $(JWT_SECRET_KEY)
   JWT_IDENTITY_CLAIM: sub

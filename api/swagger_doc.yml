@@ -1083,6 +1083,8 @@ definitions:
         type: string
       is_anonymous:
         type: boolean
+      is_admin:
+        type: boolean
       is_friend:
         type: boolean
         description: True if the logged user has added him as a friend
@@ -1100,9 +1102,6 @@ definitions:
             type: integer
           description:
             type: string
-          created_at:
-            type: string
-            format: date-time
           birthdate:
             type: string
             format: date-time

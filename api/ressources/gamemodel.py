@@ -32,7 +32,7 @@ def getModelArgs():
 	parser.add_argument('model', type=dict, default={})
 	parser.add_argument('is_public', type=bool, nullable=True, default=None)
 
-	if fjwt.current_user.isAdmin():
+	if fjwt.current_user.is_admin:
 		parser.add_argument('is_official', type=bool, nullable=True, default=None)
 
 	return {key:val for key, val in parser.parse_args().items() if val != None}
@@ -69,7 +69,7 @@ class Model(Resource):
 	@marshal_with(model_fields)
 	def post(self, modelclass):
 		model = modelclass.create(
-			owner_id = fjwt.get_jwt_identity(),
+			owner_id = fjwt.fjwt.current_user.id,
 			**getModelArgs(),
 		)
 		return model
@@ -98,7 +98,7 @@ class ModelWithId(Resource):
 	@fjwt.jwt_required
 	@marshal_with(model_fields)
 	def put(self, modelclass, id):
-		model = modelclass.get(id=id, owner_id = fjwt.get_jwt_identity())
+		model = modelclass.get(id=id, owner_id = fjwt.current_user.id)
 		args = getModelArgs()
 		try:
 			model.model.populate(args['model'])
@@ -114,7 +114,7 @@ class ModelWithId(Resource):
 
 	@fjwt.jwt_required
 	def delete(self, modelclass, id):
-		model = modelclass.get(id=id, owner_id = fjwt.get_jwt_identity())
+		model = modelclass.get(id=id, owner_id = fjwt.current_user.id)
 		model.delete_instance()
 		return None
 

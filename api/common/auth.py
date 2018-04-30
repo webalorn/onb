@@ -5,12 +5,14 @@ from sqldb.models.user import User as sqlUser
 
 @onb.jwt.user_identity_loader
 def user_identity_lookup(user):
-	return user.id
+	return {'id': user.id, 'jrt': user.jwt_revoked_at}
 
 @onb.jwt.user_loader_callback_loader
 def user_loader_callback(identity):
 	try:
-		user = sqlUser.get(id=identity)
+		user = sqlUser.get(id=identity['id'])
+		if user.jwt_revoked_at > identity['jrt']:
+			return None
 		if datetime.datetime.now() - user.updated_date >= datetime.timedelta(hours=1):
 			user.save()
 		return user
