@@ -22,7 +22,6 @@ class BaseModel(Model):
 
 		phrase = notAlphaNumRegex.sub('', phrase).lower().split()
 		phrase = " OR ".join([word + '*' for word in phrase]) or '*'
-		print("SEARCH PHRASE =", phrase)
 
 		return (cls.select().join(
 				cls.searchTable,
