@@ -1,11 +1,11 @@
-from flask_restful import Resource, reqparse, marshal, marshal_with, inputs
+from flask_restful import Resource, reqparse, marshal_with, inputs, request
 from sqldb.models.user import User as sqlUser
 from api.common.errors import *
 from api.fields.user import *
 from api.common.auth import jwt_anonymous_user
 import flask_jwt_extended as fjwt
-import onb, datetime
 from api.common.parser import ExtendedParser
+import onb, datetime, random
 
 ### Parsers
 
@@ -39,8 +39,14 @@ def parseUserDatas():
 	parser = reqparse.RequestParser()
 	parser.add_argument('profile', type=parseUserProfile, default={})
 	parser.add_argument('settings', type=parseUserSettings, default={})
-	args = parser.parse_args()
+	return parser.parse_args()
 	return args
+
+def parseChangePassword():
+	parser = reqparse.RequestParser()
+	parser.add_argument('password', type=str)
+	parser.add_argument('new_password', type=str)
+	return parser.parse_args()
 
 ### Common functions
 
@@ -51,7 +57,7 @@ def getNewUserFields():
 
 	if not username:
 		raise BadRequestError
-	if sqlUser.select().where(sqlUser.username == args['username']):
+	if sqlUser.usernameExists(args['username']):
 		raise UserAlreadyExistsError
 	return username, password
 
@@ -81,19 +87,30 @@ class User(Resource):
 	def put(self):
 		return updateUser(fjwt.get_current_user())
 
+@onb.api.resource('/user/username_available')
+class UsernameAvailable(Resource):
+	def get(self):
+		username = request.get_json()
+		if sqlUser.usernameExists(username):
+			suggest = [username + str(random.randint(1, 999)) for k in range(5)]
+			suggest = [username for username in suggest if not sqlUser.usernameExists(username)]
+
+			return {'available': False, 'suggestions': suggest}, 409
+		return {'available': True}
+
 @onb.api.resource('/user/anonymous')
 class AnonymousUser(Resource):
 	@marshal_with(auth_user_fields)
-	def post(self):
+	def get(self):
 		""" Create a new anonymous user """
 		return sqlUser.create(username=None, password_hash=None)
 
 	@marshal_with(auth_user_fields)
 	@jwt_anonymous_user
-	def put(self):
+	def post(self):
 		""" Create a real account from an anonymous user """
 		user = fjwt.get_current_user()
-		username, password_hash = User.getNewUserFields()
+		username, password_hash = getNewUserFields()
 		user.username = username
 		user.password_hash = password_hash
 		user.save()
@@ -125,3 +142,12 @@ class UserAuth(Resource):
 	@fjwt.jwt_required
 	def delete(self):
 		fjwt.get_current_user().revoke_all_jwt()
+
+	@fjwt.jwt_required
+	def post(self):
+		args = parseChangePassword()
+		user = fjwt.get_current_user()
+		if not user.verifyPassword(args['password']):
+			raise UserAuthError
+		user.setPassword(args['new_password'])
+		user.save()

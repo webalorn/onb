@@ -30,6 +30,20 @@ class User(BaseModel, SqlTableModel):
 	def save(self, *p, **pn):
 		super().save(*p, **pn)
 
+	def verifyPassword(self, password):
+		return bcrypt.checkpw(password.encode('utf8'), self.password_hash.encode('utf8'))
+
+	def setPassword(self, password):
+		self.password_hash = self.hashPassword(password)
+
+	def revoke_all_jwt(self):
+		self.jwt_revoked_at += 1
+		self.save()
+
+	@classmethod
+	def usernameExists(cls, username):
+		return bool(cls.select().where(cls.username == username))
+
 	@classmethod
 	def create(cls, *p, **pn):
 		return super().create(*p, **pn,
@@ -42,16 +56,6 @@ class User(BaseModel, SqlTableModel):
 		salt = bcrypt.gensalt()
 		password = password.encode('utf8')
 		return bcrypt.hashpw(password, salt)
-
-	def verifyPassword(self, password):
-		return bcrypt.checkpw(password.encode('utf8'), self.password_hash.encode('utf8'))
-
-	def setPassword(self, password):
-		self.password_hash = self.hashPassword(password)
-
-	def revoke_all_jwt(self):
-		self.jwt_revoked_at += 1
-		self.save()
 
 class OwnedObject(BaseModel): # Every user can read, only the owner can write
 	owner = ForeignKeyField(User, null=True, default=None)

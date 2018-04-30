@@ -24,7 +24,7 @@ errors = {
 	},
 	'UserAuthError': {
 		'message': "Auth failed",
-		'status': 400,
+		'status': 401,
 	},
 	'NotFoundError': {
 		'message': "Ressource not found",

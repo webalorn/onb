@@ -233,6 +233,35 @@ paths:
             $ref: "#/definitions/User"
         400:
           description: "Log-in error: Bad request or invalid credentials"
+
+    post:
+      tags:
+      - user
+      summary: Update user password
+      operationId: updateUserPassword
+      parameters:
+      - in: body
+        name: userPassword
+        required: true
+        description: Old and new password
+        schema:
+            type: object
+            properties:
+              password:
+                type: string
+                format: password
+              new_password:
+                type: string
+                format: password
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: Bad request
+      security:
+      - jwt_auth: []
     delete:
       tags:
       - user
@@ -307,35 +336,6 @@ paths:
         description: Only profile and settings fields are allowed
         schema:
             $ref: "#/definitions/User"
-      responses:
-        200:
-          description: Success
-          schema:
-            $ref: "#/definitions/User"
-        400:
-          description: Bad request
-      security:
-      - jwt_auth: []
-  /user/password:
-    post:
-      tags:
-      - user
-      summary: Update user password
-      operationId: updateUserPassword
-      parameters:
-      - in: body
-        name: userPassword
-        required: true
-        description: Old and new password
-        schema:
-            type: object
-            properties:
-              old_password:
-                type: string
-                format: password
-              new_password:
-                type: string
-                format: password
       responses:
         200:
           description: Success
