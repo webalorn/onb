@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse, marshal, marshal_with, request
 import flask_jwt_extended as fjwt
 from sqldb.models.gameobject import sqlModels
+from engine.storage.encoder import ModelEncoder
 from api.common.errors import *
 from api.fields.gamemodel import *
 import onb, peewee
@@ -116,3 +117,13 @@ class ModelWithId(Resource):
 		model = modelclass.get(id=id, owner_id = fjwt.get_jwt_identity())
 		model.delete_instance()
 		return None
+
+# Get models schemas
+
+@onb.api.resource('/model/<model:modelclass>/schemas')
+class ModelSchemas(Resource):
+	def get(self, modelclass):
+		return {
+			"model": modelclass.modelClass,
+			"schemas": ModelEncoder.encodeSchemas(modelclass.modelClass),
+		}
