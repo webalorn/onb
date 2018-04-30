@@ -29,7 +29,7 @@ class ApiModelTest(ApiTestModel):
 		self.assertInJson([{'id':1}], data)
 		self.assertNotInJson([{'id':3}], data)
 
-		data = self.app_get('/model/unit', 200, data={'pagination': 2, 'page': 2, 'only_official': False})
+		data = self.app_get('/model/unit', 200, data={'pagination': 2, 'page': 2	, 'only_official': False})
 		self.assertEqual(len(data), 2)
 		self.assertInJson([{'id':3}], data)
 		self.assertNotInJson([{'id':1}], data)
@@ -78,4 +78,22 @@ class ApiModelTest(ApiTestModel):
 
 		data2 = self.app_post('/model/unit', 200, data={'name': 'Troll'}, token=token)
 		self.assertEqual(data1['id']+1, data2['id'])
-		
+	
+	def test_getSchemas(self):
+		datas = self.app_get('/model/unit/schemas', 200)
+
+		self.assertInJson({
+			"model": "unit",
+			"schemas": {
+				"action": {
+					"type": "model",
+					"model_name": "action",
+					"submodels": [],
+				},
+				"unit": {
+					"type": "model",
+					"model_name": "unit",
+				}
+			}
+		}, datas);
+		self.assertTrue(len(datas['schemas']['action']['submodels']) > 0)
