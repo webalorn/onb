@@ -1,4 +1,5 @@
 from ..sqldb.sqldbmodel import SqldbTestModel
+from sqldb.models.user import User
 import api.api, onb, json
 from engine.engine import Rand
 from werkzeug.wrappers import Headers

@@ -22,7 +22,7 @@ def parseUserProfile(vals):
 	parser = ExtendedParser()
 	parser.add_argument('avatar_id', type=int)
 	parser.add_argument('description', type=str)
-	parser.add_argument('birthdate', type=datetime.datetime)
+	parser.add_argument('birthdate', type=lambda x : datetime.datetime.strptime(x, "%d-%m-%Y")),
 	parser.add_argument('country', type=str)
 	parser.add_argument('gender', type=str, choices=[None, 'M', 'F'])
 	parser.add_argument('first_name', type=str)

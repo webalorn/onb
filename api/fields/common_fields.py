@@ -7,3 +7,7 @@ class MarshalFields(fields.Raw):
 	def __init__(self, datas, *p, **pn):
 		self.datas = datas
 		return super().__init__(*p, **pn)
+
+class DayDate(fields.Raw):
+	def format(self, value):
+		return value.strftime("%d-%m-%Y")

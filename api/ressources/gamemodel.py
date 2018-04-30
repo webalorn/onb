@@ -69,7 +69,7 @@ class Model(Resource):
 	@marshal_with(model_fields)
 	def post(self, modelclass):
 		model = modelclass.create(
-			owner_id = fjwt.fjwt.current_user.id,
+			owner_id = fjwt.current_user.id,
 			**getModelArgs(),
 		)
 		return model
