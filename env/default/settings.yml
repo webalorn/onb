@@ -13,10 +13,5 @@ flask:
 
 sqldb: onb_dev
 
-locations:
-  dbRoot: db
-  dbFiles: //(dbRoot)/files
-  sqliteDb: //(dbRoot)/onb.db
-
 require:
   game: engine/settings.yml

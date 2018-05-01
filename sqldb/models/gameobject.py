@@ -33,7 +33,7 @@ class GameObjectIndex(IndexModel):
 
 class GameObject(OwnedObject):
 	modelClass = 'game_entity'
-	model = ModelField(modelClass, unique=True)
+	model = ModelField(modelClass)
 	type = TextField(default=modelClass)
 
 	def populateFields(self):
@@ -57,11 +57,6 @@ class GameObject(OwnedObject):
 			setattr(indexRow, fieldName, getattr(self, fieldName))
 		indexRow.save()"""
 
-	def delete_instance(self, *p, **pn):
-		StorageManager().delete(self.model)
-		self.model = None
-		super().delete_instance()
-
 	@staticmethod
 	def _createGameObjectModel(modelName):
 		""" Create a new class to save a specific model"""
@@ -72,7 +67,7 @@ class GameObject(OwnedObject):
 			'exposedFields': exposedFields,
 			#'searchTable': GameObjectIndex._createGameObjectIndex(modelName, exposedFields),
 			'modelClass': modelName,
-			'model': ModelField(modelName, unique=True),
+			'model': ModelField(modelName),
 			'type': TextField(default=modelName),
 		}
 

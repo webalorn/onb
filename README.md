@@ -18,6 +18,7 @@
 #### Install dependencies
 
 - Install pipenv packages 
+- Install PostgreSQL and create 'onb' user with 'onb' password, and databases 'onb_dev', 'onb_testing' and 'onb_production'
 
 ## Usage
 

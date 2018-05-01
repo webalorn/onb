@@ -24,13 +24,10 @@ class GameObjectTest(SqldbTestModel):
 			self.assertEqual(getattr(self.sqlModel, key), val)
 
 	def test_delete(self):
-		filepath = onb.getDbPath(self.sqlModel.model._storageLocation)
 		model_id = self.sqlModel.id
 
 		self.assertTrue(self.modelClass.select().where(self.modelClass.id == model_id).exists())
-		self.assertTrue(os.path.isfile(filepath))
 
 		self.sqlModel.delete_instance()
 
 		self.assertFalse(self.modelClass.select().where(self.modelClass.id == model_id).exists())
-		self.assertFalse(os.path.isfile(filepath))

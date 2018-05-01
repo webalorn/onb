@@ -8,7 +8,4 @@ flask:
 
 sqldb: onb_testing
 
-locations:
-  dbRoot: __temp_dir__
-
 inherit: env/default/settings.yml

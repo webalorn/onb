@@ -181,10 +181,9 @@ class ForeignKeyField(FieldValue):
 
 ### Structures
 
-from .structfields import *
-
 class DictField(ClassField):
 	def __init__(self, fieldsSharedType, *p, keysIn=None, **pn):
+		from .structfields import ListModel, DictModel
 		self.keysIn = keysIn
 		ClassField.__init__(self, DictModel, [fieldsSharedType, keysIn], *p, **pn)
 
@@ -196,6 +195,7 @@ class DictField(ClassField):
 
 class ListField(ClassField):
 	def __init__(self, fieldsSharedType, *p, **pn):
+		from .structfields import ListModel, DictModel
 		ClassField.__init__(self, ListModel, [fieldsSharedType], *p, **pn)
 
 	def createValueFrom(self, otherValue):

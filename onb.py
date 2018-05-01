@@ -18,16 +18,15 @@ class OnbSettings:
 
 	@classmethod
 	def createDbObject(self):
-		"""if conf.sqldb == 'sqlite':
-			pragmas = [
-				('journal_mode', 'wal'),
-				('cache_size', -1000 * 32)
-			]
-			os.makedirs(os.path.dirname(conf.locations.sqliteDb), exist_ok=True)
-			return PooledSqliteExtDatabase(conf.locations.sqliteDb, pragmas=pragmas)
-		elif conf.sqldb == 'memory':
-			return PooledSqliteExtDatabase(':memory:')"""
 		return PostgresqlExtDatabase(conf.sqldb, user='onb', password='onb')
+
+	@classmethod
+	def inMemoryGeneratedDatas(cls):
+		from engine.generator.tables import TableGenerator
+		from engine.storage.encoder import ModelEncoder
+
+		conf.game.table = TableGenerator.new()
+		conf.game.table_json = ModelEncoder.encode(conf.game.table)
 
 	@classmethod
 	def loadFrom(cls, filename):
@@ -37,7 +36,7 @@ class OnbSettings:
 		cfgLoader = SettingsLoader(cls.root)
 		conf = cfgLoader.loadYamlCfg(filename)
 		sqldb = cls.createDbObject()
-
+		cls.inMemoryGeneratedDatas()
 
 ### Global functions for simple parameters use
 

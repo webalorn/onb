@@ -15,5 +15,3 @@ powerTypes:
   - electricity
   - acid
   - magic
-locations:
-  table: //(dbRoot)/table.json

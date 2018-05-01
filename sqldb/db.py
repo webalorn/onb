@@ -2,7 +2,6 @@ import peewee, onb
 from sqldb.models import *
 from sqldb.models.user import User
 import engine.storage.jsondb as jsondb
-from engine.generator.tables import TableGenerator
 
 tables = []
 
@@ -19,7 +18,6 @@ def generateStructure(verbose=False):
 		print("Create tables for:", [t.__name__ for t in tables])
 	onb.sqldb.create_tables(tables)
 
-	jsondb.storeTo(TableGenerator.new(), onb.conf.game.locations.table)
 	onb.sqldb.close()
 
 def generateBaseTestDatas():
