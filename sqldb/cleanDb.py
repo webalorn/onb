@@ -1,0 +1,1 @@
+sudo -u postgres -i sh -c "dropdb onb_$1 ; createdb onb_$1"

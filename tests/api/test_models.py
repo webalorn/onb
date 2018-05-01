@@ -5,8 +5,8 @@ class ApiModelTest(ApiTestModel):
 	def test_getModelList(self):
 		data = self.app_get('/model/unit', 200, data={'only_official': False})
 		self.assertInJson([{
-			"id": 1,
-			"owner_id": 1,
+			"id": self.AnyValue,
+			"owner_id": self.firstId,
 			"type": "unit",
 			"is_official": self.AnyValue,
 			"is_public": True,

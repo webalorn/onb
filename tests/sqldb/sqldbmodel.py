@@ -24,7 +24,7 @@ class SqldbTestModel(MainTestModel):
 	def generateBaseTestDatas(cls):
 		""" Use this when you need a clean database with default values """
 		cls.clearTables(basemodels.SqlTableModel)
-		generateBaseTestDatas()
+		SqldbTestModel.firstId = generateBaseTestDatas().id
 
 	def setUp(self):
 		super().setUp()

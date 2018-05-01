@@ -37,3 +37,5 @@ def generateBaseTestDatas():
 
 	if not onb.sqldb.is_closed():
 		onb.sqldb.close()
+
+	return user

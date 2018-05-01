@@ -24,8 +24,8 @@ class User(BaseModel, SqlTableModel):
 	is_admin = BooleanField(default=False)
 	jwt_revoked_at = IntegerField(default=0)
 
-	profile = ForeignKeyField(UserProfile)
-	settings = ForeignKeyField(UserSettings)
+	profile = ForeignKeyField(UserProfile, on_delete='CASCADE')
+	settings = ForeignKeyField(UserSettings, on_delete='CASCADE')
 
 	#searchTable = UserIndex
 
@@ -73,11 +73,11 @@ class User(BaseModel, SqlTableModel):
 		return bcrypt.hashpw(password, salt)
 
 class Friendship(BaseModel, SqlTableModel):
-	follower = ForeignKeyField(User, backref='friends')
-	friend = ForeignKeyField(User, backref='followers')
+	follower = ForeignKeyField(User, backref='friends', on_delete='CASCADE')
+	friend = ForeignKeyField(User, backref='followers', on_delete='CASCADE')
 
 class OwnedObject(BaseModel): # Every user can read, only the owner can write
-	owner = ForeignKeyField(User, null=True, default=None)
+	owner = ForeignKeyField(User, null=True, default=None, on_delete='CASCADE')
 	is_official = BooleanField(default=False) # If true, marked as official content
 	is_public = BooleanField(default=True) # If true, marked as official content
 	is_generated = BooleanField(default=False) # If true, the owner can't modify this object directly

@@ -11,7 +11,7 @@ flask:
   JWT_ACCESS_TOKEN_EXPIRES: false
   JWT_ALGORITHM: HS512
 
-sqldb: sqlite
+sqldb: onb_dev
 
 locations:
   dbRoot: db

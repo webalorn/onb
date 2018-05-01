@@ -6,6 +6,8 @@ flask:
   TESTING: true
   JWT_SECRET_KEY: testing_secret_key
 
+sqldb: onb_testing
+
 locations:
   dbRoot: __temp_dir__
 

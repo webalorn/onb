@@ -1,5 +1,5 @@
 import os
-from playhouse.pool import PooledSqliteExtDatabase
+from playhouse.postgres_ext import PostgresqlExtDatabase
 from engine.engine import Rand, Map, SettingsLoader
 
 ### Global configuration
@@ -18,7 +18,7 @@ class OnbSettings:
 
 	@classmethod
 	def createDbObject(self):
-		if conf.sqldb == 'sqlite':
+		"""if conf.sqldb == 'sqlite':
 			pragmas = [
 				('journal_mode', 'wal'),
 				('cache_size', -1000 * 32)
@@ -26,7 +26,8 @@ class OnbSettings:
 			os.makedirs(os.path.dirname(conf.locations.sqliteDb), exist_ok=True)
 			return PooledSqliteExtDatabase(conf.locations.sqliteDb, pragmas=pragmas)
 		elif conf.sqldb == 'memory':
-			return PooledSqliteExtDatabase(':memory:')
+			return PooledSqliteExtDatabase(':memory:')"""
+		return PostgresqlExtDatabase(conf.sqldb, user='onb', password='onb')
 
 	@classmethod
 	def loadFrom(cls, filename):
