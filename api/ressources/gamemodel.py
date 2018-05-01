@@ -106,6 +106,7 @@ class ModelWithId(Resource):
 		del args['model']
 		for argname, argval in args.items():
 			setattr(model, argname, argval)
+		model.is_generated = False # Manual modification on a model set 'is_generated' to false
 		model.save()
 
 		return model

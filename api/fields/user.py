@@ -1,7 +1,28 @@
 from flask_restful import fields, marshal
 import flask_jwt_extended as fjwt
 from sqldb.models.user import User as sqlUser
+from sqldb.models.user import Friendship
 from .common_fields import MarshalFields, DayDate
+
+class FriendsField(fields.Raw):
+	def format(self, friendList):
+		return [marshal(val, user_fields_short) for val in friendList]
+
+def isFriendAttribute(user):
+	if fjwt.get_current_user():
+		return  bool(Friendship.select().where(
+				Friendship.follower == fjwt.get_current_user().id,
+				Friendship.friend == user.id
+			))
+	return False
+
+def isFollowerAttribute(user):
+	if fjwt.get_current_user():
+		return  bool(Friendship.select().where(
+				Friendship.follower == user.id,
+				Friendship.friend == fjwt.get_current_user().id
+			))
+	return False
 
 short_profile = {
 	'avatar_id': fields.Integer,
@@ -15,11 +36,9 @@ user_fields_short = {
 	'is_admin': fields.Boolean,
 	'is_anonymous': fields.Boolean(attribute=lambda user: user.isAnonymous()),
 	'profile': MarshalFields(short_profile),
+	'isFriend': fields.Boolean(attribute=isFriendAttribute),
+	'isFollower': fields.Boolean(attribute=isFollowerAttribute),
 }
-
-class FriendsField(fields.Raw):
-	def format(self, friendList):
-		return [marshal(val, user_fields_short) for val in friendList]
 
 user_fields = {
 	**user_fields_short,
