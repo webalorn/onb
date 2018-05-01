@@ -23,13 +23,7 @@ def _addSubModelsToSqlModel(classname):
 _addSubModelsToSqlModel(gameentities.BaseGameModel)
 
 sqlModelsIndexes = {}
-class GameObjectIndex(FTSenabledModel):
-	rowid = RowIDField()
-
-	class Meta:
-		database = onb.sqldb
-		options = {'tokenize': 'porter'}
-
+class GameObjectIndex(IndexModel):
 	def _createGameObjectIndex(modelName, fields):
 		properties = {name:SearchField() for name in fields}
 		sqlTableName = (modelName + '_index_table').title()

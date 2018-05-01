@@ -4,7 +4,7 @@ from api.common.errors import *
 from api.fields.user import *
 from api.common.auth import jwt_anonymous_user
 import flask_jwt_extended as fjwt
-from api.common.parser import ExtendedParser
+from api.common.parser import ExtendedParser, checkPagination
 import onb, datetime, random
 
 ### Parsers
@@ -17,6 +17,16 @@ def authParser():
 
 def createParser():
 	return authParser().copy()
+
+def parseSearchArgs():
+	parser = reqparse.RequestParser()
+	parser.add_argument('search', type=str, required=True)
+	parser.add_argument('page', type=int, default=1)
+	parser.add_argument('pagination', type=int, default=20)
+
+	args = parser.parse_args()
+	checkPagination(args['pagination'], maxi=20)
+	return args
 
 def parseUserProfile(vals):
 	parser = ExtendedParser()
@@ -97,6 +107,14 @@ class UsernameAvailable(Resource):
 
 			return {'available': False, 'suggestions': suggest}, 409
 		return {'available': True}
+
+@onb.api.resource('/user/search')
+class SearchUser(Resource):
+	@marshal_with(user_fields)
+	def get(self):
+		args = parseSearchArgs()
+		return list(sqlUser.search(args['search'])
+			.paginate(args['page'], args['pagination']))
 
 @onb.api.resource('/user/anonymous')
 class AnonymousUser(Resource):

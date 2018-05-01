@@ -3,6 +3,7 @@ import flask_jwt_extended as fjwt
 from sqldb.models.gameobject import sqlModels
 from engine.storage.encoder import ModelEncoder
 from api.common.errors import *
+from api.common.parser import checkPagination
 from api.fields.gamemodel import *
 import onb, peewee
 
@@ -16,10 +17,7 @@ def getFilterArgs():
 	parser.add_argument('fields', type=dict, default={})
 
 	args = parser.parse_args()
-	if (args['pagination'] < 1):
-		raise BadRequestError('pagination value must be at least 1')
-	if (args['pagination'] > 100):
-		raise BadRequestError('pagination value must be at most 100')
+	checkPagination(args['pagination'])
 	return args
 
 def getSearchArgs():

@@ -1,4 +1,5 @@
 from flask_restful import reqparse, inputs
+from api.common.errors import *
 
 class FakeRequest(dict):
     def __setattr__(self, name, value):
@@ -16,3 +17,9 @@ class ExtendedParser(reqparse.RequestParser):
 		setattr(fake_request, 'json', vals)
 		setattr(fake_request, 'unparsed_arguments', {})
 		return self.parse_args(fake_request)
+
+def checkPagination(pagination, maxi=100):
+	if (pagination < 1):
+		raise BadRequestError('pagination value must be at least 1')
+	if (pagination > maxi):
+		raise BadRequestError('pagination value must be at most ' + str(maxi))

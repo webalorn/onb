@@ -52,3 +52,10 @@ class SqlTableModel(): # Every model that inherit from this model will be added 
 	pass
 
 FTSenabledModel = FTS5Model if FTS5Model.fts5_installed() else FTSModel
+
+class IndexModel(FTSenabledModel):
+	rowid = RowIDField()
+
+	class Meta:
+		database = onb.sqldb
+		options = {'tokenize': 'porter'}

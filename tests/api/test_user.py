@@ -171,3 +171,11 @@ class ApiUserTest(ApiTestModel):
 		with self.assertRaises(UserAuthError):
 			self.app_get('/user/auth', 400, data={'username': username, 'password': "12345"})
 		self.app_get('/user/auth', 200, data={'username': username, 'password': "newpass"})
+
+	def test_searchUser(self):
+		datas = self.app_get('/user/search', 200, data={"search": "user"})
+		self.assertTrue(len(datas) >= 1)
+		self.assertInJson([{'id': self.AnyValue, 'username': self.AnyValue}], datas);
+
+		datas = self.app_get('/user/search', 200, data={"search": self.newUsername()})
+		self.assertEqual(len(datas), 0)

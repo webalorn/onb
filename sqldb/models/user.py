@@ -1,6 +1,9 @@
 from peewee import *
-from .basemodels import BaseModel, SqlTableModel
+from .basemodels import *
 import bcrypt
+
+class UserIndex(IndexModel, SqlTableModel):
+	username = SearchField()
 
 class UserProfile(BaseModel, SqlTableModel):
 	avatar_id = IntegerField(null=True, default=None)
@@ -24,10 +27,16 @@ class User(BaseModel, SqlTableModel):
 	profile = ForeignKeyField(UserProfile)
 	settings = ForeignKeyField(UserSettings)
 
+	searchTable = UserIndex
+
 	def isAnonymous(self):
 		return self.username == None
 
 	def save(self, *p, **pn):
+		indexRow, created = self.searchTable.get_or_create(rowid=self.id)
+		indexRow.username = self.username
+		indexRow.save()
+
 		super().save(*p, **pn)
 
 	def verifyPassword(self, password):
