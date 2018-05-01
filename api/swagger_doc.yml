@@ -433,44 +433,6 @@ paths:
             type: array
             items:
               $ref: "#/definitions/User"
-  /user/{id}/friends:
-    parameters:
-    - name: id
-      in: path
-      description: Id of the user
-      required: true
-      type: integer
-    get:
-      tags:
-      - user
-      summary: Get the user friends
-      operationId: getFriends
-      responses:
-        200:
-          description: Success
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/User"
-  /user/{id}/followers:
-    parameters:
-    - name: id
-      in: path
-      description: Id of the user
-      required: true
-      type: integer
-    get:
-      tags:
-      - user
-      summary: Get user that have added the user as friend
-      operationId: getFollowers
-      responses:
-        200:
-          description: Success
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/User"
   /user/friend/{friend_id}:
     parameters:
     - name: friend_id

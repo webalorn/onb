@@ -32,6 +32,12 @@ class User(BaseModel, SqlTableModel):
 	def isAnonymous(self):
 		return self.username == None
 
+	def getFriends(self):
+		return [relation.friend for relation in self.friends]
+
+	def getFollowers(self):
+		return [relation.follower for relation in self.followers]
+
 	def save(self, *p, **pn):
 		indexRow, created = self.searchTable.get_or_create(rowid=self.id)
 		indexRow.username = self.username
@@ -65,6 +71,10 @@ class User(BaseModel, SqlTableModel):
 		salt = bcrypt.gensalt()
 		password = password.encode('utf8')
 		return bcrypt.hashpw(password, salt)
+
+class Friendship(BaseModel, SqlTableModel):
+	follower = ForeignKeyField(User, backref='friends')
+	friend = ForeignKeyField(User, backref='followers')
 
 class OwnedObject(BaseModel): # Every user can read, only the owner can write
 	owner = ForeignKeyField(User, null=True, default=None)

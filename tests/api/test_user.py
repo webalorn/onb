@@ -4,7 +4,8 @@ from api.common.errors import *
 class ApiUserTest(ApiTestModel):
 	def test_getUser(self):
 		data = self.app_get('/user/1', 200)
-		self.assertInJson({'id': 1, 'username': 'test_user', 'is_anonymous': False, 'profile': self.AnyValue}, data)
+		self.assertInJson({'id': 1, 'username': 'test_user', 'is_anonymous': False,
+			'profile': self.AnyValue, 'friends': self.AnyValue, 'followers': self.AnyValue}, data)
 		self.assertNotInJson({'auth_token': self.AnyValue, 'settings':self.AnyValue}, data)
 
 		self.app_get('/user', 401)
@@ -176,6 +177,41 @@ class ApiUserTest(ApiTestModel):
 		datas = self.app_get('/user/search', 200, data={"search": "user"})
 		self.assertTrue(len(datas) >= 1)
 		self.assertInJson([{'id': self.AnyValue, 'username': self.AnyValue}], datas);
+		self.assertNotInJson([{'firends': self.AnyValue, 'followers': self.AnyValue}], datas)
 
 		datas = self.app_get('/user/search', 200, data={"search": self.newUsername()})
 		self.assertEqual(len(datas), 0)
+
+	def test_friends(self):
+		users = []
+		for i in range(5):
+			username = self.newUsername()
+			user_id = self.createUser(username, '1234')
+			token = self.getUserToken(username, '1234')
+			users.append({'username': username, 'id': user_id, 'token': token})
+
+		with self.assertRaises(NotFoundError):
+			self.app_post('/user/friend/'+ str(users[0]['id']), 404, token=users[0]['token'])
+
+		for i in range(1, 5):
+			self.app_post('/user/friend/' + str(users[i]['id']), 200, token=users[0]['token'])
+
+		datas = self.app_get('/user', 200, token=users[0]['token'])
+		self.assertEqual(len(datas['friends']), 4)
+		self.assertEqual(len(datas['followers']), 0)
+
+		for i in range(1, 5):
+			datas = self.app_get('/user', 200, token=users[i]['token'])
+			self.assertEqual(len(datas['friends']), 0)
+			self.assertEqual(len(datas['followers']), 1)
+			self.assertInJson({'followers': [{'id': users[0]['id']}]}, datas)
+
+		self.app_delete('/user/friend/' + str(users[1]['id']), 200, token=users[0]['token'])
+		with self.assertRaises(NotFoundError):
+			self.app_delete('/user/friend/' + str(users[1]['id']), 404, token=users[0]['token'])
+
+		datas = self.app_get('/user', 200, token=users[0]['token'])
+		self.assertEqual(len(datas['friends']), 3)
+
+		datas = self.app_get('/user', 200, token=users[1]['token'])
+		self.assertEqual(len(datas['followers']), 0)

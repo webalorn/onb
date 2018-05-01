@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse, marshal_with, inputs, request
 from sqldb.models.user import User as sqlUser
+from sqldb.models.user import Friendship
 from api.common.errors import *
 from api.fields.user import *
 from api.common.auth import jwt_anonymous_user
@@ -110,7 +111,7 @@ class UsernameAvailable(Resource):
 
 @onb.api.resource('/user/search')
 class SearchUser(Resource):
-	@marshal_with(user_fields)
+	@marshal_with(user_fields_short)
 	def get(self):
 		args = parseSearchArgs()
 		return list(sqlUser.search(args['search'])
@@ -169,3 +170,22 @@ class UserAuth(Resource):
 			raise UserAuthError
 		user.setPassword(args['new_password'])
 		user.save()
+
+@onb.api.resource('/user/friend/<int:friend_id>')
+class UserFriends(Resource):
+	@fjwt.jwt_required
+	def post(self, friend_id):
+		if friend_id == fjwt.get_current_user().id:
+			raise NotFoundError
+		try:
+			sqlUser.get(id=friend_id)
+		except:
+			raise NotFoundError
+		Friendship.get_or_create(follower_id=fjwt.get_current_user().id, friend_id=friend_id)
+
+	@fjwt.jwt_required
+	def delete(self, friend_id):
+		try:
+			friend = Friendship.get(follower_id=fjwt.get_current_user().id, friend_id=friend_id).delete_instance()
+		except:
+			raise NotFoundError
