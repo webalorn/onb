@@ -12,6 +12,7 @@ flask = "*"
 flask-restful = "*"
 bcrypt = "*"
 flask-jwt-extended = "*"
+gunicorn = "*"
 
 [dev-packages]
 
