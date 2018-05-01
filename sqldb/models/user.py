@@ -2,8 +2,8 @@ from peewee import *
 from .basemodels import *
 import bcrypt
 
-class UserIndex(IndexModel, SqlTableModel):
-	username = SearchField()
+"""class UserIndex(IndexModel, SqlTableModel):
+	username = SearchField()"""
 
 class UserProfile(BaseModel, SqlTableModel):
 	avatar_id = IntegerField(null=True, default=None)
@@ -27,7 +27,7 @@ class User(BaseModel, SqlTableModel):
 	profile = ForeignKeyField(UserProfile)
 	settings = ForeignKeyField(UserSettings)
 
-	searchTable = UserIndex
+	#searchTable = UserIndex
 
 	def isAnonymous(self):
 		return self.username == None
@@ -39,9 +39,9 @@ class User(BaseModel, SqlTableModel):
 		return [relation.follower for relation in self.followers]
 
 	def save(self, *p, **pn):
-		indexRow, created = self.searchTable.get_or_create(rowid=self.id)
+		"""indexRow, created = self.searchTable.get_or_create(rowid=self.id)
 		indexRow.username = self.username
-		indexRow.save()
+		indexRow.save()"""
 
 		super().save(*p, **pn)
 

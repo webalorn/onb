@@ -1,0 +1,3 @@
+inherit: env/default/settings.yml
+
+sqldb: sqlite

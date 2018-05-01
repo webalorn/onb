@@ -22,13 +22,13 @@ def _addSubModelsToSqlModel(classname):
 		_addSubModelsToSqlModel(modelClass)
 _addSubModelsToSqlModel(gameentities.BaseGameModel)
 
-sqlModelsIndexes = {}
+"""sqlModelsIndexes = {}
 class GameObjectIndex(IndexModel):
 	def _createGameObjectIndex(modelName, fields):
 		properties = {name:SearchField() for name in fields}
 		sqlTableName = (modelName + '_index_table').title()
 		sqlModelsIndexes[modelName] = type(sqlTableName, (GameObjectIndex, SqlTableModel,), properties)
-		return sqlModelsIndexes[modelName]
+		return sqlModelsIndexes[modelName]"""
 
 
 class GameObject(OwnedObject):
@@ -52,10 +52,10 @@ class GameObject(OwnedObject):
 		self.populateFields()
 		super().save(*p, **pn)
 
-		indexRow, created = self.searchTable.get_or_create(rowid=self.id)
+		"""indexRow, created = self.searchTable.get_or_create(rowid=self.id)
 		for fieldName in self.exposedFields:
 			setattr(indexRow, fieldName, getattr(self, fieldName))
-		indexRow.save()
+		indexRow.save()"""
 
 	def delete_instance(self, *p, **pn):
 		StorageManager().delete(self.model)
@@ -70,7 +70,7 @@ class GameObject(OwnedObject):
 		exposedFields = classModel.getExposedFields()
 		properties = {
 			'exposedFields': exposedFields,
-			'searchTable': GameObjectIndex._createGameObjectIndex(modelName, exposedFields),
+			#'searchTable': GameObjectIndex._createGameObjectIndex(modelName, exposedFields),
 			'modelClass': modelName,
 			'model': ModelField(modelName, unique=True),
 			'type': TextField(default=modelName),
