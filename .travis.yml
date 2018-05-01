@@ -7,10 +7,17 @@ env:
     - PIPENV_VENV_IN_PROJECT=1
     - PIPENV_IGNORE_VIRTUALENVS=1
 
+services:
+  - postgresql
+
 install:
   - pip install --upgrade pip
   - pip install pipenv
   - pipenv install --dev --skip-lock
+before_script:
+  - psql -c 'create database onb_testing; create user onb;' -U postgres
+  - psql -c 'create database onb;' -U postgres
+  - psql -c "ALTER USER onb WITH SUPERUSER; ALTER USER onb WITH PASSWORD 'onb';" -U postgres
 script:
   - ./runTests.sh
 
