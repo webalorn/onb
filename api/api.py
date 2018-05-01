@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Resource, Api
 from flask_jwt_extended import JWTManager
 from api.common.errors import errors
-import onb
+import onb, yaml, os
 
 app = Flask(__name__)
 
@@ -28,3 +28,11 @@ def _db_connect():
 def _db_close(exc):
 	if not onb.sqldb.is_closed():
 		onb.sqldb.close()
+
+@onb.api.resource('/')
+class ApiReference(Resource):
+	def get(self):
+		filename = os.path.join(onb.OnbSettings.root, 'api/swagger_doc.yml')
+
+		with open(filename, 'r') as f:
+			return yaml.load(f)

@@ -28,7 +28,6 @@ class OnbSettings:
 			path = db.path[1:]
 			host = db.hostname
 			port = db.port
-			print("=====>", {"path": path, "user": user, "password": password, "host": host, "port": port})
 			return PostgresqlExtDatabase(path, user=user, password=password, host=host, port=port)
 		return PostgresqlExtDatabase(conf.sqldb, user='onb', password='onb')
 
