@@ -1,3 +1,3 @@
 inherit: env/default/settings.yml
 
-sqldb: onb_production
+sqldb: heroku

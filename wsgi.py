@@ -1,4 +1,4 @@
-import onb, env.dev.settings
+import onb, env.production.settings
 from api.api import *
 import onb
 from sqldb.db import *

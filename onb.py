@@ -1,6 +1,8 @@
 import os
 from playhouse.postgres_ext import PostgresqlExtDatabase
 from engine.engine import Rand, Map, SettingsLoader
+import psycopg2
+from urllib.parse import *
 
 ### Global configuration
 conf = None
@@ -18,6 +20,16 @@ class OnbSettings:
 
 	@classmethod
 	def createDbObject(self):
+		if conf.sqldb == 'heroku':
+			DATABASE_URL = os.environ.get('DATABASE_URL')
+			db = urlparse(DATABASE_URL)
+			user = db.username
+			password = db.password
+			path = db.path[1:]
+			host = db.hostname
+			port = db.port
+			print("=====>", {"path": path, "user": user, "password": password, "host": host, "port": port})
+			return PostgresqlExtDatabase(path, user=user, password=password, host=host, port=port)
 		return PostgresqlExtDatabase(conf.sqldb, user='onb', password='onb')
 
 	@classmethod
