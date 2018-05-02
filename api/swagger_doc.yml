@@ -464,6 +464,24 @@ paths:
 
 # Battles
   /battle:
+    get:
+      tags:
+      - battle
+      summary: Get all user battles
+      operationId: getUserBattles
+      parameters:
+      - in: body
+        name: battleSettings
+        required: true
+        schema:
+            $ref: "#/definitions/Battle"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/Battle"
+      security:
+      - jwt_auth: []
     post:
       tags:
       - battle

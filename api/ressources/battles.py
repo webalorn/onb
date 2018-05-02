@@ -56,7 +56,12 @@ Model Endpoints
 @onb.api.resource('/battle')
 class Battle(Resource):
 	@fjwt.jwt_required
-	@marshal_with(battle_fields)
+	@marshal_with(battle_fields_short)
+	def get(self):
+		return list(fjwt.get_current_user().getBattles())
+
+	@fjwt.jwt_required
+	@marshal_with(battle_fields_short)
 	def post(self):
 		battle = sqlBattle.create(
 			owner_id=fjwt.get_current_user().id,

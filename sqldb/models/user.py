@@ -1,5 +1,6 @@
 from peewee import *
 from .basemodels import *
+from .customfields import *
 import bcrypt
 
 """class UserIndex(IndexModel, SqlTableModel):
@@ -24,6 +25,8 @@ class User(BaseModel, SqlTableModel):
 	is_admin = BooleanField(default=False)
 	jwt_revoked_at = IntegerField(default=0)
 
+	battles = PyDataField(default=[]) # List of ids
+
 	profile = ForeignKeyField(UserProfile, on_delete='CASCADE')
 	settings = ForeignKeyField(UserSettings, on_delete='CASCADE')
 
@@ -38,12 +41,7 @@ class User(BaseModel, SqlTableModel):
 	def getFollowers(self):
 		return [relation.follower for relation in self.followers]
 
-	def save(self, *p, **pn):
-		"""indexRow, created = self.searchTable.get_or_create(rowid=self.id)
-		indexRow.username = self.username
-		indexRow.save()"""
-
-		super().save(*p, **pn)
+	# Auth methods
 
 	def verifyPassword(self, password):
 		return bcrypt.checkpw(password.encode('utf8'), self.password_hash.encode('utf8'))
@@ -54,6 +52,23 @@ class User(BaseModel, SqlTableModel):
 	def revoke_all_jwt(self):
 		self.jwt_revoked_at += 1
 		self.save()
+
+
+	# Battles
+
+	def add_battle(self, battle_id):
+		if not battle_id in self.battles:
+			self.battles.append(battle_id)
+
+	def remove_battle(self, battle_id):
+		if battle_id in self.battles:
+			self.battles.remove(battle_id)
+
+	def getBattles(self):
+		from .battle import Battle
+		return Battle.select().where(Battle.id << self.battles)
+
+	# Static methods
 
 	@classmethod
 	def usernameExists(cls, username):

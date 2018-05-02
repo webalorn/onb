@@ -2,6 +2,7 @@ from .basemodels import *
 from engine.modelslist import getModelByName
 from engine.storage.encoder import *
 import json
+from peewee import *
 
 class ModelField(TextField):
 	def __init__(self, modelType, *p, **pn):

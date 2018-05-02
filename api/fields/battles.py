@@ -21,7 +21,7 @@ class UnitsFields(fields.Raw):
 			'count': army.units[str(unit.id)]
 		} for unit in unitsModels]
 
-battle_fields = {
+battle_fields_short = {
 	'id': fields.Integer,
 	'owner_id': fields.Integer,
 	'name': fields.String,
@@ -31,6 +31,10 @@ battle_fields = {
 	'army_maximum_cost': fields.Integer,
 	'universe': fields.String,
 	'players': PlayersField,
+}
+
+battle_fields = {
+	**battle_fields_short,
 	'armies': ArmiesField,
 }
 

@@ -21,21 +21,32 @@ class Battle(OwnedObject, SqlTableModel):
 		return User.select().where(User.id << self.players)
 
 	def addPlayer(self, player_id):
-		player = User.get(id=player_id) # Ensure model exists
+		player = User.get(id=player_id)
 		if not player_id in self.players:
+			player.add_battle(self.id)
+			player.save()
 			self.players.append(player_id)
 
 	def removePlayer(self, player_id):
-		if player_id in self.players:
+		if player_id in self.players and player_id != self.owner_id:
+			try:
+				player = User.get(id=player_id)
+				player.remove_battle(self.id)
+				player.save()
+			except:
+				pass # Player doesn't exist anymore
 			self.players.remove(player_id)
 
 	def isPlayerAllowed(self, playerId):
 		return playerId in self.players or playerId == self.owner_id
 
-	def save(self, *p, **pn):
-		if not self.owner_id in self.players:
-			self.players.append(self.owner_id)
-		super().save(*p, **pn)
+	@classmethod
+	def create(cls, *p, **pn):
+		battle = super().create(*p, **pn)
+
+		battle.addPlayer(battle.owner_id)
+		battle.save()
+		return battle
 
 class Army(BaseModel, SqlTableModel):
 	name = TextField(default="")
