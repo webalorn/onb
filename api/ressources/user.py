@@ -1,6 +1,5 @@
 from flask_restful import Resource, reqparse, marshal_with, inputs, request
 from sqldb.models.user import User as sqlUser
-from sqldb.models.user import Friendship
 from api.common.errors import *
 from api.fields.user import *
 from api.common.auth import *
@@ -181,15 +180,9 @@ class UserFriends(Resource):
 	def post(self, friend_id):
 		if friend_id == fjwt.get_current_user().id:
 			raise NotFoundError
-		try:
-			sqlUser.get(id=friend_id)
-		except:
-			raise NotFoundError
-		Friendship.get_or_create(follower_id=fjwt.get_current_user().id, friend_id=friend_id)
+
+		fjwt.get_current_user().addFriend(friend_id)
 
 	@fjwt.jwt_required
 	def delete(self, friend_id):
-		try:
-			friend = Friendship.get(follower_id=fjwt.get_current_user().id, friend_id=friend_id).delete_instance()
-		except:
-			raise NotFoundError
+		fjwt.get_current_user().removeFriend(friend_id)

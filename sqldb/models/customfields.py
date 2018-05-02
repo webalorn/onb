@@ -27,4 +27,5 @@ class PyDataField(TextField):
 		return json.dumps(value)
 
 	def python_value(self, value):
-		return json.loads(value)
+		if value is not None:
+			return json.loads(value)

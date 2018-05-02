@@ -4,14 +4,15 @@ from sqldb.models.battle import Battle as sqlBattle
 from sqldb.models.battle import Army as sqlArmy
 from engine.storage.encoder import ModelEncoder
 from .gamemodel import model_summary
+from .user import user_fields_short
 
 class ArmiesField(fields.Raw):
 	def format(self, armies):
 		return [marshal(val, army_fields) for val in armies]
 
 class PlayersField(fields.Raw):
-	def format(self, playersIds):
-		return [int(val) for val in playersIds]
+	def format(self, battle):
+		return [marshal(val, user_fields_short) for val in battle.getPlayersModels()]
 
 class UnitsFields(fields.Raw):
 	def format(self, army):
@@ -30,7 +31,7 @@ battle_fields_short = {
 	'scenario': fields.String,
 	'army_maximum_cost': fields.Integer,
 	'universe': fields.String,
-	'players': PlayersField,
+	'players': PlayersField(attribute=(lambda x : x)),
 }
 
 battle_fields = {
@@ -44,5 +45,5 @@ army_fields = {
 	'name': fields.String,
 	'alignment': fields.String,
 	'cost': fields.Integer(attribute=sqlArmy.getCost),
-	'units': UnitsFields(fields.Raw, attribute=(lambda x : x))
+	'units': UnitsFields(attribute=(lambda x : x))
 }

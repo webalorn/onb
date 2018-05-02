@@ -3,6 +3,7 @@ from sqldb.models.battle import Battle as sqlBattle
 from sqldb.models.battle import Army as sqlArmy
 from api.common.parser import ExtendedParser
 import flask_jwt_extended as fjwt
+from api.common.parser import checkPagination
 from api.common.errors import *
 from api.common.common import *
 from api.fields.battles import *
@@ -33,6 +34,15 @@ def getArmyArgs():
 	args = parser.parse_args()
 	return args;
 
+def parseGetBattlesArgs():
+	parser = reqparse.RequestParser()
+	parser.add_argument('page', type=int, default=1)
+	parser.add_argument('pagination', type=int, default=20)
+
+	args = parser.parse_args()
+	checkPagination(args['pagination'])
+	return args
+
 """
 Common functions
 """
@@ -58,7 +68,12 @@ class Battle(Resource):
 	@fjwt.jwt_required
 	@marshal_with(battle_fields_short)
 	def get(self):
-		return list(fjwt.get_current_user().getBattles())
+		args = parseGetBattlesArgs()
+		return list(fjwt.get_current_user()
+			.getBattles()
+			.order_by(sqlBattle.id.desc())
+			.paginate(args['page'], args['pagination'])
+		)
 
 	@fjwt.jwt_required
 	@marshal_with(battle_fields_short)

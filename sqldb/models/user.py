@@ -27,8 +27,14 @@ class User(BaseModel, SqlTableModel):
 
 	battles = PyDataField(default=[]) # List of ids
 
+	friends = PyDataField(default=[])
+	followers = PyDataField(default=[])
+
 	profile = ForeignKeyField(UserProfile, on_delete='CASCADE')
 	settings = ForeignKeyField(UserSettings, on_delete='CASCADE')
+
+	def save(self, *p, **pn):
+		super().save(*p, **pn)
 
 	#searchTable = UserIndex
 
@@ -36,10 +42,31 @@ class User(BaseModel, SqlTableModel):
 		return self.username == None
 
 	def getFriends(self):
-		return [relation.friend for relation in self.friends]
+		return list(User.select().where(User.id << self.friends))
 
 	def getFollowers(self):
-		return [relation.follower for relation in self.followers]
+		return list(User.select().where(User.id << self.followers))
+
+	def addFriend(self, friend_id):
+		if not friend_id in self.friends and self.id != friend_id:
+			self.friends.append(friend_id)
+			self.save()
+
+			friend = User.get(id=friend_id)
+			if not self.id in friend.followers:
+				friend.followers.append(friend_id)
+				friend.save()
+
+	def removeFriend(self, friend_id):
+		if friend_id in self.friends:
+			self.friends.remove(friend_id)
+			self.save()
+
+		friend = User.get(id=friend_id)
+		if self.id in friend.followers:
+			friend.followers.remove(friend_id)
+			friend.save()
+
 
 	# Auth methods
 
@@ -86,10 +113,6 @@ class User(BaseModel, SqlTableModel):
 		salt = bcrypt.gensalt()
 		password = password.encode('utf8')
 		return bcrypt.hashpw(password, salt)
-
-class Friendship(BaseModel, SqlTableModel):
-	follower = ForeignKeyField(User, backref='friends', on_delete='CASCADE')
-	friend = ForeignKeyField(User, backref='followers', on_delete='CASCADE')
 
 class OwnedObject(BaseModel): # Every user can read, only the owner can write
 	owner = ForeignKeyField(User, null=True, default=None, on_delete='CASCADE')

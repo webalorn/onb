@@ -1,7 +1,6 @@
 from flask_restful import fields, marshal
 import flask_jwt_extended as fjwt
 from sqldb.models.user import User as sqlUser
-from sqldb.models.user import Friendship
 from .common_fields import MarshalFields, DayDate
 
 class FriendsField(fields.Raw):
@@ -10,18 +9,12 @@ class FriendsField(fields.Raw):
 
 def isFriendAttribute(user):
 	if fjwt.get_current_user():
-		return  bool(Friendship.select().where(
-				Friendship.follower == fjwt.get_current_user().id,
-				Friendship.friend == user.id
-			))
+		return user.id in fjwt.get_current_user().friends
 	return False
 
 def isFollowerAttribute(user):
 	if fjwt.get_current_user():
-		return  bool(Friendship.select().where(
-				Friendship.follower == user.id,
-				Friendship.friend == fjwt.get_current_user().id
-			))
+		return user.id in fjwt.get_current_user().followers
 	return False
 
 short_profile = {

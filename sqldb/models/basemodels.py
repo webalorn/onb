@@ -2,7 +2,7 @@ from peewee import *
 from api.common.errors import NotFoundError
 from engine.engine import notAlphaNumRegex
 import datetime
-import onb
+import onb, copy
 
 class BaseModel(Model):
 	created_date = DateTimeField(default=datetime.datetime.now)
@@ -21,6 +21,16 @@ class BaseModel(Model):
 				setattr(self, key, val)
 		if autoSave:
 			self.save()
+
+	@classmethod
+	def create(cls, *p, **pn):
+		o = super().create(*p, **pn)
+		# Ensure default values are copied, not cloned
+		d = o.__data__
+		for key, val in d.items():
+			if hasattr(o.__class__, key) and isinstance(getattr(o.__class__, key), Field):
+				setattr(o, key, copy.deepcopy(val))
+		return o
 
 	@classmethod
 	def search(cls, phrase):
