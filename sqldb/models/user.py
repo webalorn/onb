@@ -54,7 +54,7 @@ class User(BaseModel, SqlTableModel):
 
 			friend = User.get(id=friend_id)
 			if not self.id in friend.followers:
-				friend.followers.append(friend_id)
+				friend.followers.append(self.id)
 				friend.save()
 
 	def removeFriend(self, friend_id):
@@ -64,7 +64,7 @@ class User(BaseModel, SqlTableModel):
 
 		friend = User.get(id=friend_id)
 		if self.id in friend.followers:
-			friend.followers.remove(friend_id)
+			friend.followers.remove(self.id)
 			friend.save()
 
 

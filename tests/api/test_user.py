@@ -207,8 +207,7 @@ class ApiUserTest(ApiTestModel):
 			self.assertInJson({'followers': [{'id': users[0]['id']}]}, datas)
 
 		self.app_delete('/user/friend/' + str(users[1]['id']), 200, token=users[0]['token'])
-		with self.assertRaises(NotFoundError):
-			self.app_delete('/user/friend/' + str(users[1]['id']), 404, token=users[0]['token'])
+		self.app_delete('/user/friend/' + str(users[1]['id']), 200, token=users[0]['token'])
 
 		datas = self.app_get('/user', 200, token=users[0]['token'])
 		self.assertEqual(len(datas['friends']), 3)
