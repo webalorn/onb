@@ -25,7 +25,7 @@ tags:
   description: Image upload and download
 - name: message
   description: Send and receive messages
-- name: i12n
+- name: i18n
   description: internationalization of game models, can be created by users
 - name: news
   description: Website news
@@ -837,10 +837,10 @@ paths:
       - jwt_auth: []
 
 # Dynamic internationalization
-  /i12n:
+  /i18n:
     post:
       tags:
-      - i12n
+      - i18n
       summary: Request a new translation id
       operationId: createTranslation
       responses:
@@ -851,7 +851,7 @@ paths:
             type: integer
       security:
       - jwt_auth: []
-  /i12n/{lang}:
+  /i18n/{lang}:
     parameters:
     - name: lang
       in: path
@@ -860,7 +860,7 @@ paths:
       type: string
     get:
       tags:
-      - i12n
+      - i18n
       summary: Translate a set of text ids
       operationId: getTranslations
       parameters:
@@ -882,7 +882,7 @@ paths:
               type: string
   
 
-  /i12n/{lang}/{id}:
+  /i18n/{lang}/{id}:
     parameters:
     - name: lang
       in: path
@@ -896,7 +896,7 @@ paths:
       type: integer
     get:
       tags:
-      - i12n
+      - i18n
       summary: Get a translation. If not found, return the english translation
       operationId: getTranslation
       responses:
@@ -906,7 +906,7 @@ paths:
           description: Translation not found
     put:
       tags:
-      - i12n
+      - i18n
       summary: Update a translation
       operationId: updateTranslation
       parameters:
@@ -922,7 +922,7 @@ paths:
       - jwt_auth: []
     delete:
       tags:
-      - i12n
+      - i18n
       summary: Remove a translation
       operationId: removeTranslation
       responses:
@@ -1094,7 +1094,7 @@ definitions:
             type: string
             default: null
             enum: [en, fr]
-          i12n_editor:
+          i18n_editor:
             type: boolean
             default: false
   ListFilters:

@@ -16,7 +16,7 @@ class UserProfile(BaseModel, SqlTableModel):
 
 class UserSettings(BaseModel, SqlTableModel):
 	language = TextField(default='en')
-	i12n_editor = BooleanField(default=False)
+	i18n_editor = BooleanField(default=False)
 
 class User(BaseModel, SqlTableModel):
 	username = CharField(unique=True, null=True)

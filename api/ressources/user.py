@@ -44,7 +44,7 @@ def parseUserProfile(vals):
 def parseUserSettings(vals):
 	parser = ExtendedParser()
 	parser.add_argument('language', type=str, choices=onb.conf.langs)
-	parser.add_argument('i12n_editor', type=bool)
+	parser.add_argument('i18n_editor', type=bool)
 	return parser.parse_args_from(vals)
 
 def parseUserDatas():

@@ -99,7 +99,7 @@ class ApiUserTest(ApiTestModel):
 			},
 			"settings": {
 				"language": "fr",
-				"i12n_editor": True,
+				"i18n_editor": True,
 				"foo": "bar",
 			}
 		}, token=token)
@@ -115,7 +115,7 @@ class ApiUserTest(ApiTestModel):
 			},
 			"settings": {
 				"language": "fr",
-				"i12n_editor": True,
+				"i18n_editor": True,
 			}
 		}, datas)
 		self.assertNotInJson({

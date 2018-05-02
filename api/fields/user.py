@@ -59,6 +59,6 @@ auth_user_fields = {
 	"auth_token": fields.String(attribute=lambda user: fjwt.create_access_token(identity=user)),
 	'settings': MarshalFields({
 		'language': fields.String,
-		'i12n_editor': fields.Boolean,
+		'i18n_editor': fields.Boolean,
 	}),
 }
