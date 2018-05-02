@@ -10,7 +10,7 @@ if 'flask' in onb.conf:
 	app.config.update(**onb.conf.flask)
 
 onb.app = app
-onb.api = Api(app, errors=errors)
+onb.api = Api(app, errors=errors, catch_all_404s=True)
 onb.jwt = JWTManager(app)
 
 from api.common.converters import url_converters

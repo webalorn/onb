@@ -1,7 +1,8 @@
 debug: no
 cacheAllModels: no # Avoid duplicate instances of the same model, but keep the model in memory
-searchEnabled: yes
+searchEnabled: no
 testingMode: no
+anonymousLogin: yes
 
 langs: [en, fr]
 

@@ -3,7 +3,8 @@ from sqldb.models.user import User as sqlUser
 from sqldb.models.user import Friendship
 from api.common.errors import *
 from api.fields.user import *
-from api.common.auth import jwt_anonymous_user
+from api.common.auth import *
+from api.common.common import *
 import flask_jwt_extended as fjwt
 from api.common.parser import ExtendedParser, checkPagination
 import onb, datetime, random
@@ -112,6 +113,7 @@ class UsernameAvailable(Resource):
 @onb.api.resource('/user/search')
 class SearchUser(Resource):
 	@marshal_with(user_fields_short)
+	@require_search_enabled
 	def get(self):
 		args = parseSearchArgs()
 		return list(sqlUser.search(args['search'])
@@ -120,12 +122,14 @@ class SearchUser(Resource):
 @onb.api.resource('/user/anonymous')
 class AnonymousUser(Resource):
 	@marshal_with(auth_user_fields)
+	@require_anonymous_enabled
 	def get(self):
 		""" Create a new anonymous user """
 		return sqlUser.create(username=None, password_hash=None)
 
 	@marshal_with(auth_user_fields)
 	@jwt_anonymous_user
+	@require_anonymous_enabled
 	def post(self):
 		""" Create a real account from an anonymous user """
 		user = fjwt.get_current_user()

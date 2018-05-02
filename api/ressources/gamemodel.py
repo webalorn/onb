@@ -77,6 +77,7 @@ class Model(Resource):
 @onb.api.resource('/model/<model:modelclass>/search')
 class ModelSearch(Resource):
 	@marshal_with(model_summary)
+	@require_search_enabled
 	def get(self, modelclass, pageId=1):
 		searchArgs = getSearchArgs()
 
