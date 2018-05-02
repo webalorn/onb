@@ -4,7 +4,6 @@ from engine.modelslist import getModelByName
 from engine.storage.manager import StorageManager
 from .customfields import ModelField
 from engine.models import *
-from playhouse.sqlite_ext import *
 
 sqlModels = []
 

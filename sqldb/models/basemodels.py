@@ -1,6 +1,5 @@
 from peewee import *
 from api.common.errors import NotFoundError
-# from playhouse.sqlite_ext import *
 from engine.engine import notAlphaNumRegex
 import datetime
 import onb
