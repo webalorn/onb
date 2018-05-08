@@ -37,6 +37,14 @@ securityDefinitions:
     in: header
 
 paths:
+# Get configuation
+  /config:
+    get:
+      summary: Get congiguration
+      operationId: getConfig
+      responses:
+        200:
+          description: Success
 # Get game models
   /model/table:
     get:

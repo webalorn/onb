@@ -11,3 +11,8 @@ class MarshalFields(fields.Raw):
 class DayDate(fields.Raw):
 	def format(self, value):
 		return value.strftime("%d-%m-%Y")
+
+class AnyFields(fields.Raw):
+	""" Use only when it's sure that the value already have the correct format """
+	def format(self, value):
+		return value
