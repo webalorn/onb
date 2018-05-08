@@ -2,3 +2,4 @@ debug: yes
 inherit: env/default/settings.yml
 
 sqldb: onb_dev
+dyndb: local

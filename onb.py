@@ -35,7 +35,7 @@ class OnbSettings:
 	@classmethod
 	def createDynDbObject(cls):
 		if conf.dyndb:
-			return DynDb(conf.dyntables)
+			return DynDb(conf.dyntables, conf.dyndb)
 		return None
 
 	@classmethod

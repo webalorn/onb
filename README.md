@@ -50,6 +50,12 @@ Or start the development server:
 ```base
 ./startDevApi.sh
 ```
+
+For local development with 'dev', you must:
+- Have a working postgresql server
+- Create tables with `./run.sh sqldb/generateDb.sh`
+- Launch a local instance of dynamoDB on port 8000 (with `java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb`)
+
 ### API
 
 Development API can be accessed at `http://127.0.0.1:5000`
