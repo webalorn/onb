@@ -34,7 +34,9 @@ class OnbSettings:
 
 	@classmethod
 	def createDynDbObject(cls):
-		return DynDb(conf.dyntables)
+		if conf.dyndb:
+			return DynDb(conf.dyntables)
+		return None
 
 	@classmethod
 	def inMemoryGeneratedDatas(cls):

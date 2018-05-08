@@ -6,7 +6,7 @@ argReg = re.compile('^[a-zA-Z0-9_]+$')
 
 class I18nDynTable(BaseDynTable):
 	"""
-		Key format: id:user_id:lang
+		Key format: key_user_id:lang
 	"""
 	def translate(self, key, lang):
 		key = str(key) + ':' + str(lang)
@@ -29,6 +29,8 @@ class I18nDynTable(BaseDynTable):
 			return default
 
 	def getMultiple(self, keys, lang, default=''):
+		if len(keys) > 100:
+			return {**getMultiple(keys[:100], lang, default), **getMultiple(keys[100:], lang, default)}
 		import onb
 		dbKeys = [str(key) + ':' + str(lang) for key in keys]
 		if lang != 'en':
@@ -61,11 +63,10 @@ class I18nDynTable(BaseDynTable):
 
 		return finalTranslations
 
-	def set(self, key, user_id, lang, translation):
-		for arg in (key, user_id, lang):
+	def set(self, key, lang, translation):
+		for arg in (key, lang):
 			if not argReg.match(str(arg)):
 				raise ValueError
-		key = str(key) + ':' + str(user_id)
 		dbKey = key + ':' + str(lang)
 		self.table.put_item(
 			Item={
@@ -75,12 +76,19 @@ class I18nDynTable(BaseDynTable):
 		)
 		return key
 
-	def new(self, user_id, lang, translation):
-		return self.set(Rand.randomString(20), user_id, lang, translation)
+	def setMultiple(self, key, translations):
+		for lang, text in translations.items():
+			self.set(key, lang, text)
 
-	def delete(self, key, user_id, lang):
+	def newKey(self, user_id):
+		return Rand.randomString(20) + '_' + str(user_id)
+
+	def new(self, user_id, lang, translation):
+		return self.set(self.newKey(user_id), lang, translation)
+
+	def delete(self, key, lang):
 		table.delete_item(
 			Key={
-				'key': str(key) + ':' + str(user_id) + ':' + str(lang),
+				'key': str(key) + ':' + str(lang),
 			}
 		)

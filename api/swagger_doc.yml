@@ -889,7 +889,7 @@ paths:
           description: an array of all text ids to translate
           type: array
           items:
-            type: integer
+            type: string
       responses:
         200:
           description: Success
@@ -898,6 +898,28 @@ paths:
             type: object
             additionalProperties:
               type: string
+  /i18n/key/{key}:
+    parameters:
+    - name: key
+      in: path
+      description: Translation key
+      required: true
+      type: string
+    put:
+      tags:
+      - i18n
+      summary: Update multiple translations
+      operationId: updateMultipleTranslations
+      parameters:
+      - in: body
+        name: translations
+        required: true
+        schema:
+          description: Dict of translations (lang -> value)
+          type: object
+      responses:
+        200:
+          description: Success
   
 
   /i18n/{lang}/{id}:
@@ -933,16 +955,6 @@ paths:
         required: true
         schema:
           type: string
-      responses:
-        200:
-          description: Success
-      security:
-      - jwt_auth: []
-    delete:
-      tags:
-      - i18n
-      summary: Remove a translation
-      operationId: removeTranslation
       responses:
         200:
           description: Success

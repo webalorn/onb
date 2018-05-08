@@ -7,5 +7,6 @@ flask:
   JWT_SECRET_KEY: testing_secret_key
 
 sqldb: onb_testing
+dyndb: no
 
 inherit: env/default/settings.yml

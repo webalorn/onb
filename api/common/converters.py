@@ -12,6 +12,16 @@ class ModelConverter(BaseConverter):
 	def to_url(self, value):
 		return value.modelClass
 
+class LangConverter(BaseConverter):
+	def to_python(self, value):
+		if value in onb.conf.langs:
+			return value
+		raise NotFoundError
+
+	def to_url(self, value):
+		return value
+
 url_converters = {
 	'model': ModelConverter,
+	'lang': LangConverter,
 }
