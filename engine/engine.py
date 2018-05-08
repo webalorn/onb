@@ -10,9 +10,11 @@ class Singleton(type):
 		return cls._instances[cls]
 
 class Rand:
+	@staticmethod
 	def randomString(size=10):
-		return ''.join(random.choices(string.ascii_uppercase + string.digits, k=size))
+		return ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=size))
 
+	@staticmethod
 	def roll(diceValue):
 		return random.randint(1, diceValue)
 

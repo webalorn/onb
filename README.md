@@ -14,11 +14,21 @@
 
 - python3
 - pipenv
+- postgreSQL
+- [Local DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html)
 
 #### Install dependencies
 
 - Install pipenv packages 
 - Install PostgreSQL and create 'onb' user with 'onb' password, and databases 'onb_dev', 'onb_testing' and 'onb_production'
+
+#### Environment variables:
+
+(You can put them into '.env')
+- DATABASE_URL
+- JWT_SECRET_KEY
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
 
 ## Usage
 

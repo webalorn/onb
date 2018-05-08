@@ -14,5 +14,11 @@ flask:
 
 sqldb: onb_dev
 
+dyndb: online
+dyntables:
+  i18n:
+    name: onb_i18n
+    type: i18n
+
 require:
   game: engine/settings.yml

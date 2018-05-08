@@ -1,12 +1,13 @@
 import os
 from playhouse.postgres_ext import PostgresqlExtDatabase
 from engine.engine import Rand, Map, SettingsLoader
+from dyndb.dyndb import DynDb
 import psycopg2
 from urllib.parse import *
 
 ### Global configuration
 conf = None
-conf, sqldb = None, None
+conf, sqldb, dyndb = None, None, None
 
 class OnbSettings:
 	"""
@@ -32,6 +33,10 @@ class OnbSettings:
 		return PostgresqlExtDatabase(conf.sqldb, user='onb', password='onb')
 
 	@classmethod
+	def createDynDbObject(cls):
+		return DynDb(conf.dyntables)
+
+	@classmethod
 	def inMemoryGeneratedDatas(cls):
 		from engine.generator.tables import TableGenerator
 		from engine.storage.encoder import ModelEncoder
@@ -41,12 +46,14 @@ class OnbSettings:
 
 	@classmethod
 	def loadFrom(cls, filename):
-		global conf, sqldb
+		global conf, sqldb, dyndb
 		if conf != None:
 			raise RuntimeError("Configuration already loaded")
 		cfgLoader = SettingsLoader(cls.root)
 		conf = cfgLoader.loadYamlCfg(filename)
+
 		sqldb = cls.createDbObject()
+		dyndb = cls.createDynDbObject()
 		cls.inMemoryGeneratedDatas()
 
 ### Global functions for simple parameters use
